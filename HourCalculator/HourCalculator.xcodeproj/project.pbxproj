@@ -1,0 +1,598 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3227DBE626826C0A00D1E591 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3227DBE526826C0A00D1E591 /* AppDelegate.swift */; };
+		3227DBE826826C0A00D1E591 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3227DBE726826C0A00D1E591 /* SceneDelegate.swift */; };
+		3227DBEA26826C0A00D1E591 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3227DBE926826C0A00D1E591 /* ViewController.swift */; };
+		3227DBED26826C0A00D1E591 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3227DBEB26826C0A00D1E591 /* Main.storyboard */; };
+		3227DBEF26826C0B00D1E591 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3227DBEE26826C0B00D1E591 /* Assets.xcassets */; };
+		3227DBF226826C0B00D1E591 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3227DBF026826C0B00D1E591 /* LaunchScreen.storyboard */; };
+		3227DBFD26826C0B00D1E591 /* HourCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3227DBFC26826C0B00D1E591 /* HourCalculatorTests.swift */; };
+		3227DC0826826C0B00D1E591 /* HourCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3227DC0726826C0B00D1E591 /* HourCalculatorUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3227DBF926826C0B00D1E591 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3227DBDA26826C0A00D1E591 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3227DBE126826C0A00D1E591;
+			remoteInfo = HourCalculator;
+		};
+		3227DC0426826C0B00D1E591 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3227DBDA26826C0A00D1E591 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3227DBE126826C0A00D1E591;
+			remoteInfo = HourCalculator;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3227DBE226826C0A00D1E591 /* HourCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HourCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3227DBE526826C0A00D1E591 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3227DBE726826C0A00D1E591 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		3227DBE926826C0A00D1E591 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3227DBEC26826C0A00D1E591 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3227DBEE26826C0B00D1E591 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3227DBF126826C0B00D1E591 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3227DBF326826C0B00D1E591 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3227DBF826826C0B00D1E591 /* HourCalculatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HourCalculatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3227DBFC26826C0B00D1E591 /* HourCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCalculatorTests.swift; sourceTree = "<group>"; };
+		3227DBFE26826C0B00D1E591 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3227DC0326826C0B00D1E591 /* HourCalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HourCalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3227DC0726826C0B00D1E591 /* HourCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCalculatorUITests.swift; sourceTree = "<group>"; };
+		3227DC0926826C0B00D1E591 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3227DBDF26826C0A00D1E591 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3227DBF526826C0B00D1E591 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3227DC0026826C0B00D1E591 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3227DBD926826C0A00D1E591 = {
+			isa = PBXGroup;
+			children = (
+				3227DBE426826C0A00D1E591 /* HourCalculator */,
+				3227DBFB26826C0B00D1E591 /* HourCalculatorTests */,
+				3227DC0626826C0B00D1E591 /* HourCalculatorUITests */,
+				3227DBE326826C0A00D1E591 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3227DBE326826C0A00D1E591 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3227DBE226826C0A00D1E591 /* HourCalculator.app */,
+				3227DBF826826C0B00D1E591 /* HourCalculatorTests.xctest */,
+				3227DC0326826C0B00D1E591 /* HourCalculatorUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3227DBE426826C0A00D1E591 /* HourCalculator */ = {
+			isa = PBXGroup;
+			children = (
+				3227DBE526826C0A00D1E591 /* AppDelegate.swift */,
+				3227DBE726826C0A00D1E591 /* SceneDelegate.swift */,
+				3227DBE926826C0A00D1E591 /* ViewController.swift */,
+				3227DBEB26826C0A00D1E591 /* Main.storyboard */,
+				3227DBEE26826C0B00D1E591 /* Assets.xcassets */,
+				3227DBF026826C0B00D1E591 /* LaunchScreen.storyboard */,
+				3227DBF326826C0B00D1E591 /* Info.plist */,
+			);
+			path = HourCalculator;
+			sourceTree = "<group>";
+		};
+		3227DBFB26826C0B00D1E591 /* HourCalculatorTests */ = {
+			isa = PBXGroup;
+			children = (
+				3227DBFC26826C0B00D1E591 /* HourCalculatorTests.swift */,
+				3227DBFE26826C0B00D1E591 /* Info.plist */,
+			);
+			path = HourCalculatorTests;
+			sourceTree = "<group>";
+		};
+		3227DC0626826C0B00D1E591 /* HourCalculatorUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3227DC0726826C0B00D1E591 /* HourCalculatorUITests.swift */,
+				3227DC0926826C0B00D1E591 /* Info.plist */,
+			);
+			path = HourCalculatorUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3227DBE126826C0A00D1E591 /* HourCalculator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3227DC0C26826C0B00D1E591 /* Build configuration list for PBXNativeTarget "HourCalculator" */;
+			buildPhases = (
+				3227DBDE26826C0A00D1E591 /* Sources */,
+				3227DBDF26826C0A00D1E591 /* Frameworks */,
+				3227DBE026826C0A00D1E591 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HourCalculator;
+			productName = HourCalculator;
+			productReference = 3227DBE226826C0A00D1E591 /* HourCalculator.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3227DBF726826C0B00D1E591 /* HourCalculatorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3227DC0F26826C0B00D1E591 /* Build configuration list for PBXNativeTarget "HourCalculatorTests" */;
+			buildPhases = (
+				3227DBF426826C0B00D1E591 /* Sources */,
+				3227DBF526826C0B00D1E591 /* Frameworks */,
+				3227DBF626826C0B00D1E591 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3227DBFA26826C0B00D1E591 /* PBXTargetDependency */,
+			);
+			name = HourCalculatorTests;
+			productName = HourCalculatorTests;
+			productReference = 3227DBF826826C0B00D1E591 /* HourCalculatorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3227DC0226826C0B00D1E591 /* HourCalculatorUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3227DC1226826C0B00D1E591 /* Build configuration list for PBXNativeTarget "HourCalculatorUITests" */;
+			buildPhases = (
+				3227DBFF26826C0B00D1E591 /* Sources */,
+				3227DC0026826C0B00D1E591 /* Frameworks */,
+				3227DC0126826C0B00D1E591 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3227DC0526826C0B00D1E591 /* PBXTargetDependency */,
+			);
+			name = HourCalculatorUITests;
+			productName = HourCalculatorUITests;
+			productReference = 3227DC0326826C0B00D1E591 /* HourCalculatorUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3227DBDA26826C0A00D1E591 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					3227DBE126826C0A00D1E591 = {
+						CreatedOnToolsVersion = 12.5;
+					};
+					3227DBF726826C0B00D1E591 = {
+						CreatedOnToolsVersion = 12.5;
+						TestTargetID = 3227DBE126826C0A00D1E591;
+					};
+					3227DC0226826C0B00D1E591 = {
+						CreatedOnToolsVersion = 12.5;
+						TestTargetID = 3227DBE126826C0A00D1E591;
+					};
+				};
+			};
+			buildConfigurationList = 3227DBDD26826C0A00D1E591 /* Build configuration list for PBXProject "HourCalculator" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3227DBD926826C0A00D1E591;
+			productRefGroup = 3227DBE326826C0A00D1E591 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3227DBE126826C0A00D1E591 /* HourCalculator */,
+				3227DBF726826C0B00D1E591 /* HourCalculatorTests */,
+				3227DC0226826C0B00D1E591 /* HourCalculatorUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3227DBE026826C0A00D1E591 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3227DBF226826C0B00D1E591 /* LaunchScreen.storyboard in Resources */,
+				3227DBEF26826C0B00D1E591 /* Assets.xcassets in Resources */,
+				3227DBED26826C0A00D1E591 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3227DBF626826C0B00D1E591 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3227DC0126826C0B00D1E591 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3227DBDE26826C0A00D1E591 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3227DBEA26826C0A00D1E591 /* ViewController.swift in Sources */,
+				3227DBE626826C0A00D1E591 /* AppDelegate.swift in Sources */,
+				3227DBE826826C0A00D1E591 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3227DBF426826C0B00D1E591 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3227DBFD26826C0B00D1E591 /* HourCalculatorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3227DBFF26826C0B00D1E591 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3227DC0826826C0B00D1E591 /* HourCalculatorUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3227DBFA26826C0B00D1E591 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3227DBE126826C0A00D1E591 /* HourCalculator */;
+			targetProxy = 3227DBF926826C0B00D1E591 /* PBXContainerItemProxy */;
+		};
+		3227DC0526826C0B00D1E591 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3227DBE126826C0A00D1E591 /* HourCalculator */;
+			targetProxy = 3227DC0426826C0B00D1E591 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3227DBEB26826C0A00D1E591 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3227DBEC26826C0A00D1E591 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3227DBF026826C0B00D1E591 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3227DBF126826C0B00D1E591 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3227DC0A26826C0B00D1E591 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3227DC0B26826C0B00D1E591 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3227DC0D26826C0B00D1E591 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DP6RQZGX67;
+				INFOPLIST_FILE = HourCalculator/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3227DC0E26826C0B00D1E591 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DP6RQZGX67;
+				INFOPLIST_FILE = HourCalculator/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3227DC1026826C0B00D1E591 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DP6RQZGX67;
+				INFOPLIST_FILE = HourCalculatorTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculatorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HourCalculator.app/HourCalculator";
+			};
+			name = Debug;
+		};
+		3227DC1126826C0B00D1E591 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DP6RQZGX67;
+				INFOPLIST_FILE = HourCalculatorTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculatorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HourCalculator.app/HourCalculator";
+			};
+			name = Release;
+		};
+		3227DC1326826C0B00D1E591 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DP6RQZGX67;
+				INFOPLIST_FILE = HourCalculatorUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculatorUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HourCalculator;
+			};
+			name = Debug;
+		};
+		3227DC1426826C0B00D1E591 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DP6RQZGX67;
+				INFOPLIST_FILE = HourCalculatorUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculatorUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HourCalculator;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3227DBDD26826C0A00D1E591 /* Build configuration list for PBXProject "HourCalculator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3227DC0A26826C0B00D1E591 /* Debug */,
+				3227DC0B26826C0B00D1E591 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3227DC0C26826C0B00D1E591 /* Build configuration list for PBXNativeTarget "HourCalculator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3227DC0D26826C0B00D1E591 /* Debug */,
+				3227DC0E26826C0B00D1E591 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3227DC0F26826C0B00D1E591 /* Build configuration list for PBXNativeTarget "HourCalculatorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3227DC1026826C0B00D1E591 /* Debug */,
+				3227DC1126826C0B00D1E591 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3227DC1226826C0B00D1E591 /* Build configuration list for PBXNativeTarget "HourCalculatorUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3227DC1326826C0B00D1E591 /* Debug */,
+				3227DC1426826C0B00D1E591 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3227DBDA26826C0A00D1E591 /* Project object */;
+}
