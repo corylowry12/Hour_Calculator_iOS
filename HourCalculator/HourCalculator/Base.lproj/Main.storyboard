@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -11,54 +11,94 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="HourCalculator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Home" id="BYZ-38-t0r" customClass="ViewController" customModule="HourCalculator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <datePicker contentMode="scaleToFill" highlighted="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="QbA-Un-VAf">
-                                <rect key="frame" x="0.0" y="70" width="414" height="216"/>
+                            <datePicker contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" highlighted="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="QbA-Un-VAf">
+                                <rect key="frame" x="0.0" y="74" width="390" height="180"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="180" id="WiI-0Y-eLs"/>
+                                </constraints>
                                 <connections>
-                                    <action selector="datePickerChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="CfA-7F-hcj"/>
+                                    <action selector="inTimeValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="jEi-Kb-jYy"/>
                                 </connections>
                             </datePicker>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KnQ-wm-tZX">
-                                <rect key="frame" x="0.0" y="52" width="414" height="18"/>
+                                <rect key="frame" x="0.0" y="56" width="390" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iW3-Ti-PyI">
-                                <rect key="frame" x="0.0" y="438" width="372" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Out Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sBp-Sf-THf">
-                                <rect key="frame" x="0.0" y="286" width="414" height="18"/>
+                                <rect key="frame" x="0.0" y="254" width="390" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="pg8-3I-UZ9">
+                                <rect key="frame" x="0.0" y="272" width="390" height="180"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="180" id="8Vg-6p-NNZ"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="outTimeValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="Guy-f0-i1g"/>
+                                </connections>
+                            </datePicker>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iW3-Ti-PyI">
+                                <rect key="frame" x="20" y="494" width="350" height="0.0"/>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y7w-qb-R5b">
+                                <rect key="frame" x="20" y="452" width="350" height="45"/>
+                                <color key="backgroundColor" red="0.14901960784313725" green="0.65098039215686276" blue="0.60392156862745094" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                <state key="normal" title="Calculate">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="calculateButtonDidTouch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3TV-FT-Nao"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="tintColor" red="0.14901960780000001" green="0.65098039220000004" blue="0.60392156860000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="QbA-Un-VAf" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="0IQ-LN-drg"/>
+                            <constraint firstItem="iW3-Ti-PyI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="0ML-Mf-hi9"/>
+                            <constraint firstItem="pg8-3I-UZ9" firstAttribute="top" secondItem="sBp-Sf-THf" secondAttribute="bottom" id="4Cm-oi-PsU"/>
+                            <constraint firstItem="QbA-Un-VAf" firstAttribute="top" secondItem="KnQ-wm-tZX" secondAttribute="bottom" id="5Pq-CJ-gK2"/>
+                            <constraint firstItem="sBp-Sf-THf" firstAttribute="top" secondItem="QbA-Un-VAf" secondAttribute="bottom" id="D2e-Lb-FQc"/>
                             <constraint firstItem="QbA-Un-VAf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="FhA-3a-gCF"/>
-                            <constraint firstItem="sBp-Sf-THf" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="GZ6-Rn-F8y"/>
-                            <constraint firstItem="KnQ-wm-tZX" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="Oam-Uc-Tfw"/>
+                            <constraint firstItem="Y7w-qb-R5b" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="JJ1-ij-pad"/>
+                            <constraint firstItem="KnQ-wm-tZX" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="12" id="QtC-5x-YFI"/>
+                            <constraint firstItem="iW3-Ti-PyI" firstAttribute="top" secondItem="Y7w-qb-R5b" secondAttribute="bottom" constant="8" id="QwE-Lr-JuE"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="KnQ-wm-tZX" secondAttribute="trailing" id="UwM-uC-HYJ"/>
                             <constraint firstItem="KnQ-wm-tZX" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ZJZ-zn-1dw"/>
+                            <constraint firstItem="QbA-Un-VAf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="bsc-XF-beH"/>
+                            <constraint firstItem="pg8-3I-UZ9" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="cX3-9P-qrC"/>
+                            <constraint firstItem="sBp-Sf-THf" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="cfN-OJ-84m"/>
+                            <constraint firstItem="Y7w-qb-R5b" firstAttribute="top" secondItem="pg8-3I-UZ9" secondAttribute="bottom" id="fbM-hv-pKi"/>
                             <constraint firstItem="QbA-Un-VAf" firstAttribute="top" secondItem="KnQ-wm-tZX" secondAttribute="bottom" id="hIf-7o-cx3"/>
                             <constraint firstItem="QbA-Un-VAf" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="pry-vS-eRT"/>
-                            <constraint firstItem="sBp-Sf-THf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="qnT-C6-FkS"/>
-                            <constraint firstItem="sBp-Sf-THf" firstAttribute="top" secondItem="QbA-Un-VAf" secondAttribute="bottom" id="sy6-HY-KzM"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="iW3-Ti-PyI" secondAttribute="trailing" constant="20" id="u1p-cc-soj"/>
+                            <constraint firstItem="iW3-Ti-PyI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="u4a-Mz-iH1"/>
+                            <constraint firstItem="sBp-Sf-THf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ujp-YC-Lmy"/>
+                            <constraint firstItem="iW3-Ti-PyI" firstAttribute="top" secondItem="Y7w-qb-R5b" secondAttribute="bottom" constant="8" id="vUX-Wz-Ela"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="iW3-Ti-PyI" secondAttribute="trailing" constant="20" id="wiL-SB-DMw"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Y7w-qb-R5b" secondAttribute="trailing" constant="20" id="y98-al-xMo"/>
+                            <constraint firstItem="pg8-3I-UZ9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ytS-bp-xFa"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="calculateButton" destination="Y7w-qb-R5b" id="3Kg-Dx-HTY"/>
                         <outlet property="dateLabel" destination="iW3-Ti-PyI" id="Vpi-g1-dLm"/>
-                        <outlet property="datePicker" destination="QbA-Un-VAf" id="60V-wM-CU8"/>
+                        <outlet property="datePicker" destination="QbA-Un-VAf" id="4PF-kB-qjT"/>
+                        <outlet property="datePickerOutTime" destination="pg8-3I-UZ9" id="lDO-f6-XUy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

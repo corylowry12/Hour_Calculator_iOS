@@ -6,15 +6,25 @@
 //
 
 import UIKit
+import GoogleMobileAds
+import Firebase
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
+    
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        FirebaseApp.configure()
+        
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        
         return true
+    }
+    
+    func changeStatusBarColor(_ color: UIColor) {
     }
 
     // MARK: UISceneSession Lifecycle
