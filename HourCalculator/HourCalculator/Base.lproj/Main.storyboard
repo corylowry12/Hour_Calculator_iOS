@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vOp-J0-41P">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Home-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="Home" id="BYZ-38-t0r" customClass="ViewController" customModule="HourCalculator" customModuleProvider="target" sceneMemberID="viewController">
@@ -52,8 +52,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y7w-qb-R5b">
-                                <rect key="frame" x="20" y="452" width="350" height="45"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y7w-qb-R5b">
+                                <rect key="frame" x="20" y="452" width="350" height="34"/>
                                 <color key="backgroundColor" red="0.14901960784313725" green="0.65098039215686276" blue="0.60392156862745094" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                 <state key="normal" title="Calculate">
@@ -94,6 +94,8 @@
                             <constraint firstItem="pg8-3I-UZ9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ytS-bp-xFa"/>
                         </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Home" image="outline_home_black_36pt" id="ppu-yG-h2t"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="calculateButton" destination="Y7w-qb-R5b" id="3Kg-Dx-HTY"/>
                         <outlet property="dateLabel" destination="iW3-Ti-PyI" id="Vpi-g1-dLm"/>
@@ -103,10 +105,97 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="18.840579710144929" y="75"/>
+            <point key="canvasLocation" x="-875" y="901"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="CVj-wY-UA9">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="vOp-J0-41P" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xs9-lZ-mlF">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" red="0.14901960780000001" green="0.65098039220000004" blue="0.60392156860000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="tintColor">
+                                <color key="value" red="0.14901960780000001" green="0.65098039220000004" blue="0.60392156860000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="qCm-KR-8qW"/>
+                        <segue destination="c2z-ne-z8a" kind="relationship" relationship="viewControllers" id="RI0-9a-QwG"/>
+                        <segue destination="apM-ON-Pvh" kind="relationship" relationship="viewControllers" id="5gH-EZ-OhT"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NKc-xI-UzW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="18.46153846153846" y="74.644549763033169"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="d7c-k5-u3c">
+            <objects>
+                <viewController id="apM-ON-Pvh" customClass="SettingsViewController" customModule="HourCalculator" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Eht-QO-kkd">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Congratulations, you made it to the settings, but sadly there is nothing here yet!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="12h-oB-Dd2">
+                                <rect key="frame" x="20" y="94" width="350" height="71.666666666666686"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ZZd-kk-ynH"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="12h-oB-Dd2" secondAttribute="trailing" constant="20" id="1Ue-xv-063"/>
+                            <constraint firstItem="12h-oB-Dd2" firstAttribute="leading" secondItem="ZZd-kk-ynH" secondAttribute="leading" constant="20" id="M1X-1H-TBa"/>
+                            <constraint firstItem="12h-oB-Dd2" firstAttribute="top" secondItem="ZZd-kk-ynH" secondAttribute="top" constant="50" id="s3D-2m-x0R"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Settings" image="outline_settings_black_36pt" id="F6t-Nq-oQB"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Znq-iM-EWn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="16.923076923076923" y="900.71090047393363"/>
+        </scene>
+        <!--History-->
+        <scene sceneID="xpU-U1-CxJ">
+            <objects>
+                <viewController id="c2z-ne-z8a" customClass="HistoryViewController" customModule="HourCalculator" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="DYv-4k-dBx">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Congratulations, you made it to history, but sadly there is nothing here yet!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wcb-Eo-dot">
+                                <rect key="frame" x="20" y="94" width="350" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="8Ds-gx-HA2"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Wcb-Eo-dot" firstAttribute="top" secondItem="8Ds-gx-HA2" secondAttribute="top" constant="50" id="12Q-eG-d2Y"/>
+                            <constraint firstItem="Wcb-Eo-dot" firstAttribute="leading" secondItem="8Ds-gx-HA2" secondAttribute="leading" constant="20" id="A1I-EV-eoq"/>
+                            <constraint firstAttribute="trailing" secondItem="Wcb-Eo-dot" secondAttribute="trailing" constant="20" id="xEM-Cq-4NR"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="History" image="outline_history_black_36pt" id="UDb-PH-8OW"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="85A-vf-FeA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="910.76923076923072" y="900.71090047393363"/>
         </scene>
     </scenes>
     <resources>
+        <image name="outline_history_black_36pt" width="36" height="36"/>
+        <image name="outline_home_black_36pt" width="36" height="36"/>
+        <image name="outline_settings_black_36pt" width="36" height="36"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -23,9 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-    
-    func changeStatusBarColor(_ color: UIColor) {
-    }
 
     // MARK: UISceneSession Lifecycle
 

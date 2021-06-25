@@ -34,6 +34,8 @@
 		323FC51F2684303200A20EA2 /* PromisesObjC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 320415012683AE980089EE85 /* PromisesObjC.xcframework */; };
 		323FC5212684303300A20EA2 /* UserMessagingPlatform.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 320415042683AEA50089EE85 /* UserMessagingPlatform.xcframework */; };
 		323FC525268431FD00A20EA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 32723E7B2683C16C0028BB44 /* GoogleService-Info.plist */; };
+		325A41C626855B6A00B098C9 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C526855B6A00B098C9 /* SettingsViewController.swift */; };
+		325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C72685634100B098C9 /* HistoryViewController.swift */; };
 		32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DF626825FD7006632F2 /* AppDelegate.swift */; };
 		32629DF926825FD7006632F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DF826825FD7006632F2 /* SceneDelegate.swift */; };
 		32629DFB26825FD7006632F2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DFA26825FD7006632F2 /* ViewController.swift */; };
@@ -70,6 +72,8 @@
 		320414FE2683AE8C0089EE85 /* nanopb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = nanopb.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/nanopb.xcframework"; sourceTree = "<group>"; };
 		320415012683AE980089EE85 /* PromisesObjC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PromisesObjC.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/PromisesObjC.xcframework"; sourceTree = "<group>"; };
 		320415042683AEA50089EE85 /* UserMessagingPlatform.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = UserMessagingPlatform.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/UserMessagingPlatform.xcframework"; sourceTree = "<group>"; };
+		325A41C526855B6A00B098C9 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		325A41C72685634100B098C9 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		32629DF326825FD7006632F2 /* HourCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HourCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32629DF626825FD7006632F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		32629DF826825FD7006632F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -171,6 +175,8 @@
 				32629DFF26825FD9006632F2 /* Assets.xcassets */,
 				32629E0126825FD9006632F2 /* LaunchScreen.storyboard */,
 				32629E0426825FD9006632F2 /* Info.plist */,
+				325A41C526855B6A00B098C9 /* SettingsViewController.swift */,
+				325A41C72685634100B098C9 /* HistoryViewController.swift */,
 			);
 			path = HourCalculator;
 			sourceTree = "<group>";
@@ -396,6 +402,8 @@
 				32629DFB26825FD7006632F2 /* ViewController.swift in Sources */,
 				32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */,
 				32629DF926825FD7006632F2 /* SceneDelegate.swift in Sources */,
+				325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */,
+				325A41C626855B6A00B098C9 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

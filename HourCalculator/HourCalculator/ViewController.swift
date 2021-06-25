@@ -28,14 +28,12 @@ class ViewController: UIViewController {
         bannerView.rootViewController = self
         bannerView.load(GADRequest())
         
+        tabBarController?.tabBar.items?[1].badgeValue = "0"
+        
     }
-    
-    
     
     var inHour : Int = 0
     var inMinute : Int = 0
-    
-    
     
     @IBAction func inTimeValueChanged(_ sender: Any) {
         let date = datePicker.date
