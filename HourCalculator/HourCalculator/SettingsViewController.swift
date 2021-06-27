@@ -6,53 +6,38 @@
 //
 
 import UIKit
-import GoogleMobileAds
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: UITableViewController {
     
-    var bannerView: GADBannerView!
+    let userDefaults = UserDefaults.standard
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        bannerView = GADBannerView(adSize: kGADAdSizeBanner)
+        tableView.delegate = self
         
-        addBannerViewToView(bannerView)
-        
-        bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
-        bannerView.rootViewController = self
-        bannerView.load(GADRequest())
+        tableView.tableFooterView = UIView()
         
     }
     
-    func addBannerViewToView(_ bannerView: GADBannerView) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(bannerView)
-        view.addConstraints(
-            [NSLayoutConstraint(item: bannerView,
-                                attribute: .bottom,
-                                relatedBy: .equal,
-                                toItem: view.safeAreaLayoutGuide,
-                                attribute: .bottom,
-                                multiplier: 1,
-                                constant: 0),
-             NSLayoutConstraint(item: bannerView,
-                                attribute: .centerX,
-                                relatedBy: .equal,
-                                toItem: view,
-                                attribute: .centerX,
-                                multiplier: 1,
-                                constant: 0)
-                ])
+        self.performSegue(withIdentifier: "theme", sender: self)
+        self.performSegue(withIdentifier: "patch", sender: self)
     }
     
-    func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
-        addBannerViewToView(bannerView)
-        bannerView.alpha = 0
-        UIView.animate(withDuration: 1, animations: {
-            bannerView.alpha = 1
-        })
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier:
+             "hourCell", for: indexPath) as! SettingsTableViewCell
+        
+        cell.tag = indexPath.row
+        
+        
+        
+        print("\(userDefaults.bool(forKey: "StoredEmptyHour"))")
+        
+        return cell
     }
-    
 }

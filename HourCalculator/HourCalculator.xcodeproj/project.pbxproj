@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323DD8F12685984D00332BA3 /* TableViewCell.swift */; };
 		323FC4EE26842FF100A20EA2 /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4ED26842FF100A20EA2 /* FirebaseAppDistribution-Beta */; };
 		323FC4F026842FF100A20EA2 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4EF26842FF100A20EA2 /* FirebaseInAppMessaging-Beta */; };
 		323FC4F226842FF100A20EA2 /* FirebaseAnalyticsSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4F126842FF100A20EA2 /* FirebaseAnalyticsSwift-Beta */; };
@@ -36,6 +37,7 @@
 		323FC525268431FD00A20EA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 32723E7B2683C16C0028BB44 /* GoogleService-Info.plist */; };
 		325A41C626855B6A00B098C9 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C526855B6A00B098C9 /* SettingsViewController.swift */; };
 		325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C72685634100B098C9 /* HistoryViewController.swift */; };
+		325A41CB26856ABF00B098C9 /* StoredHours.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C926856ABF00B098C9 /* StoredHours.xcdatamodeld */; };
 		32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DF626825FD7006632F2 /* AppDelegate.swift */; };
 		32629DF926825FD7006632F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DF826825FD7006632F2 /* SceneDelegate.swift */; };
 		32629DFB26825FD7006632F2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DFA26825FD7006632F2 /* ViewController.swift */; };
@@ -46,6 +48,11 @@
 		32629E1926825FD9006632F2 /* HourCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */; };
 		32723E7D2683C16C0028BB44 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 32723E7B2683C16C0028BB44 /* GoogleService-Info.plist */; };
 		32723E7E2683C16C0028BB44 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 32723E7B2683C16C0028BB44 /* GoogleService-Info.plist */; };
+		3272542E26867DA0000C6236 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542D26867DA0000C6236 /* InfoViewController.swift */; };
+		327254302686A421000C6236 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542F2686A421000C6236 /* EditViewController.swift */; };
+		328498462687BE280092D22F /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498452687BE280092D22F /* SettingsTableViewCell.swift */; };
+		328498482687D3F30092D22F /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498472687D3F30092D22F /* ThemeViewController.swift */; };
+		3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3284984B2687FE380092D22F /* PatchNotesViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,8 +79,10 @@
 		320414FE2683AE8C0089EE85 /* nanopb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = nanopb.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/nanopb.xcframework"; sourceTree = "<group>"; };
 		320415012683AE980089EE85 /* PromisesObjC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PromisesObjC.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/PromisesObjC.xcframework"; sourceTree = "<group>"; };
 		320415042683AEA50089EE85 /* UserMessagingPlatform.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = UserMessagingPlatform.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/UserMessagingPlatform.xcframework"; sourceTree = "<group>"; };
+		323DD8F12685984D00332BA3 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		325A41C526855B6A00B098C9 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		325A41C72685634100B098C9 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		325A41CA26856ABF00B098C9 /* StoredHours.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StoredHours.xcdatamodel; sourceTree = "<group>"; };
 		32629DF326825FD7006632F2 /* HourCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HourCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32629DF626825FD7006632F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		32629DF826825FD7006632F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +98,11 @@
 		32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCalculatorUITests.swift; sourceTree = "<group>"; };
 		32629E1A26825FD9006632F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		32723E7B2683C16C0028BB44 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3272542D26867DA0000C6236 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		3272542F2686A421000C6236 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		328498452687BE280092D22F /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
+		328498472687D3F30092D22F /* ThemeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
+		3284984B2687FE380092D22F /* PatchNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchNotesViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +191,13 @@
 				32629E0426825FD9006632F2 /* Info.plist */,
 				325A41C526855B6A00B098C9 /* SettingsViewController.swift */,
 				325A41C72685634100B098C9 /* HistoryViewController.swift */,
+				325A41C926856ABF00B098C9 /* StoredHours.xcdatamodeld */,
+				323DD8F12685984D00332BA3 /* TableViewCell.swift */,
+				3272542D26867DA0000C6236 /* InfoViewController.swift */,
+				3272542F2686A421000C6236 /* EditViewController.swift */,
+				328498452687BE280092D22F /* SettingsTableViewCell.swift */,
+				328498472687D3F30092D22F /* ThemeViewController.swift */,
+				3284984B2687FE380092D22F /* PatchNotesViewController.swift */,
 			);
 			path = HourCalculator;
 			sourceTree = "<group>";
@@ -399,11 +420,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				325A41CB26856ABF00B098C9 /* StoredHours.xcdatamodeld in Sources */,
 				32629DFB26825FD7006632F2 /* ViewController.swift in Sources */,
 				32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */,
 				32629DF926825FD7006632F2 /* SceneDelegate.swift in Sources */,
 				325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */,
+				323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */,
+				328498482687D3F30092D22F /* ThemeViewController.swift in Sources */,
+				3272542E26867DA0000C6236 /* InfoViewController.swift in Sources */,
 				325A41C626855B6A00B098C9 /* SettingsViewController.swift in Sources */,
+				3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */,
+				328498462687BE280092D22F /* SettingsTableViewCell.swift in Sources */,
+				327254302686A421000C6236 /* EditViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -862,6 +890,19 @@
 			productName = FirebaseFunctions;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		325A41C926856ABF00B098C9 /* StoredHours.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				325A41CA26856ABF00B098C9 /* StoredHours.xcdatamodel */,
+			);
+			currentVersion = 325A41CA26856ABF00B098C9 /* StoredHours.xcdatamodel */;
+			path = StoredHours.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 32629DEB26825FD7006632F2 /* Project object */;
 }
