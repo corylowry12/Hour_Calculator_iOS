@@ -24,6 +24,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    
     var hourItems: [Hours] {
         
         do {
@@ -44,6 +45,9 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let notificationName2 = NSNotification.Name("info")
+        NotificationCenter.default.post(name: notificationName2, object: nil)
         
         let notificationName = NSNotification.Name("Update")
         NotificationCenter.default.addObserver(self, selector: #selector(HistoryViewController.reloadTableView), name: notificationName, object: nil)
@@ -79,6 +83,9 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        let notificationName2 = NSNotification.Name("info")
+        NotificationCenter.default.post(name: notificationName2, object: self)
+        
         tableView.reloadData()
         if hourItems.count > 0 {
             self.deleteAllMenuButton.isEnabled = true
@@ -94,14 +101,19 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
+        let notificationName2 = NSNotification.Name("info")
+        NotificationCenter.default.post(name: notificationName2, object: self)
         tableView.reloadData()
         if hourItems.count > 0 {
             self.deleteAllMenuButton.isEnabled = true
             self.editMenuButton.isEnabled = true
+            self.infoButton.isEnabled = true
         }
         else {
             self.deleteAllMenuButton.isEnabled = false
             self.editMenuButton.isEnabled = false
+            infoButton.isEnabled = false
         }
     }
     
@@ -165,6 +177,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.count > 0 {
+            deleteSelectedButton.isEnabled = true
+            deleteSelectedButton.alpha = 1.0
+        }
         
         if tableView.isEditing == false {
             tableView.deselectRow(at: indexPath, animated: false)
@@ -176,6 +192,13 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
             performSegue(withIdentifier: "EditItem", sender: nil)
             
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if tableView.indexPathsForSelectedRows == nil {
+            deleteSelectedButton.isEnabled = false
+            deleteSelectedButton.alpha = 0.5
         }
     }
     
@@ -248,6 +271,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
             self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
             
+            self.infoButton.isEnabled = false
+            self.deleteAllMenuButton.isEnabled = false
+            self.editMenuButton.isEnabled = false
+            
             
         }
         
@@ -261,6 +288,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.editMenuButton.isEnabled = true
         }
         else {
+            self.infoButton.isEnabled = false
             self.deleteAllMenuButton.isEnabled = false
             self.editMenuButton.isEnabled = false
         }
@@ -268,6 +296,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     
     @IBAction func editButtonTapped(_ sender: Any) {
+    
         
         if hourItems.count > 0 {
             
@@ -283,14 +312,18 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 editButton.title = "Edit"
             }
             else if tableView.isEditing == false {
+                deleteSelectedButton.isEnabled = false
+                deleteSelectedButton.alpha = 0.5
                 tableView.setEditing(true, animated: true)
                 deleteSelectedButton.isHidden = false
-                editButton.title = "Done"
+                editButton.title = "Cancel"
             }
             else {
+                deleteSelectedButton.isEnabled = false
+                deleteSelectedButton.alpha = 0.5
                 tableView.setEditing(true, animated: true)
                 deleteSelectedButton.isHidden = false
-                editButton.title = "Done"
+                editButton.title = "Cancel"
             }
         }
     }
@@ -298,20 +331,35 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBAction func deleteSelectedButtonTapped(_ sender: Any) {
         
         if let indexPaths = tableView.indexPathsForSelectedRows {
-            for indexPath in indexPaths {
+            let sortedPaths = indexPaths.sorted {$0.row > $1.row}
+            /*for indexPath in indexPaths {
                 let hourToDelete = self.hourItems[indexPath.row]
                 self.context.delete(hourToDelete)
                 (UIApplication.shared.delegate as! AppDelegate).saveContext()
                 self.tableView.deleteRows(at: [indexPath], with: .fade)
                 self.tableView.reloadData()
                 tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
+            }*/
+            for i in (0...sortedPaths.count - 1).reversed() {
+                let hourToDelete = self.hourItems[i]
+                self.context.delete(hourToDelete)
+                (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                
+                
+                tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
             }
             
+            self.tableView.deleteRows(at: indexPaths, with: .fade)
+           
         }
         
-        if (hourItems.count == 0) {
-            deleteSelectedButton.isHidden = true
-            editButton.title = "Edit"
+        
+        
+        
+       if (hourItems.count == 0) {
+        editButton.isEnabled = false
+        deleteSelectedButton.isHidden = false
+        infoButton.isEnabled = false
         }
         
         if hourItems.count > 0 {
@@ -323,14 +371,32 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.editMenuButton.isEnabled = false
         }
         
+        tableView.setEditing(false, animated: true)
+        editButton.title = "Edit"
+        deleteSelectedButton.isHidden = true
+        
+        
     }
     
     @IBAction func infoButtonTapped(_ sender: UIBarButtonItem) {
+        if tableView.isEditing == true {
+            tableView.setEditing(false, animated: true)
+            editButton.title = "Edit"
+            deleteSelectedButton.isHidden = true
+        }
+        
+        let notificationName = NSNotification.Name("info")
+        NotificationCenter.default.post(name: notificationName, object: nil)
         performSegue(withIdentifier: "info", sender: nil)
     }
     
     @objc func reloadTableView() {
         self.tableView.reloadData()
-        
+        tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
+        if hourItems.count == 0 {
+            self.deleteAllMenuButton.isEnabled = false
+            self.editMenuButton.isEnabled = false
+            self.infoButton.isEnabled = false
+        }
     }
 }

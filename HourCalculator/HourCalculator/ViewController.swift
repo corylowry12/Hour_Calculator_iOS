@@ -27,6 +27,9 @@ class ViewController: UIViewController {
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{
             userDefaults.set(false, forKey: "StoredEmptyHours")
         }
+        if userDefaults.value(forKey: "theme") == nil{
+            userDefaults.set(2, forKey: "theme")
+        }
         
         if userDefaults.integer(forKey: "theme") == 0 {
              view.window?.overrideUserInterfaceStyle = .light
@@ -42,6 +45,10 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{
             userDefaults.set(false, forKey: "StoredEmptyHours")
+        }
+        
+        if userDefaults.value(forKey: "theme") == nil{
+            userDefaults.set(2, forKey: "theme")
         }
         
         if userDefaults.integer(forKey: "theme") == 0 {
@@ -65,6 +72,8 @@ class ViewController: UIViewController {
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         bannerView.rootViewController = self
         bannerView.load(GADRequest())
+        
+
         
         var hoursItems: [Hours] {
             

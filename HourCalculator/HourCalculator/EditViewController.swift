@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import CoreData
 
 class EditViewController: UIViewController {
     
     
     @IBOutlet weak var datePickerInTime: UIDatePicker!
     @IBOutlet weak var datePickerOutTime: UIDatePicker!
+    @IBOutlet weak var deleteButton: UIBarButtonItem!
     
     @IBOutlet weak var dateLabel: UILabel!
     var data : Int!
@@ -52,6 +54,10 @@ class EditViewController: UIViewController {
         datePickerInTime.date = date!
         datePickerOutTime.date = dateOut!
         
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver("Update")
     }
     
     var inHour : Int = 0
@@ -177,5 +183,29 @@ class EditViewController: UIViewController {
         let notificationName = NSNotification.Name("Update")
         NotificationCenter.default.post(name: notificationName, object: nil)
     }
+    
+    @IBAction func deleteButtonTapped(_ sender: Any) {
+        
+        //let defaults = UserDefaults.standard
+        
+        let hourToDelete = self.hourItems[data]
+        
+        self.context.delete(hourToDelete)
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        //deleteButton.title = "\(hourToDelete)"
+        let alert = UIAlertController(title: nil, message: "Entry Deleted   ✓", preferredStyle: .alert)
+        alert.view.tintColor = UIColor.black
+        self.present(alert, animated: true, completion: nil)
+        let notificationName = NSNotification.Name("Update")
+        NotificationCenter.default.post(name: notificationName, object: nil)
+        let when = DispatchTime.now() + 1
+        DispatchQueue.main.asyncAfter(deadline: when) {
+            alert.dismiss(animated: true, completion: {
+                self.dismiss(animated: true, completion: nil)
+            })
+        }
+        
+    }
+    
 }
 

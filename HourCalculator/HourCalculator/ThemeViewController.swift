@@ -19,6 +19,7 @@ class ThemeViewController: UIViewController {
         let storedThemeValue = UserDefaults.standard.integer(forKey: "theme")
         
         segmentedControl.selectedSegmentIndex = storedThemeValue
+        
     }
     
     @IBAction func themeSelectionValueChanged(_ sender: UISegmentedControl) {
