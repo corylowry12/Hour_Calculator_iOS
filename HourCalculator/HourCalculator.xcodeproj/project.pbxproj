@@ -179,25 +179,15 @@
 		32629DF526825FD7006632F2 /* HourCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				32830189268BAE330042AAE7 /* Storyboards */,
+				32830188268BAE050042AAE7 /* View Controllers */,
 				3255684F26897A1700CC7ACD /* HourCalculator.entitlements */,
 				32723E7B2683C16C0028BB44 /* GoogleService-Info.plist */,
 				32629DF626825FD7006632F2 /* AppDelegate.swift */,
 				32629DF826825FD7006632F2 /* SceneDelegate.swift */,
-				32629DFA26825FD7006632F2 /* ViewController.swift */,
-				32629DFC26825FD7006632F2 /* Main.storyboard */,
-				32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */,
 				32629DFF26825FD9006632F2 /* Assets.xcassets */,
-				32629E0126825FD9006632F2 /* LaunchScreen.storyboard */,
 				32629E0426825FD9006632F2 /* Info.plist */,
-				325A41C72685634100B098C9 /* HistoryViewController.swift */,
 				325A41C926856ABF00B098C9 /* StoredHours.xcdatamodeld */,
-				323DD8F12685984D00332BA3 /* TableViewCell.swift */,
-				3272542D26867DA0000C6236 /* InfoViewController.swift */,
-				3272542F2686A421000C6236 /* EditViewController.swift */,
-				328498452687BE280092D22F /* SettingsTableViewCell.swift */,
-				328498472687D3F30092D22F /* ThemeViewController.swift */,
-				3284984B2687FE380092D22F /* PatchNotesViewController.swift */,
-				325568502689C13F00CC7ACD /* TabBarController.swift */,
 			);
 			path = HourCalculator;
 			sourceTree = "<group>";
@@ -218,6 +208,32 @@
 				32629E1A26825FD9006632F2 /* Info.plist */,
 			);
 			path = HourCalculatorUITests;
+			sourceTree = "<group>";
+		};
+		32830188268BAE050042AAE7 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				32629DFA26825FD7006632F2 /* ViewController.swift */,
+				32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */,
+				325A41C72685634100B098C9 /* HistoryViewController.swift */,
+				323DD8F12685984D00332BA3 /* TableViewCell.swift */,
+				3272542D26867DA0000C6236 /* InfoViewController.swift */,
+				3272542F2686A421000C6236 /* EditViewController.swift */,
+				328498452687BE280092D22F /* SettingsTableViewCell.swift */,
+				328498472687D3F30092D22F /* ThemeViewController.swift */,
+				3284984B2687FE380092D22F /* PatchNotesViewController.swift */,
+				325568502689C13F00CC7ACD /* TabBarController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		32830189268BAE330042AAE7 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				32629DFC26825FD7006632F2 /* Main.storyboard */,
+				32629E0126825FD9006632F2 /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 		62D1BDB0B95E786AD2D0ADC3 /* Frameworks */ = {
