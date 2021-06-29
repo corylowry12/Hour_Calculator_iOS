@@ -42,6 +42,7 @@ class InfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         
     }
     
@@ -50,7 +51,7 @@ class InfoViewController: UIViewController {
         super.viewWillAppear(true)
         
         
-        if hourItems.count > 750 {
+        if hourItems.count >= 5 {
             DispatchQueue.main.async {
                 self.amountOfHoursStoredLabel.text = "Number of hours stored: \( UserDefaults.standard.string(forKey: "hourNum") ?? "")"
                 
@@ -85,25 +86,32 @@ class InfoViewController: UIViewController {
         let count = hourItems.count - 1
         
         total = 0.0
-        
-        if hourItems.count > 0 {
-            for n in 0...count {
-                total += Double(hourItems[n].totalHours!)!
-                rounded = round(total * 100) / 100.00
-                self.totalHoursStoredLabel.text = "Total Hours: \(rounded)"
+        do {
+            if hourItems.count > 0 {
+                for n in 0...count {
+                    total += Double(hourItems[n].totalHours!)!
+                    rounded = round(total * 100) / 100.00
+                    self.totalHoursStoredLabel.text = "Total Hours: \(rounded)"
+                }
+            }
+            else {
+                self.totalHoursStoredLabel.text = "Total Hours: 0"
+            }
+            if hourItems.count >= 5 {
+                
+                let defaults = UserDefaults.standard
+                defaults.set("\(hourItems.count)", forKey: "hourNum")
+                let defaults2 = UserDefaults.standard
+                defaults2.set("\(rounded)", forKey: "TotalHours")
+                self.dismiss(animated: true, completion: nil)
             }
         }
-        else {
-            self.totalHoursStoredLabel.text = "Total Hours: 0"
-        }
-        if hourItems.count > 750 {
-            
-            let defaults = UserDefaults.standard
-            defaults.set("\(hourItems.count)", forKey: "hourNum")
-            let defaults2 = UserDefaults.standard
-            defaults2.set("\(rounded)", forKey: "TotalHours")
+        catch {
+            let alert = UIAlertController(title: "There was an error", message: "Please try again or try deleting hours", preferredStyle: .alert)
+            alert.view.tintColor = UIColor.black
+            alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
             self.dismiss(animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
         }
     }
-    
 }

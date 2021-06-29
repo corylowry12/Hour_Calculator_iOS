@@ -42,6 +42,10 @@ class ViewController: UIViewController {
          }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        dateLabel.text = ""
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{
             userDefaults.set(false, forKey: "StoredEmptyHours")
@@ -73,7 +77,18 @@ class ViewController: UIViewController {
         bannerView.rootViewController = self
         bannerView.load(GADRequest())
         
-
+       let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        
+        if userDefaults.value(forKey: "appVersion") == nil || userDefaults.value(forKey: "appVersion") as? String != appVersion {
+            tabBarController?.tabBar.items?[2].badgeValue = String("1")
+        }
+        
+        if userDefaults.value(forKey: "intime") != nil {
+        datePicker.date = userDefaults.value(forKey: "intime") as! Date
+        }
+        if userDefaults.value(forKey: "outtime") != nil {
+            datePickerOutTime.date = userDefaults.value(forKey: "outtime") as! Date
+        }
         
         var hoursItems: [Hours] {
             
@@ -98,6 +113,7 @@ class ViewController: UIViewController {
     var inMinute : Int = 0
     
     @IBAction func inTimeValueChanged(_ sender: Any) {
+        userDefaults.set(datePicker.date, forKey: "intime")
         let date = datePicker.date
         let components = Calendar.current.dateComponents([.hour, .minute], from: date)
         
@@ -112,13 +128,23 @@ class ViewController: UIViewController {
     
     
     @IBAction func outTimeValueChanged(_ sender: Any) {
+        userDefaults.set(datePickerOutTime.date, forKey: "outtime")
         let outDate = datePickerOutTime.date
         let componentsOut = Calendar.current.dateComponents([.hour, .minute], from: outDate)
         outHour = componentsOut.hour!
         outMinute = componentsOut.minute!
     }
     
-    @IBAction func calculateButtonDidTouch(_ sender: Any) {
+    @IBAction func calculateButtonDidTouch(_ sender: UIButton) {
+        UIButton.animate(withDuration: 0.05,
+        animations: {
+        sender.transform = CGAffineTransform(scaleX: 0.975, y: 0.96)
+        },
+        completion: { finish in
+        UIButton.animate(withDuration: 0.05, animations: {
+        sender.transform = CGAffineTransform.identity
+        })
+        })
         
         let date = datePicker.date
         let components = Calendar.current.dateComponents([.hour, .minute], from: date)
@@ -136,9 +162,9 @@ class ViewController: UIViewController {
         let hoursDifference = outHour - inHour
         
         if hoursDifference < 0 {
-            dateLabel.text = "In time can not be greater than out time"
-        }
-        else if minutesDifference < 0 {
+           dateLabel.text = "In time can not be greater than out time"
+       }
+        if minutesDifference < 0 {
             let minutesDecimal : Double = Double(minutesDifference) / 60.00
             let minutesRounded = round(minutesDecimal * 100) / 100.00
             let minutesFormatted = String(minutesRounded).dropFirst(3)
@@ -150,7 +176,11 @@ class ViewController: UIViewController {
                 dateLabel.text = "In time can not be greater than out time"
             }
             else {
+                
                 dateLabel.text = "Total Hours: \(hours).\(minutes)"
+                //if ((dateLabel.text?.contains("-")) != nil) {
+                    //dateLabel.text!.replacingOccurrences(of: "-", with: "")
+               // }
                 
                 let total = "\(hours).\(minutes)"
                 

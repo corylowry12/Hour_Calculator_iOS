@@ -1,0 +1,6 @@
+framework module Pods_HourCalculatorTests {
+  umbrella header "Pods-HourCalculatorTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

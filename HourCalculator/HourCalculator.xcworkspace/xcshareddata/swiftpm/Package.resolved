@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/google/GoogleUtilities.git",
         "state": {
           "branch": null,
-          "revision": "5b9fc55628b94740b9666a558570f3a89a626c3d",
-          "version": "7.4.2"
+          "revision": "94f9ab80d39da19dd3a2492d5451e909333f0269",
+          "version": "7.4.3"
         }
       },
       {
@@ -98,6 +98,15 @@
           "branch": null,
           "revision": "afa9a1ace74e116848d4f743599ab83e584ff8cb",
           "version": "1.2.12"
+        }
+      },
+      {
+        "package": "Siren",
+        "repositoryURL": "https://github.com/ArtSabintsev/Siren.git",
+        "state": {
+          "branch": null,
+          "revision": "9173fc529731705a737658b2801ccbc19dd385c8",
+          "version": "5.8.1"
         }
       },
       {

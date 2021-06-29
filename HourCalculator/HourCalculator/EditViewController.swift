@@ -204,8 +204,6 @@ class EditViewController: UIViewController {
                 self.dismiss(animated: true, completion: nil)
             })
         }
-        
     }
-    
 }
 

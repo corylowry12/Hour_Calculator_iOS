@@ -16,5 +16,10 @@ class PatchNotesViewController: UITableViewController {
         tableView.delegate = self
         
         tableView.tableFooterView = UIView()
+        
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(appVersion, forKey: "appVersion")
+        tabBarController?.tabBar.items?[2].badgeValue = nil
     }
 }

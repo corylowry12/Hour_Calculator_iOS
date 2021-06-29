@@ -9,25 +9,14 @@
 /* Begin PBXBuildFile section */
 		323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323DD8F12685984D00332BA3 /* TableViewCell.swift */; };
 		323FC4EE26842FF100A20EA2 /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4ED26842FF100A20EA2 /* FirebaseAppDistribution-Beta */; };
-		323FC4F026842FF100A20EA2 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4EF26842FF100A20EA2 /* FirebaseInAppMessaging-Beta */; };
 		323FC4F226842FF100A20EA2 /* FirebaseAnalyticsSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4F126842FF100A20EA2 /* FirebaseAnalyticsSwift-Beta */; };
 		323FC4F426842FF100A20EA2 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4F326842FF100A20EA2 /* FirebaseAnalyticsWithoutAdIdSupport */; };
-		323FC4F626842FF100A20EA2 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4F526842FF100A20EA2 /* FirebaseFirestore */; };
 		323FC4F826842FF100A20EA2 /* FirebaseInstallations in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4F726842FF100A20EA2 /* FirebaseInstallations */; };
-		323FC4FA26842FF100A20EA2 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4F926842FF100A20EA2 /* FirebaseDatabase */; };
-		323FC4FC26842FF100A20EA2 /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4FB26842FF100A20EA2 /* FirebaseFirestoreSwift-Beta */; };
 		323FC4FE26842FF100A20EA2 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4FD26842FF100A20EA2 /* FirebaseAnalytics */; };
 		323FC50026842FF100A20EA2 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC4FF26842FF100A20EA2 /* FirebaseRemoteConfig */; };
 		323FC50226842FF100A20EA2 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC50126842FF100A20EA2 /* FirebaseAppCheck */; };
-		323FC50426842FF100A20EA2 /* FirebaseStorageSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC50326842FF100A20EA2 /* FirebaseStorageSwift-Beta */; };
 		323FC50626842FF100A20EA2 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC50526842FF100A20EA2 /* FirebaseAuth */; };
-		323FC50826842FF100A20EA2 /* FirebaseInAppMessagingSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC50726842FF100A20EA2 /* FirebaseInAppMessagingSwift-Beta */; };
-		323FC50A26842FF100A20EA2 /* FirebaseDatabaseSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC50926842FF100A20EA2 /* FirebaseDatabaseSwift-Beta */; };
-		323FC50C26842FF100A20EA2 /* FirebaseMLModelDownloader in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC50B26842FF100A20EA2 /* FirebaseMLModelDownloader */; };
-		323FC50E26842FF100A20EA2 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC50D26842FF100A20EA2 /* FirebaseMessaging */; };
 		323FC51026842FF100A20EA2 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC50F26842FF100A20EA2 /* FirebaseCrashlytics */; };
-		323FC51226842FF100A20EA2 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC51126842FF100A20EA2 /* FirebaseStorage */; };
-		323FC51426842FF100A20EA2 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC51326842FF100A20EA2 /* FirebaseDynamicLinks */; };
 		323FC51626842FF100A20EA2 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 323FC51526842FF100A20EA2 /* FirebaseFunctions */; };
 		323FC5192684303200A20EA2 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 320414F82683AE750089EE85 /* GoogleMobileAds.xcframework */; };
 		323FC51B2684303200A20EA2 /* GoogleUtilities.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 320414FB2683AE810089EE85 /* GoogleUtilities.xcframework */; };
@@ -35,7 +24,7 @@
 		323FC51F2684303200A20EA2 /* PromisesObjC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 320415012683AE980089EE85 /* PromisesObjC.xcframework */; };
 		323FC5212684303300A20EA2 /* UserMessagingPlatform.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 320415042683AEA50089EE85 /* UserMessagingPlatform.xcframework */; };
 		323FC525268431FD00A20EA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 32723E7B2683C16C0028BB44 /* GoogleService-Info.plist */; };
-		325A41C626855B6A00B098C9 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C526855B6A00B098C9 /* SettingsViewController.swift */; };
+		325568512689C13F00CC7ACD /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325568502689C13F00CC7ACD /* TabBarController.swift */; };
 		325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C72685634100B098C9 /* HistoryViewController.swift */; };
 		325A41CB26856ABF00B098C9 /* StoredHours.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C926856ABF00B098C9 /* StoredHours.xcdatamodeld */; };
 		32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DF626825FD7006632F2 /* AppDelegate.swift */; };
@@ -50,9 +39,14 @@
 		32723E7E2683C16C0028BB44 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 32723E7B2683C16C0028BB44 /* GoogleService-Info.plist */; };
 		3272542E26867DA0000C6236 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542D26867DA0000C6236 /* InfoViewController.swift */; };
 		327254302686A421000C6236 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542F2686A421000C6236 /* EditViewController.swift */; };
+		32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */; };
 		328498462687BE280092D22F /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498452687BE280092D22F /* SettingsTableViewCell.swift */; };
 		328498482687D3F30092D22F /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498472687D3F30092D22F /* ThemeViewController.swift */; };
 		3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3284984B2687FE380092D22F /* PatchNotesViewController.swift */; };
+		32F52A85268AD02E00BD9E2F /* Siren in Frameworks */ = {isa = PBXBuildFile; productRef = 32F52A84268AD02E00BD9E2F /* Siren */; };
+		8EBFF1BECC367AF00B69B1B7 /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7E439F5BEC8084EDAA07AE7 /* Pods_HourCalculator_HourCalculatorUITests.framework */; };
+		CA7ACF3A92246E7174EA765A /* Pods_HourCalculator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78117CE8367C288DD1FB8D9E /* Pods_HourCalculator.framework */; };
+		F1B687497A45B0096F66D4D2 /* Pods_HourCalculatorTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAF998FAC7B6F8E9136640 /* Pods_HourCalculatorTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +67,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		007C9DA652A7BA321ED99152 /* Pods-HourCalculator-HourCalculatorUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator-HourCalculatorUITests.release.xcconfig"; path = "Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests.release.xcconfig"; sourceTree = "<group>"; };
+		07071AF7D665A8B2321A7983 /* Pods-HourCalculator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator.release.xcconfig"; path = "Target Support Files/Pods-HourCalculator/Pods-HourCalculator.release.xcconfig"; sourceTree = "<group>"; };
+		1FBAF998FAC7B6F8E9136640 /* Pods_HourCalculatorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculatorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		320414F42683AE670089EE85 /* GoogleAppMeasurement.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleAppMeasurement.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/GoogleAppMeasurement.xcframework"; sourceTree = "<group>"; };
 		320414F82683AE750089EE85 /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
 		320414FB2683AE810089EE85 /* GoogleUtilities.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleUtilities.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/GoogleUtilities.xcframework"; sourceTree = "<group>"; };
@@ -81,7 +78,7 @@
 		320415042683AEA50089EE85 /* UserMessagingPlatform.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = UserMessagingPlatform.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.6.0/UserMessagingPlatform.xcframework"; sourceTree = "<group>"; };
 		323DD8F12685984D00332BA3 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		3255684F26897A1700CC7ACD /* HourCalculator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HourCalculator.entitlements; sourceTree = "<group>"; };
-		325A41C526855B6A00B098C9 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		325568502689C13F00CC7ACD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		325A41C72685634100B098C9 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		325A41CA26856ABF00B098C9 /* StoredHours.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StoredHours.xcdatamodel; sourceTree = "<group>"; };
 		32629DF326825FD7006632F2 /* HourCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HourCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,9 +98,16 @@
 		32723E7B2683C16C0028BB44 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3272542D26867DA0000C6236 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		3272542F2686A421000C6236 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		328498452687BE280092D22F /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		328498472687D3F30092D22F /* ThemeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
 		3284984B2687FE380092D22F /* PatchNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchNotesViewController.swift; sourceTree = "<group>"; };
+		3A4CD3E2571A5A1B832169C0 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		6ACE95D94FCA8F4454E6F3F8 /* Pods-HourCalculatorTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculatorTests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculatorTests/Pods-HourCalculatorTests.debug.xcconfig"; sourceTree = "<group>"; };
+		78117CE8367C288DD1FB8D9E /* Pods_HourCalculator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7E439F5BEC8084EDAA07AE7 /* Pods_HourCalculator_HourCalculatorUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator_HourCalculatorUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E257965B77F2B2FE0708C0AC /* Pods-HourCalculatorTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculatorTests.release.xcconfig"; path = "Target Support Files/Pods-HourCalculatorTests/Pods-HourCalculatorTests.release.xcconfig"; sourceTree = "<group>"; };
+		EC40FA8D36E6B294FE68967E /* Pods-HourCalculator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculator/Pods-HourCalculator.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,23 +115,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				323FC50A26842FF100A20EA2 /* FirebaseDatabaseSwift-Beta in Frameworks */,
 				323FC4F226842FF100A20EA2 /* FirebaseAnalyticsSwift-Beta in Frameworks */,
 				323FC4EE26842FF100A20EA2 /* FirebaseAppDistribution-Beta in Frameworks */,
 				323FC51D2684303200A20EA2 /* nanopb.xcframework in Frameworks */,
-				323FC50C26842FF100A20EA2 /* FirebaseMLModelDownloader in Frameworks */,
-				323FC50826842FF100A20EA2 /* FirebaseInAppMessagingSwift-Beta in Frameworks */,
-				323FC4F026842FF100A20EA2 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				323FC5212684303300A20EA2 /* UserMessagingPlatform.xcframework in Frameworks */,
 				323FC4F826842FF100A20EA2 /* FirebaseInstallations in Frameworks */,
-				323FC4F626842FF100A20EA2 /* FirebaseFirestore in Frameworks */,
-				323FC50426842FF100A20EA2 /* FirebaseStorageSwift-Beta in Frameworks */,
-				323FC51226842FF100A20EA2 /* FirebaseStorage in Frameworks */,
+				32F52A85268AD02E00BD9E2F /* Siren in Frameworks */,
 				323FC51B2684303200A20EA2 /* GoogleUtilities.xcframework in Frameworks */,
-				323FC50E26842FF100A20EA2 /* FirebaseMessaging in Frameworks */,
 				323FC5192684303200A20EA2 /* GoogleMobileAds.xcframework in Frameworks */,
-				323FC4FC26842FF100A20EA2 /* FirebaseFirestoreSwift-Beta in Frameworks */,
-				323FC4FA26842FF100A20EA2 /* FirebaseDatabase in Frameworks */,
 				323FC4F426842FF100A20EA2 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				323FC4FE26842FF100A20EA2 /* FirebaseAnalytics in Frameworks */,
 				323FC51626842FF100A20EA2 /* FirebaseFunctions in Frameworks */,
@@ -136,7 +131,7 @@
 				323FC50026842FF100A20EA2 /* FirebaseRemoteConfig in Frameworks */,
 				323FC51F2684303200A20EA2 /* PromisesObjC.xcframework in Frameworks */,
 				323FC50226842FF100A20EA2 /* FirebaseAppCheck in Frameworks */,
-				323FC51426842FF100A20EA2 /* FirebaseDynamicLinks in Frameworks */,
+				CA7ACF3A92246E7174EA765A /* Pods_HourCalculator.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1B687497A45B0096F66D4D2 /* Pods_HourCalculatorTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EBFF1BECC367AF00B69B1B7 /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,10 +185,10 @@
 				32629DF826825FD7006632F2 /* SceneDelegate.swift */,
 				32629DFA26825FD7006632F2 /* ViewController.swift */,
 				32629DFC26825FD7006632F2 /* Main.storyboard */,
+				32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */,
 				32629DFF26825FD9006632F2 /* Assets.xcassets */,
 				32629E0126825FD9006632F2 /* LaunchScreen.storyboard */,
 				32629E0426825FD9006632F2 /* Info.plist */,
-				325A41C526855B6A00B098C9 /* SettingsViewController.swift */,
 				325A41C72685634100B098C9 /* HistoryViewController.swift */,
 				325A41C926856ABF00B098C9 /* StoredHours.xcdatamodeld */,
 				323DD8F12685984D00332BA3 /* TableViewCell.swift */,
@@ -200,6 +197,7 @@
 				328498452687BE280092D22F /* SettingsTableViewCell.swift */,
 				328498472687D3F30092D22F /* ThemeViewController.swift */,
 				3284984B2687FE380092D22F /* PatchNotesViewController.swift */,
+				325568502689C13F00CC7ACD /* TabBarController.swift */,
 			);
 			path = HourCalculator;
 			sourceTree = "<group>";
@@ -231,6 +229,9 @@
 				320414FB2683AE810089EE85 /* GoogleUtilities.xcframework */,
 				320414F82683AE750089EE85 /* GoogleMobileAds.xcframework */,
 				320414F42683AE670089EE85 /* GoogleAppMeasurement.xcframework */,
+				78117CE8367C288DD1FB8D9E /* Pods_HourCalculator.framework */,
+				C7E439F5BEC8084EDAA07AE7 /* Pods_HourCalculator_HourCalculatorUITests.framework */,
+				1FBAF998FAC7B6F8E9136640 /* Pods_HourCalculatorTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -238,6 +239,12 @@
 		C57BCD1BFE3520B69AA98BE7 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				EC40FA8D36E6B294FE68967E /* Pods-HourCalculator.debug.xcconfig */,
+				07071AF7D665A8B2321A7983 /* Pods-HourCalculator.release.xcconfig */,
+				3A4CD3E2571A5A1B832169C0 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */,
+				007C9DA652A7BA321ED99152 /* Pods-HourCalculator-HourCalculatorUITests.release.xcconfig */,
+				6ACE95D94FCA8F4454E6F3F8 /* Pods-HourCalculatorTests.debug.xcconfig */,
+				E257965B77F2B2FE0708C0AC /* Pods-HourCalculatorTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -249,10 +256,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 32629E1D26825FD9006632F2 /* Build configuration list for PBXNativeTarget "HourCalculator" */;
 			buildPhases = (
+				E51E0391FF58414B0A2EDD5A /* [CP] Check Pods Manifest.lock */,
 				32629DEF26825FD7006632F2 /* Sources */,
 				32629DF026825FD7006632F2 /* Frameworks */,
 				32629DF126825FD7006632F2 /* Resources */,
 				323FC524268430B900A20EA2 /* ShellScript */,
+				4B5CB860ECC769ED5CC01A21 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -261,26 +270,16 @@
 			name = HourCalculator;
 			packageProductDependencies = (
 				323FC4ED26842FF100A20EA2 /* FirebaseAppDistribution-Beta */,
-				323FC4EF26842FF100A20EA2 /* FirebaseInAppMessaging-Beta */,
 				323FC4F126842FF100A20EA2 /* FirebaseAnalyticsSwift-Beta */,
 				323FC4F326842FF100A20EA2 /* FirebaseAnalyticsWithoutAdIdSupport */,
-				323FC4F526842FF100A20EA2 /* FirebaseFirestore */,
 				323FC4F726842FF100A20EA2 /* FirebaseInstallations */,
-				323FC4F926842FF100A20EA2 /* FirebaseDatabase */,
-				323FC4FB26842FF100A20EA2 /* FirebaseFirestoreSwift-Beta */,
 				323FC4FD26842FF100A20EA2 /* FirebaseAnalytics */,
 				323FC4FF26842FF100A20EA2 /* FirebaseRemoteConfig */,
 				323FC50126842FF100A20EA2 /* FirebaseAppCheck */,
-				323FC50326842FF100A20EA2 /* FirebaseStorageSwift-Beta */,
 				323FC50526842FF100A20EA2 /* FirebaseAuth */,
-				323FC50726842FF100A20EA2 /* FirebaseInAppMessagingSwift-Beta */,
-				323FC50926842FF100A20EA2 /* FirebaseDatabaseSwift-Beta */,
-				323FC50B26842FF100A20EA2 /* FirebaseMLModelDownloader */,
-				323FC50D26842FF100A20EA2 /* FirebaseMessaging */,
 				323FC50F26842FF100A20EA2 /* FirebaseCrashlytics */,
-				323FC51126842FF100A20EA2 /* FirebaseStorage */,
-				323FC51326842FF100A20EA2 /* FirebaseDynamicLinks */,
 				323FC51526842FF100A20EA2 /* FirebaseFunctions */,
+				32F52A84268AD02E00BD9E2F /* Siren */,
 			);
 			productName = HourCalculator;
 			productReference = 32629DF326825FD7006632F2 /* HourCalculator.app */;
@@ -290,6 +289,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 32629E2026825FD9006632F2 /* Build configuration list for PBXNativeTarget "HourCalculatorTests" */;
 			buildPhases = (
+				74A5EE8BED1E1F1C9890AC74 /* [CP] Check Pods Manifest.lock */,
 				32629E0526825FD9006632F2 /* Sources */,
 				32629E0626825FD9006632F2 /* Frameworks */,
 				32629E0726825FD9006632F2 /* Resources */,
@@ -308,9 +308,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 32629E2326825FD9006632F2 /* Build configuration list for PBXNativeTarget "HourCalculatorUITests" */;
 			buildPhases = (
+				40CDC3CEB14567FD6537D630 /* [CP] Check Pods Manifest.lock */,
 				32629E1026825FD9006632F2 /* Sources */,
 				32629E1126825FD9006632F2 /* Frameworks */,
 				32629E1226825FD9006632F2 /* Resources */,
+				0FB7949AAC34FFB814927926 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -355,6 +357,7 @@
 			mainGroup = 32629DEA26825FD7006632F2;
 			packageReferences = (
 				323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				32F52A83268AD02E00BD9E2F /* XCRemoteSwiftPackageReference "Siren" */,
 			);
 			productRefGroup = 32629DF426825FD7006632F2 /* Products */;
 			projectDirPath = "";
@@ -398,6 +401,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0FB7949AAC34FFB814927926 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		323FC524268430B900A20EA2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -415,6 +435,89 @@
 			shellPath = /bin/sh;
 			shellScript = "${BUILD_DIR%Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\n";
 		};
+		40CDC3CEB14567FD6537D630 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HourCalculator-HourCalculatorUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4B5CB860ECC769ED5CC01A21 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		74A5EE8BED1E1F1C9890AC74 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HourCalculatorTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E51E0391FF58414B0A2EDD5A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HourCalculator-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -423,6 +526,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				325A41CB26856ABF00B098C9 /* StoredHours.xcdatamodeld in Sources */,
+				32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */,
+				325568512689C13F00CC7ACD /* TabBarController.swift in Sources */,
 				32629DFB26825FD7006632F2 /* ViewController.swift in Sources */,
 				32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */,
 				32629DF926825FD7006632F2 /* SceneDelegate.swift in Sources */,
@@ -430,7 +535,6 @@
 				323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */,
 				328498482687D3F30092D22F /* ThemeViewController.swift in Sources */,
 				3272542E26867DA0000C6236 /* InfoViewController.swift in Sources */,
-				325A41C626855B6A00B098C9 /* SettingsViewController.swift in Sources */,
 				3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */,
 				328498462687BE280092D22F /* SettingsTableViewCell.swift in Sources */,
 				327254302686A421000C6236 /* EditViewController.swift in Sources */,
@@ -607,13 +711,14 @@
 		};
 		32629E1E26825FD9006632F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EC40FA8D36E6B294FE68967E /* Pods-HourCalculator.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -621,7 +726,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.5;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -633,13 +738,14 @@
 		};
 		32629E1F26825FD9006632F2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 07071AF7D665A8B2321A7983 /* Pods-HourCalculator.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -647,7 +753,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.5;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -659,6 +765,7 @@
 		};
 		32629E2126825FD9006632F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6ACE95D94FCA8F4454E6F3F8 /* Pods-HourCalculatorTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -681,6 +788,7 @@
 		};
 		32629E2226825FD9006632F2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E257965B77F2B2FE0708C0AC /* Pods-HourCalculatorTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -703,6 +811,7 @@
 		};
 		32629E2426825FD9006632F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3A4CD3E2571A5A1B832169C0 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -723,6 +832,7 @@
 		};
 		32629E2526825FD9006632F2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 007C9DA652A7BA321ED99152 /* Pods-HourCalculator-HourCalculatorUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -791,6 +901,14 @@
 				minimumVersion = 8.2.0;
 			};
 		};
+		32F52A83268AD02E00BD9E2F /* XCRemoteSwiftPackageReference "Siren" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ArtSabintsev/Siren.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.8.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -798,11 +916,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseAppDistribution-Beta";
-		};
-		323FC4EF26842FF100A20EA2 /* FirebaseInAppMessaging-Beta */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseInAppMessaging-Beta";
 		};
 		323FC4F126842FF100A20EA2 /* FirebaseAnalyticsSwift-Beta */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -814,25 +927,10 @@
 			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalyticsWithoutAdIdSupport;
 		};
-		323FC4F526842FF100A20EA2 /* FirebaseFirestore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestore;
-		};
 		323FC4F726842FF100A20EA2 /* FirebaseInstallations */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseInstallations;
-		};
-		323FC4F926842FF100A20EA2 /* FirebaseDatabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDatabase;
-		};
-		323FC4FB26842FF100A20EA2 /* FirebaseFirestoreSwift-Beta */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseFirestoreSwift-Beta";
 		};
 		323FC4FD26842FF100A20EA2 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -849,55 +947,25 @@
 			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAppCheck;
 		};
-		323FC50326842FF100A20EA2 /* FirebaseStorageSwift-Beta */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseStorageSwift-Beta";
-		};
 		323FC50526842FF100A20EA2 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
-		};
-		323FC50726842FF100A20EA2 /* FirebaseInAppMessagingSwift-Beta */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseInAppMessagingSwift-Beta";
-		};
-		323FC50926842FF100A20EA2 /* FirebaseDatabaseSwift-Beta */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseDatabaseSwift-Beta";
-		};
-		323FC50B26842FF100A20EA2 /* FirebaseMLModelDownloader */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseMLModelDownloader;
-		};
-		323FC50D26842FF100A20EA2 /* FirebaseMessaging */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseMessaging;
 		};
 		323FC50F26842FF100A20EA2 /* FirebaseCrashlytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
 		};
-		323FC51126842FF100A20EA2 /* FirebaseStorage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseStorage;
-		};
-		323FC51326842FF100A20EA2 /* FirebaseDynamicLinks */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDynamicLinks;
-		};
 		323FC51526842FF100A20EA2 /* FirebaseFunctions */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 323FC4EC26842FF100A20EA2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFunctions;
+		};
+		32F52A84268AD02E00BD9E2F /* Siren */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 32F52A83268AD02E00BD9E2F /* XCRemoteSwiftPackageReference "Siren" */;
+			productName = Siren;
 		};
 /* End XCSwiftPackageProductDependency section */
 

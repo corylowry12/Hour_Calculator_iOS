@@ -16,6 +16,8 @@ class SettingsTableViewCell: UITableViewCell {
         let userDefaults = UserDefaults.standard
         userDefaults.set(sender.isOn, forKey: "StoredEmptyHours")
         
+        
+        
         //let storedValue = userDefaults.bool(forKey: "StoredEmptyHours")
         
         print(userDefaults.bool(forKey: "StoredEmptyHours"))
@@ -24,6 +26,8 @@ class SettingsTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -35,5 +39,4 @@ class SettingsTableViewCell: UITableViewCell {
         
         // Configure the view for the selected state
     }
-    
 }

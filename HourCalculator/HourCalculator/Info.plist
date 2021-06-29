@@ -66,5 +66,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>firebase_performance_collection_enabled</key>
+	<true/>
 </dict>
 </plist>
