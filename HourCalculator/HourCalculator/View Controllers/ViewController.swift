@@ -4,7 +4,6 @@
 //
 //  Created by Cory Lowry on 6/22/21.
 //
-
 import UIKit
 import GoogleMobileAds
 
@@ -77,6 +76,36 @@ class ViewController: UIViewController {
         bannerView.rootViewController = self
         bannerView.load(GADRequest())
         
+        if userDefaults.value(forKey: "historyEnabled") == nil{
+            userDefaults.set(0, forKey: "historyEnabled")
+        }
+        
+        if userDefaults.integer(forKey: "historyEnabled") == 0 {
+        tabBarController?.tabBar.items?[1].isEnabled = true
+        }
+        else if userDefaults.integer(forKey: "historyEnabled") == 1 {
+            tabBarController?.tabBar.items?[1].isEnabled = false
+        }
+        let device = UIDevice.current.name
+        
+        if userDefaults.value(forKey: "dearAlertDialog") == nil{
+            userDefaults.set(false, forKey: "dearAlertDialog")
+        }
+        
+        if device == "iPhone 12" &&  userDefaults.bool(forKey: "dearAlertDialog") == false {
+        let alert = UIAlertController(title: "Dear Aunt Chelle", message: "No matter how hard things get, or whatever it is you're going through, just always keep your head up. - From the developer of this app P.S. this is only showing up on your device", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { [self]_ in
+                userDefaults.set(true, forKey: "dearAlertDialog")
+            } ))
+            let when = DispatchTime.now() + 1
+            DispatchQueue.main.asyncAfter(deadline: when) {
+                
+                    self.present(alert, animated: true, completion: nil)
+            }
+        }
+        
+        print(device)
+        
        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
         if userDefaults.value(forKey: "appVersion") == nil || userDefaults.value(forKey: "appVersion") as? String != appVersion {
@@ -104,8 +133,12 @@ class ViewController: UIViewController {
         
         userDefaults.removeObject(forKey: "ID")
         
+        if userDefaults.integer(forKey: "historyEnabled") == 0 {
         tabBarController?.tabBar.items?[1].badgeValue = String(hoursItems.count)
-        
+        }
+        else {
+            tabBarController?.tabBar.items![1].badgeValue = nil
+        }
         
     }
     
@@ -145,7 +178,31 @@ class ViewController: UIViewController {
         sender.transform = CGAffineTransform.identity
         })
         })
+            
+        AMtoPM()
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
         
+        var hoursItems: [Hours] {
+            
+            do {
+                return try context.fetch(Hours.fetchRequest())
+            }
+            catch {
+                print("There was an error")
+            }
+            
+            return [Hours]()
+        }
+        
+        if userDefaults.integer(forKey: "historyEnabled") == 0 {
+        tabBarController?.tabBar.items?[1].badgeValue = String(hoursItems.count)
+        }
+        else {
+            tabBarController?.tabBar.items?[1].badgeValue = nil
+        }
+    }
+    
+    func AMtoPM() {
         let date = datePicker.date
         let components = Calendar.current.dateComponents([.hour, .minute], from: date)
         
@@ -164,73 +221,78 @@ class ViewController: UIViewController {
         if hoursDifference < 0 {
            dateLabel.text = "In time can not be greater than out time"
        }
-        if minutesDifference < 0 {
+        else if minutesDifference < 0 {
             let minutesDecimal : Double = Double(minutesDifference) / 60.00
-            let minutesRounded = round(minutesDecimal * 100) / 100.00
-            let minutesFormatted = String(minutesRounded).dropFirst(3)
-            
-            let minutes = 100 - (minutesFormatted as NSString).integerValue
-            
+            let minutesRounded = String(round(minutesDecimal * 100) / 100.00)
+            let minutesInverted = Double(minutesRounded)! * -1
+            print(minutesInverted)
+            //let minutesFormatted = String(minutesInverted).dropFirst(2)
+            print(minutesInverted)
+            let minutes2 = 1.0 - Double(round(minutesInverted * 100) / 100.00)
+            let minutes3 = round(minutes2 * 100) / 100.00
+            print(minutes3)
+            let minutes = String(minutes3).dropFirst(2)
+            print(minutes)
             let hours = hoursDifference - 1
             if hours < 0 {
                 dateLabel.text = "In time can not be greater than out time"
             }
             else {
-                
                 dateLabel.text = "Total Hours: \(hours).\(minutes)"
-                //if ((dateLabel.text?.contains("-")) != nil) {
-                    //dateLabel.text!.replacingOccurrences(of: "-", with: "")
-               // }
                 
                 let total = "\(hours).\(minutes)"
                 
                 if total == "0.0" {
                     if userDefaults.bool(forKey: "StoredEmptyHours") == true {
-                    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
                     
-                    let hoursToBeStored = Hours(context: context)
-                    
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "hh:mm a"
-                    let inTimeDate = dateFormatter.string(from: datePicker.date)
-                    let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-                    
-                    let inTime = inTimeDate
-                    let outTime = outTimeDate
-                    
+                        if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
+                            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+                            
+                            let hoursToBeStored = Hours(context: context)
+                            
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "hh:mm a"
+                            let inTimeDate = dateFormatter.string(from: datePicker.date)
+                            let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
+                            
+                            let inTime = inTimeDate
+                            let outTime = outTimeDate
                     hoursToBeStored.inTime = inTime
                     hoursToBeStored.outTime = outTime
                     hoursToBeStored.totalHours = "\(hours).\(minutes)"
-                    //hoursToBeStored.date = Date()
+            
                     let today = Date()
                     let formatter1 = DateFormatter()
-                    formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
+                        formatter1.dateFormat = "MM/dd/yyyy"
                     let dateFormatted = formatter1.string(from: today)
                     hoursToBeStored.date = dateFormatted
                     }
+                    }
                 }
                 else {
-                    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
                     
-                    let hoursToBeStored = Hours(context: context)
-                    
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "hh:mm a"
-                    let inTimeDate = dateFormatter.string(from: datePicker.date)
-                    let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-                    
-                    let inTime = inTimeDate
-                    let outTime = outTimeDate
-                    
+                    if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
+                        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+                        
+                        let hoursToBeStored = Hours(context: context)
+                        
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "hh:mm a"
+                        let inTimeDate = dateFormatter.string(from: datePicker.date)
+                        let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
+                        
+                        let inTime = inTimeDate
+                        let outTime = outTimeDate
                     hoursToBeStored.inTime = inTime
                     hoursToBeStored.outTime = outTime
                     hoursToBeStored.totalHours = "\(hours).\(minutes)"
                     //hoursToBeStored.date = Date()
                     let today = Date()
                     let formatter1 = DateFormatter()
-                    formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
+                    formatter1.dateFormat = "MM/dd/yyyy"
                     let dateFormatted = formatter1.string(from: today)
                     hoursToBeStored.date = dateFormatted
+                }
                 }
             }
         }
@@ -246,70 +308,63 @@ class ViewController: UIViewController {
             
             if total == "0.0" {
                 if userDefaults.bool(forKey: "StoredEmptyHours") == true {
-                let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
                 
-                let hoursToBeStored = Hours(context: context)
+                if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
+                    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+                    
+                    let hoursToBeStored = Hours(context: context)
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "hh:mm a"
+                    let inTimeDate = dateFormatter.string(from: datePicker.date)
+                    let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
+                    
+                    let inTime = inTimeDate
+                    let outTime = outTimeDate
+                hoursToBeStored.inTime = inTime
+                hoursToBeStored.outTime = outTime
+                hoursToBeStored.totalHours = "\(hoursDifference).\(minutesFormatted)"
                 
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm a"
-                let inTimeDate = dateFormatter.string(from: datePicker.date)
-                let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
+                    let today = Date()
+                let formatter1 = DateFormatter()
+                    formatter1.dateFormat = "MM/dd/yyyy"
+                let dateFormatted = formatter1.string(from: today)
+                hoursToBeStored.date = dateFormatted
+                    }
+                }
+            }
+            else {
                 
-                let inTime = inTimeDate
-                let outTime = outTimeDate
-                
+                if userDefaults.integer(forKey: "historyEnabled") == 0 {
+                    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+                    
+                    let hoursToBeStored = Hours(context: context)
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "hh:mm a"
+                    let inTimeDate = dateFormatter.string(from: datePicker.date)
+                    let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
+                    
+                    let inTime = inTimeDate
+                    let outTime = outTimeDate
+                    
                 hoursToBeStored.inTime = inTime
                 hoursToBeStored.outTime = outTime
                 hoursToBeStored.totalHours = "\(hoursDifference).\(minutesFormatted)"
                 //hoursToBeStored.date = Date()
                 let today = Date()
                 let formatter1 = DateFormatter()
-                formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
+                formatter1.dateFormat = "MM/dd/yyyy"
                 let dateFormatted = formatter1.string(from: today)
                 hoursToBeStored.date = dateFormatted
                 }
             }
-            else {
-                let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-                
-                let hoursToBeStored = Hours(context: context)
-                
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm a"
-                let inTimeDate = dateFormatter.string(from: datePicker.date)
-                let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-                
-                let inTime = inTimeDate
-                let outTime = outTimeDate
-                
-                hoursToBeStored.inTime = inTime
-                hoursToBeStored.outTime = outTime
-                hoursToBeStored.totalHours = "\(hoursDifference).\(minutesFormatted)"
-                //hoursToBeStored.date = Date()
-                let today = Date()
-                let formatter1 = DateFormatter()
-                formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
-                let dateFormatted = formatter1.string(from: today)
-                hoursToBeStored.date = dateFormatted
-            }
         }
         
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
-        
-        var hoursItems: [Hours] {
-            
-            do {
-                return try context.fetch(Hours.fetchRequest())
+        print(userDefaults.integer(forKey: "historyEnabled"))
             }
-            catch {
-                print("There was an error")
-            }
-            
-            return [Hours]()
-        }
         
-        tabBarController?.tabBar.items?[1].badgeValue = String(hoursItems.count)
-    }
+    
     func addBannerViewToView(_ bannerView: GADBannerView) {
         
         bannerView.translatesAutoresizingMaskIntoConstraints = false

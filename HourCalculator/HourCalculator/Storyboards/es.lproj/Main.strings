@@ -1,0 +1,183 @@
+
+/* Class = "UITableViewSection"; headerTitle = "History Sort"; ObjectID = "1Vt-aU-p2v"; */
+"1Vt-aU-p2v.headerTitle" = "History Sort";
+
+/* Class = "UIBarButtonItem"; title = "Info"; ObjectID = "2DY-ue-Ya1"; */
+"2DY-ue-Ya1.title" = "Info";
+
+/* Class = "UILabel"; text = "Data Ascending"; ObjectID = "3Ir-zr-dg9"; */
+"3Ir-zr-dg9.text" = "Data Ascending";
+
+/* Class = "UINavigationItem"; title = "History"; ObjectID = "4OT-GV-K7Q"; */
+"4OT-GV-K7Q.title" = "History";
+
+/* Class = "UILabel"; text = "Out Time"; ObjectID = "4nS-3C-1iY"; */
+"4nS-3C-1iY.text" = "Out Time";
+
+/* Class = "UITableViewSection"; headerTitle = "Toggle History"; ObjectID = "5ca-5n-Xc6"; */
+"5ca-5n-Xc6.headerTitle" = "Toggle History";
+
+/* Class = "UILabel"; text = "• Added dialog that will pop up when you hit dismiss in the edit view if you changed hours and did not click save"; ObjectID = "5oY-oo-ThQ"; */
+"5oY-oo-ThQ.text" = "• Added dialog that will pop up when you hit dismiss in the edit view if you changed hours and did not click save";
+
+/* Class = "UIBarButtonItem"; title = "Dismiss"; ObjectID = "5sK-B6-U13"; */
+"5sK-B6-U13.title" = "Dismiss";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "5wg-WX-ZCy"; */
+"5wg-WX-ZCy.normalTitle" = "Save";
+
+/* Class = "UITableViewSection"; headerTitle = "Storage"; ObjectID = "9sP-Dx-OSH"; */
+"9sP-Dx-OSH.headerTitle" = "Storage";
+
+/* Class = "UINavigationItem"; title = "Settings"; ObjectID = "Btz-Ic-SSN"; */
+"Btz-Ic-SSN.title" = "Settings";
+
+/* Class = "UILabel"; text = "• Added dialog that will pop up when you click the delete button in the edit view so you dont delete it by accident"; ObjectID = "ESH-xM-9sW"; */
+"ESH-xM-9sW.text" = "• Added dialog that will pop up when you click the delete button in the edit view so you dont delete it by accident";
+
+/* Class = "UILabel"; text = "Out Time"; ObjectID = "Gxm-wY-xn4"; */
+"Gxm-wY-xn4.text" = "Out Time";
+
+/* Class = "UILabel"; text = "Total Hours"; ObjectID = "Hww-2P-r01"; */
+"Hww-2P-r01.text" = "Total Hours";
+
+/* Class = "UILabel"; text = "History Settings"; ObjectID = "ITD-gj-VQM"; */
+"ITD-gj-VQM.text" = "History Settings";
+
+/* Class = "UILabel"; text = "Most Hours Descending"; ObjectID = "Iw3-oy-W7s"; */
+"Iw3-oy-W7s.text" = "Most Hours Descending";
+
+/* Class = "UILabel"; text = "In Time"; ObjectID = "KnQ-wm-tZX"; */
+"KnQ-wm-tZX.text" = "In Time";
+
+/* Class = "UILabel"; text = "• Fixed issue with it calculating wrong hours depending on what the in time and out time minutes were"; ObjectID = "KwW-ZO-Eip"; */
+"KwW-ZO-Eip.text" = "• Fixed issue with it calculating wrong hours depending on what the in time and out time minutes were";
+
+/* Class = "UINavigationItem"; title = "Patch Notes"; ObjectID = "Mgg-gJ-4eB"; */
+"Mgg-gJ-4eB.title" = "Patch Notes";
+
+/* Class = "UILabel"; text = "Patch Notes"; ObjectID = "Nh7-lR-PJv"; */
+"Nh7-lR-PJv.text" = "Patch Notes";
+
+/* Class = "UINavigationItem"; title = "Info"; ObjectID = "O2s-6f-2Ze"; */
+"O2s-6f-2Ze.title" = "Info";
+
+/* Class = "UITableViewSection"; headerTitle = "History"; ObjectID = "OJ0-Qm-uET"; */
+"OJ0-Qm-uET.headerTitle" = "History";
+
+/* Class = "UILabel"; text = "Number of hours stored:"; ObjectID = "Owx-cj-Fx6"; */
+"Owx-cj-Fx6.text" = "Number of hours stored:";
+
+/* Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "Pr4-1J-gro"; */
+"Pr4-1J-gro.title" = "Edit";
+
+/* Class = "UILabel"; text = "Version: 1.0.9"; ObjectID = "SIX-Tc-r60"; */
+"SIX-Tc-r60.text" = "Version: 1.0.9";
+
+/* Class = "UILabel"; text = "Most Hours Ascending"; ObjectID = "SOa-kg-GqM"; */
+"SOa-kg-GqM.text" = "Most Hours Ascending";
+
+/* Class = "UITabBarItem"; title = "Settings"; ObjectID = "SvU-4Y-zLI"; */
+"SvU-4Y-zLI.title" = "Settings";
+
+/* Class = "UITableViewSection"; headerTitle = "Updates"; ObjectID = "Uwp-oj-gXg"; */
+"Uwp-oj-gXg.headerTitle" = "Updates";
+
+/* Class = "UILabel"; text = "Date"; ObjectID = "VtM-kl-7uw"; */
+"VtM-kl-7uw.text" = "Date";
+
+/* Class = "UITabBarItem"; title = "History"; ObjectID = "WJ2-pO-sSJ"; */
+"WJ2-pO-sSJ.title" = "History";
+
+/* Class = "UITableViewSection"; headerTitle = "New Features"; ObjectID = "XRN-Ul-hos"; */
+"XRN-Ul-hos.headerTitle" = "New Features";
+
+/* Class = "UIButton"; normalTitle = "Calculate"; ObjectID = "Y7w-qb-R5b"; */
+"Y7w-qb-R5b.normalTitle" = "Calculate";
+
+/* Class = "UINavigationItem"; title = "Edit Hour"; ObjectID = "aDC-7Z-wJc"; */
+"aDC-7Z-wJc.title" = "Edit Hour";
+
+/* Class = "UIBarButtonItem"; title = "Delete"; ObjectID = "aZp-Y2-cbx"; */
+"aZp-Y2-cbx.title" = "Delete";
+
+/* Class = "UINavigationItem"; title = "Edit Hour"; ObjectID = "bDK-9t-JYl"; */
+"bDK-9t-JYl.title" = "Edit Hour";
+
+/* Class = "UILabel"; text = "• Fixed crashing if you went to edit hours and something was wrong with the previously stored date"; ObjectID = "cG2-OP-PQX"; */
+"cG2-OP-PQX.text" = "• Fixed crashing if you went to edit hours and something was wrong with the previously stored date";
+
+/* Class = "UILabel"; text = "Dark"; ObjectID = "cQ9-Ic-K9n"; */
+"cQ9-Ic-K9n.text" = "Dark";
+
+/* Class = "UILabel"; text = "Release: Beta"; ObjectID = "cdc-I9-RjJ"; */
+"cdc-I9-RjJ.text" = "Release: Beta";
+
+/* Class = "UILabel"; text = "• Fixed issue with date picker in edit hours view not being perfectly aligned"; ObjectID = "eTc-qQ-5d4"; */
+"eTc-qQ-5d4.text" = "• Fixed issue with date picker in edit hours view not being perfectly aligned";
+
+/* Class = "UIBarButtonItem"; title = "Dismiss"; ObjectID = "eaG-g8-qaZ"; */
+"eaG-g8-qaZ.title" = "Dismiss";
+
+/* Class = "UITableViewSection"; headerTitle = "Appearance"; ObjectID = "fBY-Bs-7R1"; */
+"fBY-Bs-7R1.headerTitle" = "Appearance";
+
+/* Class = "UILabel"; text = "Disable History"; ObjectID = "gkh-ZX-t6R"; */
+"gkh-ZX-t6R.text" = "Disable History";
+
+/* Class = "UINavigationItem"; title = "Theme"; ObjectID = "hUQ-h6-bpH"; */
+"hUQ-h6-bpH.title" = "Theme";
+
+/* Class = "UILabel"; text = "In Time"; ObjectID = "iV7-C8-eCs"; */
+"iV7-C8-eCs.text" = "In Time";
+
+/* Class = "UIBarButtonItem"; title = "Delete All"; ObjectID = "kXc-EK-dIG"; */
+"kXc-EK-dIG.title" = "Delete All";
+
+/* Class = "UIButton"; normalTitle = "Delete Selected"; ObjectID = "koY-kt-Al6"; */
+"koY-kt-Al6.normalTitle" = "Delete Selected";
+
+/* Class = "UILabel"; text = "Date Descending"; ObjectID = "lG8-ot-YlZ"; */
+"lG8-ot-YlZ.text" = "Date Descending";
+
+/* Class = "UILabel"; text = "Allow hours equal to 0 to be stored"; ObjectID = "nac-rK-cuh"; */
+"nac-rK-cuh.text" = "Allow hours equal to 0 to be stored";
+
+/* Class = "UILabel"; text = "Follow System"; ObjectID = "oQh-7E-7zU"; */
+"oQh-7E-7zU.text" = "Follow System";
+
+/* Class = "UITableViewSection"; headerTitle = "Version Info"; ObjectID = "oRQ-ZF-QPN"; */
+"oRQ-ZF-QPN.headerTitle" = "Version Info";
+
+/* Class = "UILabel"; text = "Total Hours"; ObjectID = "opv-sV-oUm"; */
+"opv-sV-oUm.text" = "Total Hours";
+
+/* Class = "UILabel"; text = "Theme"; ObjectID = "oqH-eA-35r"; */
+"oqH-eA-35r.text" = "Theme";
+
+/* Class = "UITabBarItem"; title = "Home"; ObjectID = "ppu-yG-h2t"; */
+"ppu-yG-h2t.title" = "Home";
+
+/* Class = "UILabel"; text = "Out Time"; ObjectID = "sBp-Sf-THf"; */
+"sBp-Sf-THf.text" = "Out Time";
+
+/* Class = "UITableViewSection"; headerTitle = "Theme Selection"; ObjectID = "tW1-Bx-Ccl"; */
+"tW1-Bx-Ccl.headerTitle" = "Theme Selection";
+
+/* Class = "UILabel"; text = "In Time"; ObjectID = "uY3-vM-Afw"; */
+"uY3-vM-Afw.text" = "In Time";
+
+/* Class = "UITableViewSection"; headerTitle = "Bugs"; ObjectID = "ubt-ju-orh"; */
+"ubt-ju-orh.headerTitle" = "Bugs";
+
+/* Class = "UINavigationItem"; title = "History Settings"; ObjectID = "wSc-6h-I71"; */
+"wSc-6h-I71.title" = "History Settings";
+
+/* Class = "UILabel"; text = "Light"; ObjectID = "xR6-3V-Vi0"; */
+"xR6-3V-Vi0.text" = "Light";
+
+/* Class = "UILabel"; text = "Enable History"; ObjectID = "y8I-Cv-I60"; */
+"y8I-Cv-I60.text" = "Enable History";
+
+/* Class = "UILabel"; text = "Last Updated: July 2, 2021"; ObjectID = "ycr-x3-Yid"; */
+"ycr-x3-Yid.text" = "Last Updated: July 2, 2021";
