@@ -86,25 +86,6 @@ class ViewController: UIViewController {
         else if userDefaults.integer(forKey: "historyEnabled") == 1 {
             tabBarController?.tabBar.items?[1].isEnabled = false
         }
-        let device = UIDevice.current.name
-        
-        if userDefaults.value(forKey: "dearAlertDialog") == nil{
-            userDefaults.set(false, forKey: "dearAlertDialog")
-        }
-        
-        if device == "iPhone 12" &&  userDefaults.bool(forKey: "dearAlertDialog") == false {
-        let alert = UIAlertController(title: "Dear Aunt Chelle", message: "No matter how hard things get, or whatever it is you're going through, just always keep your head up. - From the developer of this app P.S. this is only showing up on your device", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { [self]_ in
-                userDefaults.set(true, forKey: "dearAlertDialog")
-            } ))
-            let when = DispatchTime.now() + 1
-            DispatchQueue.main.asyncAfter(deadline: when) {
-                
-                    self.present(alert, animated: true, completion: nil)
-            }
-        }
-        
-        print(device)
         
        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
