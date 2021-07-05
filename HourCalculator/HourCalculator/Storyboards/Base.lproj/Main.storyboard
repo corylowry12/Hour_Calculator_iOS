@@ -1053,10 +1053,10 @@
                                 <inset key="scrollIndicatorInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="20"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="HourItems" id="nHE-q2-wXG" customClass="TableViewCell" customModule="HourCalculator" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="49" width="374" height="112"/>
+                                        <rect key="frame" x="8" y="49" width="374" height="112.33333587646484"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nHE-q2-wXG" id="iMb-U4-Vwy">
-                                            <rect key="frame" x="0.0" y="0.0" width="344.33333333333331" height="112"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="344.33333333333331" height="112.33333587646484"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="In Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uY3-vM-Afw">
@@ -1078,13 +1078,13 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Hours" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="opv-sV-oUm">
-                                                    <rect key="frame" x="12" y="56.666666666666657" width="320.33333333333331" height="21"/>
+                                                    <rect key="frame" x="12" y="56.666666666666664" width="320.33333333333331" height="21.333333333333336"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VtM-kl-7uw">
-                                                    <rect key="frame" x="12" y="79.666666666666671" width="320.33333333333331" height="20.333333333333329"/>
+                                                    <rect key="frame" x="12" y="80" width="320.33333333333331" height="20.333333333333329"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1187,7 +1187,7 @@
                         <outlet property="infoButton" destination="2DY-ue-Ya1" id="bkc-J5-ArO"/>
                         <outlet property="tableView" destination="LlD-Dg-VUw" id="C9z-3Q-jqY"/>
                         <segue destination="Kyy-9F-mJQ" kind="show" identifier="EditItem" id="1tB-Lf-hHx"/>
-                        <segue destination="QjV-PK-69d" kind="presentation" identifier="info" id="NkV-g8-AxI"/>
+                        <segue destination="QjV-PK-69d" kind="showDetail" identifier="info" id="NkV-g8-AxI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="85A-vf-FeA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1355,6 +1355,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="amountOfHoursStoredLabel" destination="Owx-cj-Fx6" id="DeT-J3-u8b"/>
                         <outlet property="totalHoursStoredLabel" destination="Hww-2P-r01" id="EYU-rM-bfB"/>
@@ -1369,6 +1370,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="QjV-PK-69d" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="Yb4-2F-Htt"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="d7I-Lo-eGi">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
