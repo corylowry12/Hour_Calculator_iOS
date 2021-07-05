@@ -30,14 +30,22 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var infoButton: UIBarButtonItem!
     var tappedItem: Hours!
     
+    let userDefaults = UserDefaults.standard
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var undo = 0
     
     var hourItems: [Hours] {
         
         do {
+            var sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
             let fetchrequest = NSFetchRequest<Hours>(entityName: "Hours")
-            let sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
+            if userDefaults.integer(forKey: "historySort") == 0 {
+                sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
+            }
+            else if userDefaults.integer(forKey: "historySort") == 1 {
+                sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)
+            }
             fetchrequest.sortDescriptors = [sort]
             return try context.fetch(fetchrequest)
             
@@ -101,10 +109,9 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         
         self.becomeFirstResponder()
-        
-        
         
         let defaults = UserDefaults.standard
         if defaults.value(forKey: "undoAlertMessage") == nil {
@@ -543,4 +550,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         noHoursStoredBackground()
     }
-}
+    @IBAction func sortButton(_ sender: UIBarButtonItem) {
+        
+            }
+    }

@@ -87,6 +87,10 @@ class ViewController: UIViewController {
             tabBarController?.tabBar.items?[1].isEnabled = false
         }
         
+        if userDefaults.value(forKey: "historySort") == nil {
+            userDefaults.set(0, forKey: "historySort")
+        }
+        
        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
         if userDefaults.value(forKey: "appVersion") == nil || userDefaults.value(forKey: "appVersion") as? String != appVersion {

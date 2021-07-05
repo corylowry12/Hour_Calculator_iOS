@@ -21,11 +21,19 @@ class EditViewController: UIViewController {
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    let userDefaults = UserDefaults.standard
+    
     var hourItems: [Hours] {
         
         do {
+            var sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
             let fetchrequest = NSFetchRequest<Hours>(entityName: "Hours")
-            let sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
+            if userDefaults.integer(forKey: "historySort") == 0 {
+                sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
+            }
+            else if userDefaults.integer(forKey: "historySort") == 1 {
+                sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)
+            }
             fetchrequest.sortDescriptors = [sort]
             return try context.fetch(fetchrequest)
             

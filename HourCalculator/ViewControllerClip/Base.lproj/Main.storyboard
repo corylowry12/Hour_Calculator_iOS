@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ViewControllerClip" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pHK-rw-U4O">
+                                <rect key="frame" x="0.0" y="44" width="414" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="1tO-9U-6Be">
+                                <rect key="frame" x="0.0" y="65" width="414" height="216"/>
+                                <connections>
+                                    <action selector="inTimeChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="YJo-ra-qPO"/>
+                                </connections>
+                            </datePicker>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Out Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pti-KO-FMu">
+                                <rect key="frame" x="0.0" y="281" width="414" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="em4-b9-dM5">
+                                <rect key="frame" x="0.0" y="302" width="414" height="216"/>
+                                <connections>
+                                    <action selector="outTimeChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="sFn-v1-0oC"/>
+                                </connections>
+                            </datePicker>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JQ2-59-Ixg">
+                                <rect key="frame" x="20" y="520" width="374" height="30"/>
+                                <color key="backgroundColor" red="0.14902000000000001" green="0.65098" blue="0.60392000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Calculate"/>
+                                <connections>
+                                    <action selector="calculateButtonPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="et5-Kc-Lsj"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ytJ-51-kFt">
+                                <rect key="frame" x="40" y="558" width="334" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="JQ2-59-Ixg" secondAttribute="trailing" constant="20" id="4Vq-K8-cbm"/>
+                            <constraint firstItem="em4-b9-dM5" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="5O1-xk-1K5"/>
+                            <constraint firstItem="pHK-rw-U4O" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Cfg-wW-jee"/>
+                            <constraint firstItem="JQ2-59-Ixg" firstAttribute="top" secondItem="em4-b9-dM5" secondAttribute="bottom" constant="2" id="L7t-Zq-9Q1"/>
+                            <constraint firstItem="ytJ-51-kFt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="LGN-sJ-1LV"/>
+                            <constraint firstItem="1tO-9U-6Be" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="N5l-yY-O1M"/>
+                            <constraint firstItem="1tO-9U-6Be" firstAttribute="top" secondItem="pHK-rw-U4O" secondAttribute="bottom" id="NGx-Cg-kBe"/>
+                            <constraint firstItem="JQ2-59-Ixg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Oh7-db-Tze"/>
+                            <constraint firstItem="Pti-KO-FMu" firstAttribute="top" secondItem="1tO-9U-6Be" secondAttribute="bottom" id="R5v-f4-Tsg"/>
+                            <constraint firstItem="pHK-rw-U4O" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="T2D-yZ-Ek5"/>
+                            <constraint firstItem="em4-b9-dM5" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Umm-Kn-ipv"/>
+                            <constraint firstItem="Pti-KO-FMu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Yn5-yG-wlg"/>
+                            <constraint firstItem="em4-b9-dM5" firstAttribute="top" secondItem="Pti-KO-FMu" secondAttribute="bottom" id="ZRR-FJ-UXA"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Pti-KO-FMu" secondAttribute="trailing" id="bMa-qo-6Du"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ytJ-51-kFt" secondAttribute="trailing" constant="20" id="oMu-Q7-glW"/>
+                            <constraint firstItem="ytJ-51-kFt" firstAttribute="top" secondItem="JQ2-59-Ixg" secondAttribute="bottom" constant="8" id="pv2-iX-1I3"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="pHK-rw-U4O" secondAttribute="trailing" id="vfE-hR-ucc"/>
+                            <constraint firstItem="1tO-9U-6Be" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="wiq-A5-Cxh"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="calculateButtonClip" destination="JQ2-59-Ixg" id="Rbw-v6-FQD"/>
+                        <outlet property="inTimeDatePicker" destination="1tO-9U-6Be" id="h84-WP-Lvx"/>
+                        <outlet property="outTimeDatePicker" destination="em4-b9-dM5" id="cG4-D0-64o"/>
+                        <outlet property="outputLabel" destination="ytJ-51-kFt" id="9VG-BQ-9Ao"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-25" y="52"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
