@@ -12,25 +12,32 @@
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
-			<key>Icon83.5@2x</key>
+			<key>blue_logo</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>Icon83.5@2x</string>
+					<string>blue_logo</string>
 				</array>
 			</dict>
-			<key>facebook</key>
+			<key>orange_logo</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>facebook</string>
+					<string>orange_logo</string>
 				</array>
 			</dict>
-			<key>google</key>
+			<key>purple_logo</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>google</string>
+					<string>purple_logo</string>
+				</array>
+			</dict>
+			<key>red_logo</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>red_logo</string>
 				</array>
 			</dict>
 		</dict>

@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.set(increment, forKey: "runCount")
         
         return true
+        
     }
     
     // MARK: UISceneSession Lifecycle

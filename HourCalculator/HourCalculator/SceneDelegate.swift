@@ -20,7 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         Siren.shared.wail()
         
-        //window?.tintColor = UIColor.red
         if userDefaults.integer(forKey: "accent") == 0 {
             window?.tintColor = UIColor(rgb: 0x26A69A)
         }

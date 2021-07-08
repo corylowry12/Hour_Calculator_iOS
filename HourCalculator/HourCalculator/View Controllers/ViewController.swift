@@ -22,20 +22,22 @@ class ViewController: UIViewController {
     @IBOutlet weak var calculateButton: UIButton!
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
+func changeIcon(_ iconName: Any?) {
+    if UIApplication.shared.responds(to: #selector(getter: UIApplication.supportsAlternateIcons)) && UIApplication.shared.supportsAlternateIcons {
+        
+        typealias setAlternateIconName = @convention(c) (NSObject, Selector, NSString?, @escaping (NSError) -> ()) -> ()
+        
+        let selectorString = "_setAlternateIconName:completionHandler:"
+        
+        let selector = NSSelectorFromString(selectorString)
+        let imp = UIApplication.shared.method(for: selector)
+        let method = unsafeBitCast(imp, to: setAlternateIconName.self)
+        method(UIApplication.shared, selector, iconName as! NSString?, { _ in })
+    }
+}
     
     override func viewDidAppear(_ animated: Bool) {
-        
-        /*if UIApplication.shared.responds(to: #selector(getter: UIApplication.supportsAlternateIcons)) && UIApplication.shared.supportsAlternateIcons {
-            
-            typealias setAlternateIconName = @convention(c) (NSObject, Selector, NSString?, @escaping (NSError) -> ()) -> ()
-            
-            let selectorString = "_setAlternateIconName:completionHandler:"
-            
-            let selector = NSSelectorFromString(selectorString)
-            let imp = UIApplication.shared.method(for: selector)
-            let method = unsafeBitCast(imp, to: setAlternateIconName.self)
-            method(UIApplication.shared, selector, "facebook" as NSString?, { _ in })
-        }*/
         
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{
             userDefaults.set(false, forKey: "StoredEmptyHours")
@@ -63,18 +65,23 @@ class ViewController: UIViewController {
         
         if userDefaults.integer(forKey: "accent") == 0 {
             calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
+            changeIcon(nil)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
             calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
+            changeIcon("purple_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 2 {
             calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
+            changeIcon("blue_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 3 {
             calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
+            changeIcon("orange_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 4 {
             calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+            changeIcon("red_logo")
         }
         
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{

@@ -40,7 +40,10 @@
 		32A2C0562692911800EABD3C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0552692911800EABD3C /* Assets.xcassets */; };
 		32A2C0592692911800EABD3C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0572692911800EABD3C /* LaunchScreen.storyboard */; };
 		32A2C05E2692911800EABD3C /* ViewControllerClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 32A2C04A2692911500EABD3C /* ViewControllerClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		32A2C0F22696AFDC00EABD3C /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F12696AFDC00EABD3C /* facebook.png */; };
+		32A2C0F92696C12600EABD3C /* orange_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F52696C12600EABD3C /* orange_logo.png */; };
+		32A2C0FA2696C12700EABD3C /* blue_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F62696C12600EABD3C /* blue_logo.png */; };
+		32A2C0FB2696C12700EABD3C /* purple_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F72696C12600EABD3C /* purple_logo.png */; };
+		32A2C0FC2696C12700EABD3C /* red_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F82696C12600EABD3C /* red_logo.png */; };
 		32F52A85268AD02E00BD9E2F /* Siren in Frameworks */ = {isa = PBXBuildFile; productRef = 32F52A84268AD02E00BD9E2F /* Siren */; };
 		8EBFF1BECC367AF00B69B1B7 /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7E439F5BEC8084EDAA07AE7 /* Pods_HourCalculator_HourCalculatorUITests.framework */; };
 		CA7ACF3A92246E7174EA765A /* Pods_HourCalculator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78117CE8367C288DD1FB8D9E /* Pods_HourCalculator.framework */; };
@@ -131,7 +134,10 @@
 		32A2C0582692911800EABD3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		32A2C05A2692911800EABD3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		32A2C05B2692911800EABD3C /* ViewControllerClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ViewControllerClip.entitlements; sourceTree = "<group>"; };
-		32A2C0F12696AFDC00EABD3C /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
+		32A2C0F52696C12600EABD3C /* orange_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orange_logo.png; sourceTree = "<group>"; };
+		32A2C0F62696C12600EABD3C /* blue_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_logo.png; sourceTree = "<group>"; };
+		32A2C0F72696C12600EABD3C /* purple_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple_logo.png; sourceTree = "<group>"; };
+		32A2C0F82696C12600EABD3C /* red_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_logo.png; sourceTree = "<group>"; };
 		3A4CD3E2571A5A1B832169C0 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		6ACE95D94FCA8F4454E6F3F8 /* Pods-HourCalculatorTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculatorTests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculatorTests/Pods-HourCalculatorTests.debug.xcconfig"; sourceTree = "<group>"; };
 		78117CE8367C288DD1FB8D9E /* Pods_HourCalculator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -209,7 +215,10 @@
 		32629DF526825FD7006632F2 /* HourCalculator */ = {
 			isa = PBXGroup;
 			children = (
-				32A2C0F12696AFDC00EABD3C /* facebook.png */,
+				32A2C0F62696C12600EABD3C /* blue_logo.png */,
+				32A2C0F52696C12600EABD3C /* orange_logo.png */,
+				32A2C0F72696C12600EABD3C /* purple_logo.png */,
+				32A2C0F82696C12600EABD3C /* red_logo.png */,
 				32830189268BAE330042AAE7 /* Storyboards */,
 				32830188268BAE050042AAE7 /* View Controllers */,
 				3255684F26897A1700CC7ACD /* HourCalculator.entitlements */,
@@ -449,10 +458,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32A2C0FA2696C12700EABD3C /* blue_logo.png in Resources */,
+				32A2C0FB2696C12700EABD3C /* purple_logo.png in Resources */,
+				32A2C0FC2696C12700EABD3C /* red_logo.png in Resources */,
 				32629E0326825FD9006632F2 /* LaunchScreen.storyboard in Resources */,
-				32A2C0F22696AFDC00EABD3C /* facebook.png in Resources */,
 				32629E0026825FD9006632F2 /* Assets.xcassets in Resources */,
 				32629DFE26825FD7006632F2 /* Main.storyboard in Resources */,
+				32A2C0F92696C12600EABD3C /* orange_logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -819,7 +831,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -827,7 +839,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.7;
+				MARKETING_VERSION = 1.1.9;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -847,7 +859,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -855,7 +867,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.7;
+				MARKETING_VERSION = 1.1.9;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -961,7 +973,7 @@
 				CODE_SIGN_ENTITLEMENTS = ViewControllerClip/ViewControllerClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = ViewControllerClip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -969,7 +981,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.7;
+				MARKETING_VERSION = 1.1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -985,7 +997,7 @@
 				CODE_SIGN_ENTITLEMENTS = ViewControllerClip/ViewControllerClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = ViewControllerClip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -993,7 +1005,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.7;
+				MARKETING_VERSION = 1.1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

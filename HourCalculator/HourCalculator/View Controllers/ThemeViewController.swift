@@ -99,27 +99,31 @@ class ThemeViewController: UITableViewController {
                 let accent = UIColor(rgb: 0x26A69A)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(0, forKey: "accent")
-                
+                changeIcon(nil)
             }
             else if indexPath.row == 1 {
                 let accent = UIColor(rgb: 0x7841c4)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(1, forKey: "accent")
+                changeIcon("purple_logo")
             }
             else if indexPath.row == 2 {
                 let accent = UIColor(rgb: 0x347deb)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(2, forKey: "accent")
+                changeIcon("blue_logo")
             }
             else if indexPath.row == 3 {
                 let accent = UIColor(rgb: 0xfc783a)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(3, forKey: "accent")
+                changeIcon("orange_logo")
             }
             else if indexPath.row == 4 {
                 let accent = UIColor(rgb: 0xc41d1d)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(4, forKey: "accent")
+                changeIcon("red_logo")
             }
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
@@ -154,6 +158,20 @@ class ThemeViewController: UITableViewController {
         if sender.selectedSegmentIndex == 2 {
             view.window!.overrideUserInterfaceStyle = .unspecified
             userDefaults.set(2, forKey: "theme")
+        }
+    }
+    
+    func changeIcon(_ iconName: Any?) {
+        if UIApplication.shared.responds(to: #selector(getter: UIApplication.supportsAlternateIcons)) && UIApplication.shared.supportsAlternateIcons {
+            
+            typealias setAlternateIconName = @convention(c) (NSObject, Selector, NSString?, @escaping (NSError) -> ()) -> ()
+            
+            let selectorString = "_setAlternateIconName:completionHandler:"
+            
+            let selector = NSSelectorFromString(selectorString)
+            let imp = UIApplication.shared.method(for: selector)
+            let method = unsafeBitCast(imp, to: setAlternateIconName.self)
+            method(UIApplication.shared, selector, iconName as! NSString?, { _ in })
         }
     }
 }
