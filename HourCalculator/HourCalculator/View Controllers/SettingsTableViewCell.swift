@@ -11,6 +11,8 @@ class SettingsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var hourSwitch : UISwitch?
     
+    let userDefaults = UserDefaults.standard
+    
     @IBAction func onHourSwitchChanged(_ sender: UISwitch) {
         
         let userDefaults = UserDefaults.standard

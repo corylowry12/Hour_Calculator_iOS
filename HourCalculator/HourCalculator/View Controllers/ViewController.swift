@@ -6,6 +6,7 @@
 //
 import UIKit
 import GoogleMobileAds
+import StoreKit
 
 class ViewController: UIViewController {
     
@@ -23,6 +24,19 @@ class ViewController: UIViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidAppear(_ animated: Bool) {
+        
+        /*if UIApplication.shared.responds(to: #selector(getter: UIApplication.supportsAlternateIcons)) && UIApplication.shared.supportsAlternateIcons {
+            
+            typealias setAlternateIconName = @convention(c) (NSObject, Selector, NSString?, @escaping (NSError) -> ()) -> ()
+            
+            let selectorString = "_setAlternateIconName:completionHandler:"
+            
+            let selector = NSSelectorFromString(selectorString)
+            let imp = UIApplication.shared.method(for: selector)
+            let method = unsafeBitCast(imp, to: setAlternateIconName.self)
+            method(UIApplication.shared, selector, "facebook" as NSString?, { _ in })
+        }*/
+        
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{
             userDefaults.set(false, forKey: "StoredEmptyHours")
         }
@@ -46,6 +60,23 @@ class ViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        if userDefaults.integer(forKey: "accent") == 0 {
+            calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
+        }
+        else if userDefaults.integer(forKey: "accent") == 1 {
+            calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
+        }
+        else if userDefaults.integer(forKey: "accent") == 2 {
+            calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
+        }
+        else if userDefaults.integer(forKey: "accent") == 3 {
+            calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
+        }
+        else if userDefaults.integer(forKey: "accent") == 4 {
+            calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+        }
+        
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{
             userDefaults.set(false, forKey: "StoredEmptyHours")
         }
@@ -163,6 +194,10 @@ class ViewController: UIViewController {
         sender.transform = CGAffineTransform.identity
         })
         })
+        
+        if userDefaults.integer(forKey: "runCount") >= 5 {
+            SKStoreReviewController.requestReview()
+        }
             
         AMtoPM()
         (UIApplication.shared.delegate as! AppDelegate).saveContext()

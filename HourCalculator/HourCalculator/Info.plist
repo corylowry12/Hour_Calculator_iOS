@@ -8,6 +8,33 @@
 	<string>Hour Calculator</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+			<key>Icon83.5@2x</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>Icon83.5@2x</string>
+				</array>
+			</dict>
+			<key>facebook</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>facebook</string>
+				</array>
+			</dict>
+			<key>google</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>google</string>
+				</array>
+			</dict>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>

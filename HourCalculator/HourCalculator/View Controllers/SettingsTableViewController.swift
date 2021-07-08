@@ -12,6 +12,7 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet var patchNotesCell: SettingsTableViewCell!
     let userDefaults = UserDefaults.standard
     
+    @IBOutlet var hourSwitch: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +38,23 @@ class SettingsTableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        if userDefaults.integer(forKey: "accent") == 0 {
+            hourSwitch?.onTintColor = UIColor(rgb: 0x26A69A)
+        }
+        else if userDefaults.integer(forKey: "accent") == 1 {
+            hourSwitch?.onTintColor = UIColor(rgb: 0x7841c4)
+        }
+        else if userDefaults.integer(forKey: "accent") == 2 {
+            hourSwitch?.onTintColor = UIColor(rgb: 0x347deb)
+        }
+        else if userDefaults.integer(forKey: "accent") == 3 {
+            hourSwitch?.onTintColor = UIColor(rgb: 0xfc783a)
+        }
+        else if userDefaults.integer(forKey: "accent") == 4 {
+            hourSwitch.onTintColor = UIColor(rgb: 0xc41d1d)
+        }
+        
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
         if userDefaults.value(forKey: "appVersion") == nil || userDefaults.value(forKey: "appVersion") as? String != appVersion {

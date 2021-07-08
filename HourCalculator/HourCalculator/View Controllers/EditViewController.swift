@@ -14,6 +14,7 @@ class EditViewController: UIViewController {
     @IBOutlet weak var datePickerInTime: UIDatePicker!
     @IBOutlet weak var datePickerOutTime: UIDatePicker!
     @IBOutlet weak var deleteButton: UIBarButtonItem!
+    @IBOutlet var saveButton: UIButton!
     
     @IBOutlet var DatePicker: UIDatePicker!
     @IBOutlet weak var dateLabel: UILabel!
@@ -47,6 +48,24 @@ class EditViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        if userDefaults.integer(forKey: "accent") == 0 {
+            saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
+        }
+        else if userDefaults.integer(forKey: "accent") == 1 {
+            saveButton.backgroundColor = UIColor(rgb: 0x7841c4)
+        }
+        else if userDefaults.integer(forKey: "accent") == 2 {
+            saveButton.backgroundColor = UIColor(rgb: 0x347deb)
+        }
+        else if userDefaults.integer(forKey: "accent") == 3 {
+            saveButton.backgroundColor = UIColor(rgb: 0xfc783a)
+        }
+        else if userDefaults.integer(forKey: "accent") == 4 {
+            saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -66,6 +85,8 @@ class EditViewController: UIViewController {
         let defaults = UserDefaults.standard
         
         data = Int(defaults.string(forKey: "ID")!)!
+        
+        print(data)
         
         let hourItemStored = hourItems[data].inTime
         let hourItemStored2 = hourItems[data].outTime
@@ -286,18 +307,6 @@ class EditViewController: UIViewController {
         
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         
-        
-        var hoursItems: [Hours] {
-            
-            do {
-                return try context.fetch(Hours.fetchRequest())
-            }
-            catch {
-                print("There was an error")
-            }
-            
-            return [Hours]()
-        }
     }
 }
 

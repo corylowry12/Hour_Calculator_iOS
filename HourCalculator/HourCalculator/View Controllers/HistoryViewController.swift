@@ -199,6 +199,22 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        if userDefaults.integer(forKey: "accent") == 0 {
+            deleteSelectedButton.backgroundColor = UIColor(rgb: 0x26A69A)
+        }
+        else if userDefaults.integer(forKey: "accent") == 1 {
+            deleteSelectedButton.backgroundColor = UIColor(rgb: 0x7841c4)
+        }
+        else if userDefaults.integer(forKey: "accent") == 2 {
+            deleteSelectedButton.backgroundColor = UIColor(rgb: 0x347deb)
+        }
+        else if userDefaults.integer(forKey: "accent") == 3 {
+            deleteSelectedButton.backgroundColor = UIColor(rgb: 0xfc783a)
+        }
+        else if userDefaults.integer(forKey: "accent") == 4 {
+            deleteSelectedButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+        }
+        
         /* let indexPath = NSIndexPath(row: 0, section: 0) as IndexPath
          /*tableView.beginUpdates()
          tableView.reloadRows(at: [indexPath], with: .automatic)*/
