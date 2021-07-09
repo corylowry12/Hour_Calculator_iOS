@@ -23,6 +23,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @IBOutlet weak var editButton: UIBarButtonItem!
     
+    @IBOutlet var exportMenuButton: UIBarButtonItem!
     @IBOutlet weak var deleteAllMenuButton: UIBarButtonItem!
     @IBOutlet weak var deleteSelectedButton: UIButton!
     @IBOutlet weak var editMenuButton: UIBarButtonItem!
@@ -95,7 +96,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     editMenuButton.isEnabled = true
                     infoButton.isEnabled = true
                     deleteAllMenuButton.isEnabled = true
-                    
+                    exportMenuButton.isEnabled = true
                     noHoursStoredBackground()
                     
                     tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
@@ -131,10 +132,12 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         if hourItems.count > 0 {
             self.deleteAllMenuButton.isEnabled = true
             self.editMenuButton.isEnabled = true
+            exportMenuButton.isEnabled = true
         }
         else {
             self.deleteAllMenuButton.isEnabled = false
             self.editMenuButton.isEnabled = false
+            self.exportMenuButton.isEnabled = false
         }
         
         bannerView = GADBannerView(adSize: kGADAdSizeBanner)
@@ -187,10 +190,12 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         if hourItems.count > 0 {
             self.deleteAllMenuButton.isEnabled = true
             self.editMenuButton.isEnabled = true
+            self.exportMenuButton.isEnabled = true
         }
         else {
             self.deleteAllMenuButton.isEnabled = false
             self.editMenuButton.isEnabled = false
+            self.exportMenuButton.isEnabled = false
         }
     }
     
@@ -231,11 +236,13 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.deleteAllMenuButton.isEnabled = true
             self.editMenuButton.isEnabled = true
             self.infoButton.isEnabled = true
+            self.exportMenuButton.isEnabled = true
         }
         else {
             self.deleteAllMenuButton.isEnabled = false
             self.editMenuButton.isEnabled = false
             infoButton.isEnabled = false
+            exportMenuButton.isEnabled = false
         }
     }
     
@@ -433,6 +440,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.infoButton.isEnabled = false
             self.deleteAllMenuButton.isEnabled = false
             self.editMenuButton.isEnabled = false
+            exportMenuButton.isEnabled = false
             
             noHoursStoredBackground()
         }
@@ -445,11 +453,13 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         if hourItems.count > 0 {
             self.deleteAllMenuButton.isEnabled = true
             self.editMenuButton.isEnabled = true
+            self.exportMenuButton.isEnabled = true
         }
         else {
             self.infoButton.isEnabled = false
             self.deleteAllMenuButton.isEnabled = false
             self.editMenuButton.isEnabled = false
+            exportMenuButton.isEnabled = false
         }
     }
     
@@ -526,21 +536,23 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             editButton.isEnabled = false
             deleteSelectedButton.isHidden = false
             infoButton.isEnabled = false
+            exportMenuButton.isEnabled = false
         }
         
         if hourItems.count > 0 {
             self.deleteAllMenuButton.isEnabled = true
             self.editMenuButton.isEnabled = true
+            exportMenuButton.isEnabled = true
         }
         else {
             self.deleteAllMenuButton.isEnabled = false
             self.editMenuButton.isEnabled = false
+            exportMenuButton.isEnabled = false
         }
         
         tableView.setEditing(false, animated: true)
         editButton.title = "Edit"
         deleteSelectedButton.isHidden = true
-        
         
     }
     
@@ -563,10 +575,63 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.deleteAllMenuButton.isEnabled = false
             self.editMenuButton.isEnabled = false
             self.infoButton.isEnabled = false
+            self.exportMenuButton.isEnabled = false
         }
         noHoursStoredBackground()
     }
-    @IBAction func sortButton(_ sender: UIBarButtonItem) {
-        
+  
+    @IBAction func exportButton(_ sender: Any) {
+        if tableView.isEditing == true {
+            tableView.setEditing(false, animated: true)
+            deleteSelectedButton.isHidden = true
+            editButton.title = "Edit"
+        }
+        let timeCards = TimeCards(context: self.context)
+        var total = 0.0
+        let alert = UIAlertController(title: "Warning", message: "This will delete these hours and store them in the time cards section and CAN NOT be undone! Are you sure you want to continue?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
+            if self.hourItems.count >= 7 {
+                timeCards.week = self.hourItems[6].date!
+                for i in (0...6).reversed() {
+                let hourToDelete = self.hourItems[i]
+                total += Double(self.hourItems[i].totalHours!)!
+                
+                self.context.delete(hourToDelete)
+                let index = [0, i] as IndexPath
+                self.tableView.deleteRows(at: [index], with: .fade)
+                
             }
+                self.noHoursStoredBackground()
+                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                //let timeCards = TimeCards(context: self.context)
+                timeCards.total = total
+                //timeCards.week = self.hourItems.last!.date
+            }
+            else if self.hourItems.count < 7 {
+                timeCards.week = self.hourItems.last!.date!
+                for i in (0...self.hourItems.count - 1).reversed() {
+                    let hourToDelete = self.hourItems[i]
+                    total += Double(self.hourItems[i].totalHours!)!
+                    let index = [0, i] as IndexPath
+                    self.context.delete(hourToDelete)
+                    
+                    self.tableView.deleteRows(at: [index], with: .fade)
+                    
+                }
+                self.noHoursStoredBackground()
+                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                timeCards.total = total
+                //print("\(String(describing: self.hourItems.first?.date))")
+                //timeCards.week = self.hourItems.last!.date
+                self.editButton.isEnabled = false
+                self.infoButton.isEnabled = false
+                self.deleteAllMenuButton.isEnabled = false
+                self.exportMenuButton.isEnabled = false
+            }
+            
+        }))
+            
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
+}

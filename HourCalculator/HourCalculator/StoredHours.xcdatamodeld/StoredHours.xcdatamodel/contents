@@ -6,7 +6,15 @@
         <attribute name="outTime" optional="YES" attributeType="String"/>
         <attribute name="totalHours" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="TimeCards" representedClassName="TimeCards" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="String"/>
+        <attribute name="inTime" optional="YES" attributeType="String"/>
+        <attribute name="outTime" optional="YES" attributeType="String"/>
+        <attribute name="total" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="week" optional="YES" attributeType="String"/>
+    </entity>
     <elements>
         <element name="Hours" positionX="-63" positionY="-18" width="128" height="89"/>
+        <element name="TimeCards" positionX="-63" positionY="9" width="128" height="104"/>
     </elements>
 </model>

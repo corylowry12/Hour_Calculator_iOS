@@ -12,6 +12,7 @@
 		325568512689C13F00CC7ACD /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325568502689C13F00CC7ACD /* TabBarController.swift */; };
 		325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C72685634100B098C9 /* HistoryViewController.swift */; };
 		325A41CB26856ABF00B098C9 /* StoredHours.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C926856ABF00B098C9 /* StoredHours.xcdatamodeld */; };
+		325F378826978B88000D6FFB /* TimeCardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325F378726978B88000D6FFB /* TimeCardTableViewController.swift */; };
 		32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DF626825FD7006632F2 /* AppDelegate.swift */; };
 		32629DF926825FD7006632F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DF826825FD7006632F2 /* SceneDelegate.swift */; };
 		32629DFB26825FD7006632F2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DFA26825FD7006632F2 /* ViewController.swift */; };
@@ -22,6 +23,7 @@
 		32629E1926825FD9006632F2 /* HourCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */; };
 		3272542E26867DA0000C6236 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542D26867DA0000C6236 /* InfoViewController.swift */; };
 		327254302686A421000C6236 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542F2686A421000C6236 /* EditViewController.swift */; };
+		3272C60A269799D400091268 /* TimeCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272C609269799D400091268 /* TimeCardTableViewCell.swift */; };
 		32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */; };
 		328498462687BE280092D22F /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498452687BE280092D22F /* SettingsTableViewCell.swift */; };
 		328498482687D3F30092D22F /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498472687D3F30092D22F /* ThemeViewController.swift */; };
@@ -98,6 +100,7 @@
 		325568502689C13F00CC7ACD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		325A41C72685634100B098C9 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		325A41CA26856ABF00B098C9 /* StoredHours.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StoredHours.xcdatamodel; sourceTree = "<group>"; };
+		325F378726978B88000D6FFB /* TimeCardTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardTableViewController.swift; sourceTree = "<group>"; };
 		32629DF326825FD7006632F2 /* HourCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HourCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32629DF626825FD7006632F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		32629DF826825FD7006632F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -114,6 +117,7 @@
 		32629E1A26825FD9006632F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3272542D26867DA0000C6236 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		3272542F2686A421000C6236 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		3272C609269799D400091268 /* TimeCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardTableViewCell.swift; sourceTree = "<group>"; };
 		32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		328498452687BE280092D22F /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		328498472687D3F30092D22F /* ThemeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
@@ -264,6 +268,8 @@
 				32629DFA26825FD7006632F2 /* ViewController.swift */,
 				3254AFA0268E71FB005B13E5 /* HistorySettingsTableViewController.swift */,
 				32A2C044269234F200EABD3C /* HowToTableViewController.swift */,
+				325F378726978B88000D6FFB /* TimeCardTableViewController.swift */,
+				3272C609269799D400091268 /* TimeCardTableViewCell.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -606,11 +612,13 @@
 				3254AFA1268E71FB005B13E5 /* HistorySettingsTableViewController.swift in Sources */,
 				32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */,
 				325568512689C13F00CC7ACD /* TabBarController.swift in Sources */,
+				325F378826978B88000D6FFB /* TimeCardTableViewController.swift in Sources */,
 				32629DFB26825FD7006632F2 /* ViewController.swift in Sources */,
 				32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */,
 				32A2C045269234F200EABD3C /* HowToTableViewController.swift in Sources */,
 				32629DF926825FD7006632F2 /* SceneDelegate.swift in Sources */,
 				325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */,
+				3272C60A269799D400091268 /* TimeCardTableViewCell.swift in Sources */,
 				323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */,
 				328498482687D3F30092D22F /* ThemeViewController.swift in Sources */,
 				3272542E26867DA0000C6236 /* InfoViewController.swift in Sources */,
@@ -831,7 +839,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -839,7 +847,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.9;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -859,7 +867,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -867,7 +875,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.9;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -973,7 +981,7 @@
 				CODE_SIGN_ENTITLEMENTS = ViewControllerClip/ViewControllerClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = ViewControllerClip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -981,7 +989,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.9;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -997,7 +1005,7 @@
 				CODE_SIGN_ENTITLEMENTS = ViewControllerClip/ViewControllerClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = ViewControllerClip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -1005,7 +1013,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.9;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
