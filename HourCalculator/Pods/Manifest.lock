@@ -1,16 +1,20 @@
 PODS:
+  - Instabug (10.7.5)
   - SwipeableTabBarController (3.4.2)
 
 DEPENDENCIES:
+  - Instabug (~> 10.7.5)
   - SwipeableTabBarController
 
 SPEC REPOS:
   trunk:
+    - Instabug
     - SwipeableTabBarController
 
 SPEC CHECKSUMS:
+  Instabug: ec36344097cf86024029f5cf9dde858e6f9ab0ee
   SwipeableTabBarController: 9a218bdee9426d1bfe36d7962f852024bb08d61b
 
-PODFILE CHECKSUM: c8b46bf48a3dd06e610748bdc061f948fc7e6f64
+PODFILE CHECKSUM: 2e038626027f0f815d690323a3b9b38d99a98eac
 
 COCOAPODS: 1.10.1

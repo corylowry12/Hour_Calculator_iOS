@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import Instabug
 
 class EditViewController: UIViewController {
     
@@ -24,6 +25,10 @@ class EditViewController: UIViewController {
     
     let userDefaults = UserDefaults.standard
     
+    var didUpdateInTime: Bool = true
+    var didUpdateOutTime: Bool = true
+    var didUpdateDate: Bool = true
+    
     var hourItems: [Hours] {
         
         do {
@@ -34,6 +39,12 @@ class EditViewController: UIViewController {
             }
             else if userDefaults.integer(forKey: "historySort") == 1 {
                 sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)
+            }
+            else if userDefaults.integer(forKey: "historySort") == 2 {
+                sort = NSSortDescriptor(key: #keyPath(Hours.totalHours), ascending: true)
+            }
+            else if userDefaults.integer(forKey: "historySort") == 3 {
+                sort = NSSortDescriptor(key: #keyPath(Hours.totalHours), ascending: false)
             }
             fetchrequest.sortDescriptors = [sort]
             return try context.fetch(fetchrequest)
@@ -49,6 +60,12 @@ class EditViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        //DatePicker.sizeToFit()
+        //DatePicker.clipsToBounds = true
+        
+        BugReporting.enabled = true
+        
         if userDefaults.integer(forKey: "accent") == 0 {
             saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
         }
@@ -69,6 +86,9 @@ class EditViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //let id = Hours(context: context).objectID
+        //print(id)
+        
         let os = ProcessInfo().operatingSystemVersion
         
         switch (os.majorVersion, os.minorVersion, os.patchVersion) {
@@ -86,12 +106,12 @@ class EditViewController: UIViewController {
         
         data = Int(defaults.string(forKey: "ID")!)!
         
-        print(data)
+        //print(data)
         
         let hourItemStored = hourItems[data].inTime
         let hourItemStored2 = hourItems[data].outTime
         let dateTaken = hourItems[data].date
-        print("date2 \(dateTaken)")
+        //print("date2 \(dateTaken)")
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm a"
         let dateFormatterForDateTaken = DateFormatter()
@@ -120,13 +140,33 @@ class EditViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver("Update")
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
     }
     
     var inHour : Int = 0
     var inMinute : Int = 0
     
-    @IBAction func inTimeValueChanged(_ sender: Any) {
-        
+    @IBAction func dateChanged(_ sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        let date = dateFormatter.string(from: sender.date)
+        if date == hourItems[data].date {
+            didUpdateDate = true
+        }
+        else {
+        didUpdateDate = false
+        }
+    }
+    @IBAction func inTimeValueChanged(_ sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm a"
+        let inTimeDate = dateFormatter.string(from: sender.date)
+        if inTimeDate == hourItems[data].inTime {
+            didUpdateInTime = true
+        }
+        else {
+        didUpdateInTime = false
+        }
         let date = datePickerInTime.date
         let components = Calendar.current.dateComponents([.hour, .minute], from: date)
         
@@ -138,8 +178,16 @@ class EditViewController: UIViewController {
     var outHour : Int = 0
     var outMinute : Int = 0
     
-    @IBAction func outTimeValueChanged(_ sender: Any) {
-        
+    @IBAction func outTimeValueChanged(_ sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm a"
+        let outTimeDate = dateFormatter.string(from: sender.date)
+        if outTimeDate == hourItems[data].outTime {
+            didUpdateOutTime = true
+        }
+        else {
+        didUpdateOutTime = false
+        }
         let outDate = datePickerOutTime.date
         let componentsOut = Calendar.current.dateComponents([.hour, .minute], from: outDate)
         outHour = componentsOut.hour!
@@ -147,21 +195,40 @@ class EditViewController: UIViewController {
     }
     @IBAction func saveButtonClicked(_ sender: Any) {
         
-        save()
-        
+        if didUpdateDate == false || didUpdateOutTime == false || didUpdateDate == false {
+        //save()
+            let date = datePickerInTime.date
+            let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+            
+            inHour = components.hour!
+            inMinute = components.minute!
+            
+            let outDate = datePickerOutTime.date
+            let componentsOut = Calendar.current.dateComponents([.hour, .minute], from: outDate)
+            
+            outHour = componentsOut.hour!
+            outMinute = componentsOut.minute!
+            
+            //let minutesDifference = outMinute - inMinute
+            let hoursDifference = outHour - inHour
+            
+            if hoursDifference < 0 && (12...24).contains(inHour) && (0...12).contains(outHour){
+                    self.PMtoAM()
+            }
+            else {
+                    self.save()
+                
+            }
+        }
+        else {
+            dateLabel.text = "Can Not Save, No Values Were Changed"
+        }
     }
     
     @IBAction func cancelButtonClicked(_ sender: Any) {
-        let dateFormatterForDateTaken = DateFormatter()
-        dateFormatterForDateTaken.dateFormat = "MM/dd/yyyy"
-        let date = dateFormatterForDateTaken.string(from: DatePicker.date)
-        dateFormatterForDateTaken.dateFormat = "hh:mm a"
-        let inTimeHour = dateFormatterForDateTaken.string(from: datePickerInTime.date)
-        let outTimeHour = dateFormatterForDateTaken.string(from: datePickerOutTime.date)
-        
-        if date != hourItems[data].date ||
-            inTimeHour != hourItems[data].inTime ||
-            outTimeHour != hourItems[data].outTime {
+        if didUpdateInTime == false ||
+            didUpdateOutTime == false ||
+            didUpdateDate == false {
             let alert = UIAlertController(title: "Pending Changes", message: "You are trying to leave with pending changes. Would you like to save?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                 self.save()
@@ -221,8 +288,7 @@ class EditViewController: UIViewController {
         
     }
     
-    func save() {
-        
+    func PMtoAM() {
         let date = datePickerInTime.date
         let components = Calendar.current.dateComponents([.hour, .minute], from: date)
         
@@ -236,18 +302,17 @@ class EditViewController: UIViewController {
         outMinute = componentsOut.minute!
         
         let minutesDifference = outMinute - inMinute
-        let hoursDifference = outHour - inHour
+        let hoursDifference = outHour - inHour + 24
         
-        if hoursDifference < 0 {
-            dateLabel.text = "In time can not be greater than out time"
-        }
-        else if minutesDifference < 0 {
+        if minutesDifference < 0 {
             let minutesDecimal : Double = Double(minutesDifference) / 60.00
-            let minutesRounded = round(minutesDecimal * 100) / 100.00
-            let minutesFormatted = String(minutesRounded).dropFirst(3)
-            
-            let minutes = 100 - (minutesFormatted as NSString).integerValue
-            
+            let minutesRounded = String(round(minutesDecimal * 100) / 100.00)
+            let minutesInverted = Double(minutesRounded)! * -1
+            let minutes2 = 1.0 - Double(round(minutesInverted * 100) / 100.00)
+            let minutes3 = round(minutes2 * 100) / 100.00
+            print(minutes3)
+            let minutes = String(minutes3).dropFirst(2)
+            print(minutes)
             let hours = hoursDifference - 1
             if hours < 0 {
                 dateLabel.text = "In time can not be greater than out time"
@@ -304,9 +369,98 @@ class EditViewController: UIViewController {
             
             hoursToBeStored.date = dateEntered
         }
+        didUpdateInTime = true
+        didUpdateOutTime = true
+        didUpdateDate = true
+    }
+    
+    func save() {
         
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        let date = datePickerInTime.date
+        let components = Calendar.current.dateComponents([.hour, .minute], from: date)
         
+        inHour = components.hour!
+        inMinute = components.minute!
+        
+        let outDate = datePickerOutTime.date
+        let componentsOut = Calendar.current.dateComponents([.hour, .minute], from: outDate)
+        
+        outHour = componentsOut.hour!
+        outMinute = componentsOut.minute!
+        
+        let minutesDifference = outMinute - inMinute
+        let hoursDifference = outHour - inHour
+        
+        if hoursDifference < 0 {
+            dateLabel.text = "In time can not be greater than out time"
+        }
+        else if minutesDifference < 0 {
+            let minutesDecimal : Double = Double(minutesDifference) / 60.00
+            let minutesRounded = String(round(minutesDecimal * 100) / 100.00)
+            let minutesInverted = Double(minutesRounded)! * -1
+            let minutes2 = 1.0 - Double(round(minutesInverted * 100) / 100.00)
+            let minutes3 = round(minutes2 * 100) / 100.00
+            let minutes = String(minutes3).dropFirst(2)
+            let hours = hoursDifference - 1
+            if hours < 0 {
+                dateLabel.text = "In time can not be greater than out time"
+            }
+            else {
+                dateLabel.text = "Total Hours: \(hours).\(minutes)"
+                
+                //let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+                
+                let hoursToBeStored = hourItems[data]
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "hh:mm a"
+                let inTimeDate = dateFormatter.string(from: datePickerInTime.date)
+                let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
+                
+                let dateFormatterForDateTaken = DateFormatter()
+                dateFormatterForDateTaken.dateFormat = "MM/dd/yyyy"
+                let dateEntered = dateFormatterForDateTaken.string(from: DatePicker.date)
+                
+                let inTime = inTimeDate
+                let outTime = outTimeDate
+                
+                hoursToBeStored.inTime = inTime
+                hoursToBeStored.outTime = outTime
+                hoursToBeStored.totalHours = "\(hours).\(minutes)"
+                hoursToBeStored.date = dateEntered
+            }
+        }
+        else {
+            let minutesDecimal : Double = Double(minutesDifference) / 60.00
+            let minutesRounded = round(minutesDecimal * 100) / 100.00
+            let minutesFormatted = String(minutesRounded).dropFirst(2)
+            
+            dateLabel.text = "Total Hours: \(hoursDifference).\(minutesFormatted)"
+            
+            let hoursToBeStored = hourItems[data]
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "hh:mm a"
+            let inTimeDate = dateFormatter.string(from: datePickerInTime.date)
+            let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
+            
+            let dateFormatterForDateTaken = DateFormatter()
+            dateFormatterForDateTaken.dateFormat = "MM/dd/yyyy"
+            let dateEntered = dateFormatterForDateTaken.string(from: DatePicker.date)
+            
+            let inTime = inTimeDate
+            let outTime = outTimeDate
+            
+            hoursToBeStored.inTime = inTime
+            hoursToBeStored.outTime = outTime
+            hoursToBeStored.totalHours = "\(hoursDifference).\(minutesFormatted)"
+            
+            hoursToBeStored.date = dateEntered
+        }
+        didUpdateInTime = true
+        didUpdateOutTime = true
+        didUpdateDate = true
+        //(UIApplication.shared.delegate as! AppDelegate).saveContext()
     }
 }
 

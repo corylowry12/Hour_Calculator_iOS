@@ -1,8 +1,8 @@
 CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/SwipeableTabBarController"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/SwipeableTabBarController" "${PODS_ROOT}/Instabug" "${PODS_XCFRAMEWORKS_BUILD_DIR}/Instabug" "$(PODS_ROOT)/Instabug/"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/SwipeableTabBarController/SwipeableTabBarController.framework/Headers"
-OTHER_LDFLAGS = $(inherited) -framework "SwipeableTabBarController"
+OTHER_LDFLAGS = $(inherited) -l"z" -framework "AVFoundation" -framework "CoreData" -framework "CoreGraphics" -framework "CoreMedia" -framework "CoreMotion" -framework "CoreTelephony" -framework "CoreVideo" -framework "Instabug" -framework "SwipeableTabBarController" -framework "SystemConfiguration" -framework "UIKit"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.

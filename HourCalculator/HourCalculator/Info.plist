@@ -58,6 +58,10 @@
 	<string>ca-app-pub-4546055219731501~4456783748</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>needs access to your microphone so you can attach voice notes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>needs access to your photo library so you can attach images.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

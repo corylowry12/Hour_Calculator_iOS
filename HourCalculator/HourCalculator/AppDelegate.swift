@@ -9,6 +9,7 @@ import UIKit
 import GoogleMobileAds
 import CoreData
 import Siren
+import Instabug
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,17 +21,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         
+        Instabug.start(withToken: "12c913aa56061e961162c27164e3a51e", invocationEvents: .shake)
+        
         Siren.shared.wail()
         
         Siren.shared.rulesManager = RulesManager(globalRules: .persistent, showAlertAfterCurrentVersionHasBeenReleasedForDays: 5)
-        
-        if UserDefaults.standard.value(forKey: "runCount") == nil {
-            UserDefaults.standard.set(1, forKey: "runCount")
-        }
-        
-        let runCount = UserDefaults.standard.integer(forKey: "runCount")
-        let increment = runCount + 1
-        UserDefaults.standard.set(increment, forKey: "runCount")
         
         return true
         

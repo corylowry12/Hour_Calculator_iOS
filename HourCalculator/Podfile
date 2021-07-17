@@ -7,6 +7,7 @@ target 'HourCalculator' do
 
   # Pods for HourCalculator
 pod 'SwipeableTabBarController'
+pod 'Instabug', '~> 10.7.5' 
 
   target 'HourCalculatorTests' do
     inherit! :search_paths

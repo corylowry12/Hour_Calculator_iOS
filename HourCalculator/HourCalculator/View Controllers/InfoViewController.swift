@@ -9,6 +9,7 @@ import UIKit
 import GoogleMobileAds
 import CoreData
 import MediaPlayer
+import Instabug
 
 class InfoViewController: UIViewController {
     
@@ -50,6 +51,7 @@ class InfoViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        BugReporting.enabled = true
         
         if hourItems.count >= 5 {
             DispatchQueue.main.async {

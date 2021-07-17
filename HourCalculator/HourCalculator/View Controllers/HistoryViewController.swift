@@ -9,6 +9,7 @@ import UIKit
 import GoogleMobileAds
 import CoreData
 import SwipeableTabBarController
+import Instabug
 
 extension UIViewController: UIPopoverPresentationControllerDelegate {
     public func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
@@ -47,6 +48,12 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             else if userDefaults.integer(forKey: "historySort") == 1 {
                 sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)
             }
+            else if userDefaults.integer(forKey: "historySort") == 2 {
+                sort = NSSortDescriptor(key: #keyPath(Hours.totalHours), ascending: true)
+            }
+            else if userDefaults.integer(forKey: "historySort") == 3 {
+                sort = NSSortDescriptor(key: #keyPath(Hours.totalHours), ascending: false)
+            }
             fetchrequest.sortDescriptors = [sort]
             return try context.fetch(fetchrequest)
             
@@ -75,7 +82,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    var bannerView: GADBannerView!
+    lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
     
     override var canBecomeFirstResponder: Bool {
         get {
@@ -86,6 +93,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake {
             if undo == 1 {
+                BugReporting.dismiss()
                 print("Why are you shaking me?")
                 let alert = UIAlertController(title: "Undo", message: "Would you like to undo recent hour deletion?", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
@@ -99,18 +107,22 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     exportMenuButton.isEnabled = true
                     noHoursStoredBackground()
                     
+                    undo = 0
+                    
                     tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
                 }))
                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
-            
+            else {
+                BugReporting.enabled = true
+                Instabug.show()
+            }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         
         self.becomeFirstResponder()
         
@@ -140,8 +152,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.exportMenuButton.isEnabled = false
         }
         
-        bannerView = GADBannerView(adSize: kGADAdSizeBanner)
-        
+        //bannerView = GADBannerView(adSize: kGADAdSizeBanner)
         
         addBannerViewToView(bannerView)
         
@@ -220,13 +231,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             deleteSelectedButton.backgroundColor = UIColor(rgb: 0xc41d1d)
         }
         
-        /* let indexPath = NSIndexPath(row: 0, section: 0) as IndexPath
-         /*tableView.beginUpdates()
-         tableView.reloadRows(at: [indexPath], with: .automatic)*/
-         tableView.beginUpdates()
-         tableView.reloadRows(at: [indexPath], with: .fade)
-         tableView.endUpdates()*/
-        
         noHoursStoredBackground()
         
         let notificationName2 = NSNotification.Name("info")
@@ -253,14 +257,14 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath : IndexPath) -> UITableViewCell {
-        
+            
         let hourItems = hourItems[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "HourItems", for: indexPath) as! TableViewCell
-        
-        let inTime : String = String(hourItems.inTime!)
-        let outTime: String = String(hourItems.outTime!)
-        let totalHours = hourItems.totalHours!
+        //DispatchQueue.main.async {
+        let inTime = String(hourItems.inTime!)
+        let outTime = String(hourItems.outTime!)
+        let totalHours = String(hourItems.totalHours!)
         let date = hourItems.date!
         
         
@@ -268,7 +272,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.outTimeLabel.text = "Out Time: \(outTime)"
         cell.totalHoursLabel.text = "Total Hours: \(totalHours)"
         cell.dateLabel.text = "Date: \(date)"
-        
+        //}
         return cell
         
     }
@@ -281,7 +285,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.setEditing(false, animated: false)
         editButton.title = "Edit"
         deleteSelectedButton.isHidden = true
-        
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -294,19 +297,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
             undo = 1
             
-            var hoursItems: [Hours] {
-                
-                do {
-                    return try context.fetch(Hours.fetchRequest())
-                }
-                catch {
-                    print("There was an error")
-                }
-                
-                return [Hours]()
-            }
-            
-            tabBarController?.tabBar.items?[1].badgeValue = String(hoursItems.count)
+            tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
             
             if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
                 let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .alert)
@@ -412,12 +403,15 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         let alert = UIAlertController(title: "Delete All?", message: "Are you sure you would like to delete all stored hours?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
             undo = 1
+            DispatchQueue.main.async {
             for i in (0...hourItems.count - 1).reversed() {
                 let index = [0, i] as IndexPath
                 let hourToDelete = self.hourItems[i]
                 
                 self.context.delete(hourToDelete)
                 self.tableView.deleteRows(at: [index], with: .fade)
+                
+            }
                 noHoursStoredBackground()
                 tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
             }
@@ -509,19 +503,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if let indexPaths = tableView.indexPathsForSelectedRows {
             let sortedPaths = indexPaths.sorted {$0.row > $1.row}
-            /*for indexPath in indexPaths {
-             let hourToDelete = self.hourItems[indexPath.row]
-             self.context.delete(hourToDelete)
-             (UIApplication.shared.delegate as! AppDelegate).saveContext()
-             self.tableView.deleteRows(at: [indexPath], with: .fade)
-             self.tableView.reloadData()
-             tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
-             }*/
+      
             for i in (0...sortedPaths.count - 1).reversed() {
                 let hourToDelete = self.hourItems[i]
                 self.context.delete(hourToDelete)
-                //(UIApplication.shared.delegate as! AppDelegate).saveContext()
-                
                 
                 tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
             }
@@ -590,9 +575,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         var total = 0.0
         let alert = UIAlertController(title: "Warning", message: "This will delete these hours and store them in the time cards section and CAN NOT be undone! Are you sure you want to continue?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
-            if self.hourItems.count >= 7 {
-                timeCards.week = self.hourItems[6].date!
-                for i in (0...6).reversed() {
+        
+            let date = "\(self.hourItems.last!.date ?? "Unknown")-\(self.hourItems.first!.date ?? "Unkown")"
+                timeCards.week = date
+            DispatchQueue.main.async {
+            for i in (0...self.hourItems.count - 1).reversed() {
                 let hourToDelete = self.hourItems[i]
                 total += Double(self.hourItems[i].totalHours!)!
                 
@@ -600,35 +587,19 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 let index = [0, i] as IndexPath
                 self.tableView.deleteRows(at: [index], with: .fade)
                 
-            }
-                self.noHoursStoredBackground()
-                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                //let timeCards = TimeCards(context: self.context)
                 timeCards.total = total
-                //timeCards.week = self.hourItems.last!.date
             }
-            else if self.hourItems.count < 7 {
-                timeCards.week = self.hourItems.last!.date!
-                for i in (0...self.hourItems.count - 1).reversed() {
-                    let hourToDelete = self.hourItems[i]
-                    total += Double(self.hourItems[i].totalHours!)!
-                    let index = [0, i] as IndexPath
-                    self.context.delete(hourToDelete)
-                    
-                    self.tableView.deleteRows(at: [index], with: .fade)
-                    
-                }
-                self.noHoursStoredBackground()
-                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                timeCards.total = total
-                //print("\(String(describing: self.hourItems.first?.date))")
-                //timeCards.week = self.hourItems.last!.date
-                self.editButton.isEnabled = false
-                self.infoButton.isEnabled = false
-                self.deleteAllMenuButton.isEnabled = false
-                self.exportMenuButton.isEnabled = false
-            }
+            self.noHoursStoredBackground()
+            self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+            self.editButton.isEnabled = false
+            self.infoButton.isEnabled = false
+            self.deleteAllMenuButton.isEnabled = false
+            self.exportMenuButton.isEnabled = false
             
+            (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            
+            self.undo = 0
+            }
         }))
             
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))

@@ -10,8 +10,9 @@ import UIKit
 
 class TimeCardTableViewCell : UITableViewCell {
     
-    @IBOutlet var totalLabel: UILabel!
-    @IBOutlet var inTimeLabel: UILabel!
+    @IBOutlet weak var totalLabel: UILabel!
+    @IBOutlet weak var inTimeLabel: UILabel!
+    
     override class func awakeFromNib() {
         super.awakeFromNib()
     }

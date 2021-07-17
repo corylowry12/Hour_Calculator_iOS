@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Instabug
 
 extension UIColor {
    convenience init(red: Int, green: Int, blue: Int) {
@@ -28,11 +29,11 @@ extension UIColor {
 class ThemeViewController: UITableViewController {
     
     var window: UIWindow?
-    @IBOutlet var tintImageView: UIImageView!
-    @IBOutlet var purpleImageView: UIImageView!
-    @IBOutlet var turquoiseImageView: UIImageView!
-    @IBOutlet var orangeImageView: UIImageView!
-    @IBOutlet var redImageView: UIImageView!
+    @IBOutlet weak var tintImageView: UIImageView!
+    @IBOutlet weak var purpleImageView: UIImageView!
+    @IBOutlet weak var turquoiseImageView: UIImageView!
+    @IBOutlet weak var orangeImageView: UIImageView!
+    @IBOutlet weak var redImageView: UIImageView!
     
     let storedThemeValue = UserDefaults.standard.integer(forKey: "theme")
     let storedAccentValue = UserDefaults.standard.integer(forKey: "accent")
@@ -65,6 +66,10 @@ class ThemeViewController: UITableViewController {
         
         //segmentedControl.selectedSegmentIndex = storedThemeValue
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        BugReporting.enabled = true
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

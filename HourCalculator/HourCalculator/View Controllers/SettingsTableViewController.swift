@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import Instabug
 
 class SettingsTableViewController: UITableViewController {
     
-    @IBOutlet var patchNotesCell: SettingsTableViewCell!
+    @IBOutlet weak var patchNotesCell: SettingsTableViewCell!
     let userDefaults = UserDefaults.standard
     
     @IBOutlet var hourSwitch: UISwitch!
@@ -38,6 +39,8 @@ class SettingsTableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        BugReporting.enabled = true
         
         if userDefaults.integer(forKey: "accent") == 0 {
             hourSwitch?.onTintColor = UIColor(rgb: 0x26A69A)

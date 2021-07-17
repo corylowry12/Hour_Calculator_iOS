@@ -1,2 +1,3 @@
 ${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/SwipeableTabBarController/SwipeableTabBarController.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/Instabug/Instabug.framework/Instabug

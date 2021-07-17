@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import Instabug
 
 class HistorySettingsTableViewController: UITableViewController {
     
@@ -63,6 +64,10 @@ class HistorySettingsTableViewController: UITableViewController {
             print(userDefaults.integer(forKey: "historyEnabled"))
             
         }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        BugReporting.enabled = true
+    }
         
         override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             if indexPath.section == 0 {
@@ -101,6 +106,14 @@ class HistorySettingsTableViewController: UITableViewController {
                 else if indexPath.row == 1 {
                     print("row 1")
                     UserDefaults.standard.set(1, forKey: "historySort")
+                }
+                else if indexPath.row == 2 {
+                    print("row 2")
+                    UserDefaults.standard.set(2, forKey: "historySort")
+                }
+                else if indexPath.row == 3 {
+                    print("row 3")
+                    UserDefaults.standard.set(3, forKey: "historySort")
                 }
             }
         }

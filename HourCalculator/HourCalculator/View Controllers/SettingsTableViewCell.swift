@@ -18,10 +18,6 @@ class SettingsTableViewCell: UITableViewCell {
         let userDefaults = UserDefaults.standard
         userDefaults.set(sender.isOn, forKey: "StoredEmptyHours")
         
-        
-        
-        //let storedValue = userDefaults.bool(forKey: "StoredEmptyHours")
-        
         print(userDefaults.bool(forKey: "StoredEmptyHours"))
     }
     
