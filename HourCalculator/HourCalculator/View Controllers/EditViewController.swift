@@ -175,6 +175,11 @@ class EditViewController: UIViewController {
         
     }
     
+    @IBAction func dateDatePicker(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
     var outHour : Int = 0
     var outMinute : Int = 0
     

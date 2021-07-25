@@ -9,21 +9,21 @@ import UIKit
 import Instabug
 
 extension UIColor {
-   convenience init(red: Int, green: Int, blue: Int) {
-       assert(red >= 0 && red <= 255, "Invalid red component")
-       assert(green >= 0 && green <= 255, "Invalid green component")
-       assert(blue >= 0 && blue <= 255, "Invalid blue component")
-
-       self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
-   }
-
-   convenience init(rgb: Int) {
-       self.init(
-           red: (rgb >> 16) & 0xFF,
-           green: (rgb >> 8) & 0xFF,
-           blue: rgb & 0xFF
-       )
-   }
+    convenience init(red: Int, green: Int, blue: Int) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    }
+    
+    convenience init(rgb: Int) {
+        self.init(
+            red: (rgb >> 16) & 0xFF,
+            green: (rgb >> 8) & 0xFF,
+            blue: rgb & 0xFF
+        )
+    }
 }
 
 class ThemeViewController: UITableViewController {
@@ -74,63 +74,69 @@ class ThemeViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-        if storedThemeValue != indexPath.row {
-            tableView.cellForRow(at: [0, storedThemeValue])?.accessoryType = .none
-        }
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        
-        let userDefaults = UserDefaults.standard
-        userDefaults.setValue(indexPath.row, forKey: "theme")
-        
-        if indexPath.row == 0 {
-            view.window?.overrideUserInterfaceStyle = .light
-            userDefaults.set(0, forKey: "theme")
-        }
-        else if indexPath.row == 1 {
-            view.window?.overrideUserInterfaceStyle = .dark
-            userDefaults.set(1, forKey: "theme")
-        }
-        else if indexPath.row == 2 {
-            view.window?.overrideUserInterfaceStyle = .unspecified
-            userDefaults.set(2, forKey: "theme")
-        }
-        }
+                
+                let userDefaults = UserDefaults.standard
+                
+                if indexPath.row == 0 {
+                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
+                    view.window?.overrideUserInterfaceStyle = .light
+                    userDefaults.set(0, forKey: "theme")
+                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
+                }
+                else if indexPath.row == 1 {
+                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
+                    view.window?.overrideUserInterfaceStyle = .dark
+                    userDefaults.set(1, forKey: "theme")
+                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
+                }
+                else if indexPath.row == 2 {
+                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
+                    view.window?.overrideUserInterfaceStyle = .unspecified
+                    userDefaults.set(2, forKey: "theme")
+                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
+                }
+                }
         else if indexPath.section == 1 {
-            print("hello world")
-            if storedThemeValue != indexPath.row {
-                tableView.cellForRow(at: [1, storedThemeValue])?.accessoryType = .none
-            }
             if indexPath.row == 0 {
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0x26A69A)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(0, forKey: "accent")
                 changeIcon(nil)
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
             }
             else if indexPath.row == 1 {
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0x7841c4)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(1, forKey: "accent")
                 changeIcon("purple_logo")
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
             }
             else if indexPath.row == 2 {
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0x347deb)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(2, forKey: "accent")
                 changeIcon("blue_logo")
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
             }
             else if indexPath.row == 3 {
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0xfc783a)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(3, forKey: "accent")
                 changeIcon("orange_logo")
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
             }
             else if indexPath.row == 4 {
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0xc41d1d)
                 view.window?.tintColor = accent
                 UserDefaults.standard.set(4, forKey: "accent")
                 changeIcon("red_logo")
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
             }
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
     }
     
@@ -146,24 +152,6 @@ class ThemeViewController: UITableViewController {
             tableView.cellForRow(at: selectedIndexPath)?.accessoryType = .none
         }
         return indexPath
-    }
-    
-   
-    
-    @IBAction func themeSelectionValueChanged(_ sender: UISegmentedControl) {
-        let userDefaults = UserDefaults.standard
-        if sender.selectedSegmentIndex == 0 {
-            view.window!.overrideUserInterfaceStyle = .light
-            userDefaults.set(0, forKey: "theme")
-        }
-        else if sender.selectedSegmentIndex == 1 {
-            view.window!.overrideUserInterfaceStyle = .dark
-            userDefaults.set(1, forKey: "theme")
-        }
-        if sender.selectedSegmentIndex == 2 {
-            view.window!.overrideUserInterfaceStyle = .unspecified
-            userDefaults.set(2, forKey: "theme")
-        }
     }
     
     func changeIcon(_ iconName: Any?) {

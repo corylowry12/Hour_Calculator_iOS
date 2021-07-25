@@ -15,6 +15,7 @@ import Instabug
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    let userDefaults = UserDefaults.standard
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -26,6 +27,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Siren.shared.wail()
         
         Siren.shared.rulesManager = RulesManager(globalRules: .persistent, showAlertAfterCurrentVersionHasBeenReleasedForDays: 5)
+        
+        if userDefaults.integer(forKey: "theme") == 0 {
+            window?.overrideUserInterfaceStyle = .light
+        }
+        else if userDefaults.integer(forKey: "theme") == 1 {
+            window?.overrideUserInterfaceStyle = .dark
+        }
+        else if userDefaults.integer(forKey: "theme") == 2 {
+            window?.overrideUserInterfaceStyle = .unspecified
+        }
         
         return true
         

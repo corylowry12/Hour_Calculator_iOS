@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     
     lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
     
+    @IBOutlet weak var dateDatePicker: UIDatePicker!
     var window : UIWindow?
     
     var userDefaults = UserDefaults.standard
@@ -86,27 +87,43 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         //view.layer.shadowPath = UIBezierPath(rect: view.bounds).cgPath
+        let os = ProcessInfo().operatingSystemVersion
+        
+        switch (os.majorVersion, os.minorVersion, os.patchVersion) {
+        case (let x, _, _) where x < 14: do {
+            dateDatePicker.isHidden = true
+        }
+        default: do {
+            dateDatePicker.isHidden = false
+        }
+        }
+        dateDatePicker.maximumDate = Date()
         
         BugReporting.enabled = true
         
         if userDefaults.integer(forKey: "accent") == 0 {
             calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
+            dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
             changeIcon(nil)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
             calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
+            dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
             changeIcon("purple_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 2 {
             calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
+            dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
             changeIcon("blue_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 3 {
             calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
+            dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
             changeIcon("orange_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 4 {
             calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+            dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
             changeIcon("red_logo")
         }
         
@@ -119,20 +136,22 @@ class ViewController: UIViewController {
         }
         
         if userDefaults.integer(forKey: "theme") == 0 {
-            view.window?.overrideUserInterfaceStyle = .light
+            window?.overrideUserInterfaceStyle = .light
         }
         else if userDefaults.integer(forKey: "theme") == 1 {
-            view.window?.overrideUserInterfaceStyle = .dark
+            window?.overrideUserInterfaceStyle = .dark
         }
         else if userDefaults.integer(forKey: "theme") == 2 {
-            view.window?.overrideUserInterfaceStyle = .unspecified
+            window?.overrideUserInterfaceStyle = .unspecified
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-     
+        if userDefaults.value(forKey: "timeCardsSort") == nil {
+            userDefaults.set(0, forKey: "timeCardsSort")
+        }
         addBannerViewToView(bannerView)
         
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
@@ -176,6 +195,11 @@ class ViewController: UIViewController {
             tabBarController?.tabBar.items![1].badgeValue = nil
         }
         
+    }
+    
+    
+    @IBAction func dateDatePicker(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     var inHour : Int = 0
@@ -293,7 +317,7 @@ class ViewController: UIViewController {
                         hoursToBeStored.outTime = outTime
                         hoursToBeStored.totalHours = "\(hours).\(minutes)"
                         
-                        let today = Date()
+                        let today = dateDatePicker.date
                         let formatter1 = DateFormatter()
                         formatter1.dateFormat = "MM/dd/yyyy"
                         let dateFormatted = formatter1.string(from: today)
@@ -314,7 +338,7 @@ class ViewController: UIViewController {
                         hoursToBeStored.inTime = inTime
                         hoursToBeStored.outTime = outTime
                         hoursToBeStored.totalHours = "\(hours).\(minutes)"
-                        let today = Date()
+                        let today = dateDatePicker.date
                         let formatter1 = DateFormatter()
                         formatter1.dateFormat = "MM/dd/yyyy"
                         let dateFormatted = formatter1.string(from: today)
@@ -348,7 +372,7 @@ class ViewController: UIViewController {
                         hoursToBeStored.outTime = outTime
                         hoursToBeStored.totalHours = "\(hoursDifference).\(minutesFormatted)"
                         
-                        let today = Date()
+                        let today = dateDatePicker.date
                         let formatter1 = DateFormatter()
                         formatter1.dateFormat = "MM/dd/yyyy"
                         let dateFormatted = formatter1.string(from: today)
@@ -371,7 +395,7 @@ class ViewController: UIViewController {
                     hoursToBeStored.inTime = inTime
                     hoursToBeStored.outTime = outTime
                     hoursToBeStored.totalHours = "\(hoursDifference).\(minutesFormatted)"
-                    let today = Date()
+                    let today = dateDatePicker.date
                     let formatter1 = DateFormatter()
                     formatter1.dateFormat = "MM/dd/yyyy"
                     let dateFormatted = formatter1.string(from: today)
@@ -427,7 +451,7 @@ class ViewController: UIViewController {
                             hoursToBeStored.outTime = outTime
                             hoursToBeStored.totalHours = "\(hours).\(minutes)"
                             
-                            let today = Date()
+                            let today = dateDatePicker.date
                             let formatter1 = DateFormatter()
                             formatter1.dateFormat = "MM/dd/yyyy"
                             let dateFormatted = formatter1.string(from: today)
@@ -450,7 +474,7 @@ class ViewController: UIViewController {
                         hoursToBeStored.outTime = outTime
                         hoursToBeStored.totalHours = "\(hours).\(minutes)"
                         //hoursToBeStored.date = Date()
-                        let today = Date()
+                        let today = dateDatePicker.date
                         let formatter1 = DateFormatter()
                         formatter1.dateFormat = "MM/dd/yyyy"
                         let dateFormatted = formatter1.string(from: today)
@@ -487,7 +511,7 @@ class ViewController: UIViewController {
                         hoursToBeStored.outTime = outTime
                         hoursToBeStored.totalHours = "\(hoursDifference).\(minutesFormatted)"
                         
-                        let today = Date()
+                        let today = dateDatePicker.date
                         let formatter1 = DateFormatter()
                         formatter1.dateFormat = "MM/dd/yyyy"
                         let dateFormatted = formatter1.string(from: today)
@@ -512,7 +536,7 @@ class ViewController: UIViewController {
                     hoursToBeStored.inTime = inTime
                     hoursToBeStored.outTime = outTime
                     hoursToBeStored.totalHours = "\(hoursDifference).\(minutesFormatted)"
-                    let today = Date()
+                    let today = dateDatePicker.date
                     let formatter1 = DateFormatter()
                     formatter1.dateFormat = "MM/dd/yyyy"
                     let dateFormatted = formatter1.string(from: today)
