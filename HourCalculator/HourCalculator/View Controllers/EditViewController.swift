@@ -465,7 +465,6 @@ class EditViewController: UIViewController {
         didUpdateInTime = true
         didUpdateOutTime = true
         didUpdateDate = true
-        //(UIApplication.shared.delegate as! AppDelegate).saveContext()
     }
 }
 

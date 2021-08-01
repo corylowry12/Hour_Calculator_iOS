@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "outline_settings_black_36pt_1x.png",
+      "filename" : "outline_date_range_black_36pt_1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "outline_settings_black_36pt_2x.png",
+      "filename" : "outline_date_range_black_36pt_2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "outline_settings_black_36pt_3x.png",
+      "filename" : "outline_date_range_black_36pt_3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

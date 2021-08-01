@@ -21,7 +21,7 @@ class PatchNotesViewController: UITableViewController {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         let userDefaults = UserDefaults.standard
         userDefaults.set(appVersion, forKey: "appVersion")
-        tabBarController?.tabBar.items?[2].badgeValue = nil
+        tabBarController?.tabBar.items?[3].badgeValue = nil
     }
     
     override func viewWillAppear(_ animated: Bool) {

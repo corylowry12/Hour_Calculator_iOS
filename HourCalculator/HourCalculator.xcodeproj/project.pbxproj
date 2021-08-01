@@ -21,7 +21,6 @@
 		32629E0326825FD9006632F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32629E0126825FD9006632F2 /* LaunchScreen.storyboard */; };
 		32629E0E26825FD9006632F2 /* HourCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E0D26825FD9006632F2 /* HourCalculatorTests.swift */; };
 		32629E1926825FD9006632F2 /* HourCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */; };
-		3272542E26867DA0000C6236 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542D26867DA0000C6236 /* InfoViewController.swift */; };
 		327254302686A421000C6236 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542F2686A421000C6236 /* EditViewController.swift */; };
 		3272C60A269799D400091268 /* TimeCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272C609269799D400091268 /* TimeCardTableViewCell.swift */; };
 		32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */; };
@@ -35,13 +34,6 @@
 		329B521F269141A90012E307 /* PromisesObjC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B521E269141A90012E307 /* PromisesObjC.xcframework */; };
 		329B5222269141B20012E307 /* UserMessagingPlatform.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5221269141B20012E307 /* UserMessagingPlatform.xcframework */; };
 		32A2C045269234F200EABD3C /* HowToTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A2C044269234F200EABD3C /* HowToTableViewController.swift */; };
-		32A2C04D2692911500EABD3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A2C04C2692911500EABD3C /* AppDelegate.swift */; };
-		32A2C04F2692911500EABD3C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A2C04E2692911500EABD3C /* SceneDelegate.swift */; };
-		32A2C0512692911500EABD3C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A2C0502692911500EABD3C /* ViewController.swift */; };
-		32A2C0542692911500EABD3C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0522692911500EABD3C /* Main.storyboard */; };
-		32A2C0562692911800EABD3C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0552692911800EABD3C /* Assets.xcassets */; };
-		32A2C0592692911800EABD3C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0572692911800EABD3C /* LaunchScreen.storyboard */; };
-		32A2C05E2692911800EABD3C /* ViewControllerClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 32A2C04A2692911500EABD3C /* ViewControllerClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		32A2C0F92696C12600EABD3C /* orange_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F52696C12600EABD3C /* orange_logo.png */; };
 		32A2C0FA2696C12700EABD3C /* blue_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F62696C12600EABD3C /* blue_logo.png */; };
 		32A2C0FB2696C12700EABD3C /* purple_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F72696C12600EABD3C /* purple_logo.png */; };
@@ -67,13 +59,6 @@
 			remoteGlobalIDString = 32629DF226825FD7006632F2;
 			remoteInfo = HourCalculator;
 		};
-		32A2C05C2692911800EABD3C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 32629DEB26825FD7006632F2 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 32A2C0492692911500EABD3C;
-			remoteInfo = ViewControllerClip;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -83,7 +68,6 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
 			dstSubfolderSpec = 16;
 			files = (
-				32A2C05E2692911800EABD3C /* ViewControllerClip.app in Embed App Clips */,
 			);
 			name = "Embed App Clips";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -115,7 +99,6 @@
 		32629E1426825FD9006632F2 /* HourCalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HourCalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCalculatorUITests.swift; sourceTree = "<group>"; };
 		32629E1A26825FD9006632F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3272542D26867DA0000C6236 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		3272542F2686A421000C6236 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		3272C609269799D400091268 /* TimeCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardTableViewCell.swift; sourceTree = "<group>"; };
 		32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -129,15 +112,6 @@
 		329B521E269141A90012E307 /* PromisesObjC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PromisesObjC.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/PromisesObjC.xcframework"; sourceTree = "<group>"; };
 		329B5221269141B20012E307 /* UserMessagingPlatform.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = UserMessagingPlatform.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/UserMessagingPlatform.xcframework"; sourceTree = "<group>"; };
 		32A2C044269234F200EABD3C /* HowToTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToTableViewController.swift; sourceTree = "<group>"; };
-		32A2C04A2692911500EABD3C /* ViewControllerClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViewControllerClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		32A2C04C2692911500EABD3C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		32A2C04E2692911500EABD3C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		32A2C0502692911500EABD3C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		32A2C0532692911500EABD3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		32A2C0552692911800EABD3C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		32A2C0582692911800EABD3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		32A2C05A2692911800EABD3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		32A2C05B2692911800EABD3C /* ViewControllerClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ViewControllerClip.entitlements; sourceTree = "<group>"; };
 		32A2C0F52696C12600EABD3C /* orange_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orange_logo.png; sourceTree = "<group>"; };
 		32A2C0F62696C12600EABD3C /* blue_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_logo.png; sourceTree = "<group>"; };
 		32A2C0F72696C12600EABD3C /* purple_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple_logo.png; sourceTree = "<group>"; };
@@ -182,13 +156,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		32A2C0472692911500EABD3C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -198,7 +165,6 @@
 				32629DF526825FD7006632F2 /* HourCalculator */,
 				32629E0C26825FD9006632F2 /* HourCalculatorTests */,
 				32629E1726825FD9006632F2 /* HourCalculatorUITests */,
-				32A2C04B2692911500EABD3C /* ViewControllerClip */,
 				32629DF426825FD7006632F2 /* Products */,
 				C57BCD1BFE3520B69AA98BE7 /* Pods */,
 				62D1BDB0B95E786AD2D0ADC3 /* Frameworks */,
@@ -211,7 +177,6 @@
 				32629DF326825FD7006632F2 /* HourCalculator.app */,
 				32629E0926825FD9006632F2 /* HourCalculatorTests.xctest */,
 				32629E1426825FD9006632F2 /* HourCalculatorUITests.xctest */,
-				32A2C04A2692911500EABD3C /* ViewControllerClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -257,19 +222,18 @@
 			isa = PBXGroup;
 			children = (
 				3272542F2686A421000C6236 /* EditViewController.swift */,
+				3254AFA0268E71FB005B13E5 /* HistorySettingsTableViewController.swift */,
 				325A41C72685634100B098C9 /* HistoryViewController.swift */,
-				3272542D26867DA0000C6236 /* InfoViewController.swift */,
+				32A2C044269234F200EABD3C /* HowToTableViewController.swift */,
 				3284984B2687FE380092D22F /* PatchNotesViewController.swift */,
 				328498452687BE280092D22F /* SettingsTableViewCell.swift */,
 				32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */,
 				325568502689C13F00CC7ACD /* TabBarController.swift */,
 				323DD8F12685984D00332BA3 /* TableViewCell.swift */,
 				328498472687D3F30092D22F /* ThemeViewController.swift */,
-				32629DFA26825FD7006632F2 /* ViewController.swift */,
-				3254AFA0268E71FB005B13E5 /* HistorySettingsTableViewController.swift */,
-				32A2C044269234F200EABD3C /* HowToTableViewController.swift */,
-				325F378726978B88000D6FFB /* TimeCardTableViewController.swift */,
 				3272C609269799D400091268 /* TimeCardTableViewCell.swift */,
+				325F378726978B88000D6FFB /* TimeCardTableViewController.swift */,
+				32629DFA26825FD7006632F2 /* ViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -281,21 +245,6 @@
 				32629E0126825FD9006632F2 /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
-			sourceTree = "<group>";
-		};
-		32A2C04B2692911500EABD3C /* ViewControllerClip */ = {
-			isa = PBXGroup;
-			children = (
-				32A2C04C2692911500EABD3C /* AppDelegate.swift */,
-				32A2C04E2692911500EABD3C /* SceneDelegate.swift */,
-				32A2C0502692911500EABD3C /* ViewController.swift */,
-				32A2C0522692911500EABD3C /* Main.storyboard */,
-				32A2C0552692911800EABD3C /* Assets.xcassets */,
-				32A2C0572692911800EABD3C /* LaunchScreen.storyboard */,
-				32A2C05A2692911800EABD3C /* Info.plist */,
-				32A2C05B2692911800EABD3C /* ViewControllerClip.entitlements */,
-			);
-			path = ViewControllerClip;
 			sourceTree = "<group>";
 		};
 		62D1BDB0B95E786AD2D0ADC3 /* Frameworks */ = {
@@ -344,7 +293,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				32A2C05D2692911800EABD3C /* PBXTargetDependency */,
 			);
 			name = HourCalculator;
 			packageProductDependencies = (
@@ -393,23 +341,6 @@
 			productReference = 32629E1426825FD9006632F2 /* HourCalculatorUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		32A2C0492692911500EABD3C /* ViewControllerClip */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 32A2C05F2692911800EABD3C /* Build configuration list for PBXNativeTarget "ViewControllerClip" */;
-			buildPhases = (
-				32A2C0462692911500EABD3C /* Sources */,
-				32A2C0472692911500EABD3C /* Frameworks */,
-				32A2C0482692911500EABD3C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ViewControllerClip;
-			productName = ViewControllerClip;
-			productReference = 32A2C04A2692911500EABD3C /* ViewControllerClip.app */;
-			productType = "com.apple.product-type.application.on-demand-install-capable";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -429,9 +360,6 @@
 					32629E1326825FD9006632F2 = {
 						CreatedOnToolsVersion = 12.5;
 						TestTargetID = 32629DF226825FD7006632F2;
-					};
-					32A2C0492692911500EABD3C = {
-						CreatedOnToolsVersion = 12.5.1;
 					};
 				};
 			};
@@ -454,7 +382,6 @@
 				32629DF226825FD7006632F2 /* HourCalculator */,
 				32629E0826825FD9006632F2 /* HourCalculatorTests */,
 				32629E1326825FD9006632F2 /* HourCalculatorUITests */,
-				32A2C0492692911500EABD3C /* ViewControllerClip */,
 			);
 		};
 /* End PBXProject section */
@@ -485,16 +412,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		32A2C0482692911500EABD3C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				32A2C0592692911800EABD3C /* LaunchScreen.storyboard in Resources */,
-				32A2C0562692911800EABD3C /* Assets.xcassets in Resources */,
-				32A2C0542692911500EABD3C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,7 +538,6 @@
 				3272C60A269799D400091268 /* TimeCardTableViewCell.swift in Sources */,
 				323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */,
 				328498482687D3F30092D22F /* ThemeViewController.swift in Sources */,
-				3272542E26867DA0000C6236 /* InfoViewController.swift in Sources */,
 				3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */,
 				328498462687BE280092D22F /* SettingsTableViewCell.swift in Sources */,
 				327254302686A421000C6236 /* EditViewController.swift in Sources */,
@@ -644,16 +560,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		32A2C0462692911500EABD3C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				32A2C0512692911500EABD3C /* ViewController.swift in Sources */,
-				32A2C04D2692911500EABD3C /* AppDelegate.swift in Sources */,
-				32A2C04F2692911500EABD3C /* SceneDelegate.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -666,11 +572,6 @@
 			isa = PBXTargetDependency;
 			target = 32629DF226825FD7006632F2 /* HourCalculator */;
 			targetProxy = 32629E1526825FD9006632F2 /* PBXContainerItemProxy */;
-		};
-		32A2C05D2692911800EABD3C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 32A2C0492692911500EABD3C /* ViewControllerClip */;
-			targetProxy = 32A2C05C2692911800EABD3C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -687,22 +588,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				32629E0226825FD9006632F2 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		32A2C0522692911500EABD3C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				32A2C0532692911500EABD3C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		32A2C0572692911800EABD3C /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				32A2C0582692911800EABD3C /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -839,7 +724,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -847,7 +732,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.7;
+				MARKETING_VERSION = 1.2.9;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
@@ -868,7 +753,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -876,7 +761,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.7;
+				MARKETING_VERSION = 1.2.9;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
@@ -975,54 +860,6 @@
 			};
 			name = Release;
 		};
-		32A2C0602692911800EABD3C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ViewControllerClip/ViewControllerClip.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
-				DEVELOPMENT_TEAM = DP6RQZGX67;
-				INFOPLIST_FILE = ViewControllerClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.2.7;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		32A2C0612692911800EABD3C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ViewControllerClip/ViewControllerClip.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
-				DEVELOPMENT_TEAM = DP6RQZGX67;
-				INFOPLIST_FILE = ViewControllerClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.2.7;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1058,15 +895,6 @@
 			buildConfigurations = (
 				32629E2426825FD9006632F2 /* Debug */,
 				32629E2526825FD9006632F2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		32A2C05F2692911800EABD3C /* Build configuration list for PBXNativeTarget "ViewControllerClip" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				32A2C0602692911800EABD3C /* Debug */,
-				32A2C0612692911800EABD3C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

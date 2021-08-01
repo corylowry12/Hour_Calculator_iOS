@@ -104,5 +104,4 @@ class HowToTableViewController: UITableViewController {
             tableView.scrollToRow(at: index, at: .top, animated: true)
         }
     }
-  
 }

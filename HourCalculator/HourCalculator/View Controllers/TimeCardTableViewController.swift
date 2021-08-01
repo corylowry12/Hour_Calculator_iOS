@@ -9,8 +9,11 @@ import Foundation
 import UIKit
 import CoreData
 import Instabug
+import GoogleMobileAds
 
 class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
     @IBOutlet weak var sortButton: UIButton!
     
     @IBOutlet var tableView: UITableView!
@@ -35,6 +38,12 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             }
             else if userDefaults.integer(forKey: "timeCardsSort") == 3 {
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.total), ascending: false)
+            }
+            else if userDefaults.integer(forKey: "timeCardsSort") == 4 {
+                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: true)
+            }
+            else if userDefaults.integer(forKey: "timeCardsSort") == 5 {
+                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: false)
             }
             fetchrequest.sortDescriptors = [sort]
             return try context.fetch(fetchrequest)
@@ -86,6 +95,12 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        addBannerViewToView(bannerView)
+        
+        bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
+        bannerView.rootViewController = self
+        bannerView.load(GADRequest())
+        
         tableView.delegate = self
         tableView.dataSource = self
     }
@@ -98,19 +113,21 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         
         if timeCards.count == 0 {
             sortButton.isHidden = true
-            
     
         }
         else {
             sortButton.isHidden = false
             sortButton.alpha = 0
-            
             UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
                 self.sortButton.alpha = 1.0
-            }, completion: {_ in
-              
+            }, completion: { _ in
+                
             })
         }
+        
+     
+        view.backgroundColor = tableView.backgroundColor
+        
         
         if userDefaults.integer(forKey: "accent") == 0 {
             sortButton.backgroundColor = UIColor(rgb: 0x26A69A)
@@ -140,6 +157,12 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         }
         else if userDefaults.integer(forKey: "timeCardsSort") == 3 {
             sortButton.setTitle("Sort: Total Hours Descending", for: .normal)
+        }
+        else if userDefaults.integer(forKey: "timeCardsSort") == 4 {
+            sortButton.setTitle("Sort: Name Ascending", for: .normal)
+        }
+        else if userDefaults.integer(forKey: "timeCardsSort") == 5 {
+            sortButton.setTitle("Sort: Name Descending", for: .normal)
         }
     }
     
@@ -218,11 +241,119 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                     self.sortButton.isHidden = true
                 })
             }
+            tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return timeCards.count
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .normal,
+                                        title: "Rename") { (action, view, completionHandler) in
+            let alert = UIAlertController(title: "Name", message: "Enter a name", preferredStyle: .alert)
+            alert.addTextField { [self] (textField) in
+                textField.clearButtonMode = .always
+                textField.autocapitalizationType = .words
+                textField.autocorrectionType = .no
+            
+                var name : String!
+                if timeCards[indexPath.row].name == nil {
+                    name = "Unknown"
+                }
+                else {
+                    name = timeCards[indexPath.row].name
+                }
+                textField.placeholder = name
+            }
+            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: {_ in
+                let nameToBeStored = self.timeCards[indexPath.row]
+                let textField = alert.textFields?[0]
+                var userText : String!
+                if textField?.text == "" {
+                    userText = textField?.placeholder
+                }
+                else {
+                    userText = textField!.text
+                }
+                nameToBeStored.name = userText
+                self.tableView.setEditing(false, animated: true)
+                self.tableView.reloadData()
+                self.undo = 1
+            }))
+            if self.timeCards[indexPath.row].name != nil && self.timeCards[indexPath.row].name != "Unknown" {
+                alert.addAction(UIAlertAction(title: "Remove Previous", style: .default, handler: {_ in
+                    let nameToBeStored = self.timeCards[indexPath.row]
+                    nameToBeStored.name = nil
+                    self.tableView.setEditing(false, animated: true)
+                    self.tableView.reloadData()
+                                             
+                    self.undo = 1
+                }))
+            }
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in
+                self.tableView.setEditing(false, animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
+        action.backgroundColor = .systemOrange
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let alert = UIAlertController(title: "Name", message: "Enter a name", preferredStyle: .alert)
+        alert.addTextField { [self] (textField) in
+            textField.clearButtonMode = .always
+            textField.autocapitalizationType = .words
+            textField.autocorrectionType = .no
+        
+            var name : String!
+            if timeCards[indexPath.row].name == nil {
+                name = "Unknown"
+            }
+            else {
+                name = timeCards[indexPath.row].name
+            }
+            textField.placeholder = name
+        }
+        alert.addAction(UIAlertAction(title: "Save", style: .default, handler: {_ in
+            let nameToBeStored = self.timeCards[indexPath.row]
+            let textField = alert.textFields?[0]
+            var userText : String!
+            if textField?.text == "" {
+                userText = textField?.placeholder
+            }
+            else {
+                userText = textField!.text
+            }
+            nameToBeStored.name = userText
+            UIView.transition(with: tableView,
+                                      duration: 0.35,
+                                      options: .transitionCrossDissolve,
+                                      animations: { () -> Void in
+                                        self.tableView.reloadData()
+                                      },
+                                      completion: nil);
+            self.undo = 1
+        }))
+        if timeCards[indexPath.row].name != nil && timeCards[indexPath.row].name != "Unknown" {
+            alert.addAction(UIAlertAction(title: "Remove Previous", style: .default, handler: {_ in
+                let nameToBeStored = self.timeCards[indexPath.row]
+                nameToBeStored.name = nil
+                UIView.transition(with: tableView,
+                                          duration: 0.35,
+                                          options: .transitionCrossDissolve,
+                                          animations: { () -> Void in
+                                            self.tableView.reloadData()
+                                          },
+                                          completion: nil);
+                self.undo = 1
+            }))
+        }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -235,7 +366,22 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         let inTime = timeCards.week
         let total = round
         
-        cell.inTimeLabel.text = "Week Of: \(inTime ?? "Unknown")"
+        var name : String!
+        
+        if timeCards.name == nil {
+            name = "Name: Unknown"
+        }
+        else {
+            name = "Name: \(timeCards.name ?? "")"
+        }
+        
+        cell.nameLabel.text = name
+        if timeCards.numberBeingExported == 1 {
+        cell.inTimeLabel.text = "Day Of: \(inTime ?? "Unknown")"
+        }
+        else if timeCards.numberBeingExported > 1 || timeCards.numberBeingExported == 0 {
+            cell.inTimeLabel.text = "Week Of: \(inTime ?? "Unknown")"
+        }
         cell.totalLabel.text = "Total Hours: \(total)"
         
         return cell
@@ -265,6 +411,14 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         }
         else if userDefaults.integer(forKey: "timeCardsSort") == 3 {
             sender.setTitle("Sort: Date Descending", for: .normal)
+            userDefaults.set(4, forKey: "timeCardsSort")
+        }
+        else if userDefaults.integer(forKey: "timeCardsSort") == 4 {
+            sender.setTitle("Sort: Name Ascending", for: .normal)
+            userDefaults.set(5, forKey: "timeCardsSort")
+        }
+        else if userDefaults.integer(forKey: "timeCardsSort") == 5 {
+            sender.setTitle("Sort: Name Descending", for: .normal)
             userDefaults.set(0, forKey: "timeCardsSort")
         }
         
@@ -275,5 +429,35 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                                     self.tableView.reloadData()
                                   },
                                   completion: nil);
+    }
+    
+    func addBannerViewToView(_ bannerView: GADBannerView) {
+        
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(bannerView)
+        view.addConstraints(
+            [NSLayoutConstraint(item: bannerView,
+                                attribute: .bottom,
+                                relatedBy: .equal,
+                                toItem: view.safeAreaLayoutGuide,
+                                attribute: .bottom,
+                                multiplier: 1,
+                                constant: 0),
+             NSLayoutConstraint(item: bannerView,
+                                attribute: .centerX,
+                                relatedBy: .equal,
+                                toItem: view,
+                                attribute: .centerX,
+                                multiplier: 1,
+                                constant: 0),
+            ])
+    }
+    
+    func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
+        addBannerViewToView(bannerView)
+        bannerView.alpha = 0
+        UIView.animate(withDuration: 1, animations: {
+            bannerView.alpha = 1
+        })
     }
 }

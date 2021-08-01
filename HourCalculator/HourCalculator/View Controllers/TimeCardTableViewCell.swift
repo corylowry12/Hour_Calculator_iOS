@@ -10,6 +10,7 @@ import UIKit
 
 class TimeCardTableViewCell : UITableViewCell {
     
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var inTimeLabel: UILabel!
     

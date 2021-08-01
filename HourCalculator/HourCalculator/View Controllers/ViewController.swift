@@ -41,6 +41,22 @@ class ViewController: UIViewController {
         
     }
     
+    var timeCards: [TimeCards] {
+        
+        do {
+           
+            return try context.fetch(TimeCards.fetchRequest())
+            
+        } catch {
+            
+            print("Couldn't fetch data")
+            
+        }
+        
+        return [TimeCards]()
+        
+    }
+    
     func changeIcon(_ iconName: Any?) {
         if UIApplication.shared.responds(to: #selector(getter: UIApplication.supportsAlternateIcons)) && UIApplication.shared.supportsAlternateIcons {
             
@@ -86,6 +102,7 @@ class ViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         //view.layer.shadowPath = UIBezierPath(rect: view.bounds).cgPath
         let os = ProcessInfo().operatingSystemVersion
         
@@ -176,7 +193,7 @@ class ViewController: UIViewController {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
         if userDefaults.value(forKey: "appVersion") == nil || userDefaults.value(forKey: "appVersion") as? String != appVersion {
-            tabBarController?.tabBar.items?[2].badgeValue = "1"
+            tabBarController?.tabBar.items?[3].badgeValue = "1"
         }
         
         if userDefaults.value(forKey: "intime") != nil {
@@ -194,6 +211,8 @@ class ViewController: UIViewController {
         else {
             tabBarController?.tabBar.items![1].badgeValue = nil
         }
+        
+        tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
         
     }
     
