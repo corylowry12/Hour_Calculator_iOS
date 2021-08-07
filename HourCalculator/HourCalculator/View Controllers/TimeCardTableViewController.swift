@@ -105,6 +105,14 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                     
                     undo = 0
                     
+                    sortButton.isHidden = false
+                    sortButton.alpha = 0
+                    UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
+                        self.sortButton.alpha = 1.0
+                    }, completion: { _ in
+                        
+                    })
+                    
                 }))
                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
@@ -250,10 +258,12 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             
             predicateText = "\(timeCards[indexPath.row].id_number)"
             
+            if timeCardInfo.count > 0 {
             for i in (0...timeCardInfo.count - 1).reversed() {
                 let timeCardInfoToDelete = timeCardInfo[i]
                 
                 self.context.delete(timeCardInfoToDelete)
+            }
             }
             
             let hourToDelete = self.timeCards[indexPath.row]
@@ -271,7 +281,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 })
             }
             tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
-            (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            //(UIApplication.shared.delegate as! AppDelegate).saveContext()
         }
     }
     
