@@ -158,6 +158,7 @@ class EditViewController: UIViewController {
         }
     }
     @IBAction func inTimeValueChanged(_ sender: UIDatePicker) {
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm a"
         let inTimeDate = dateFormatter.string(from: sender.date)
@@ -165,7 +166,7 @@ class EditViewController: UIViewController {
             didUpdateInTime = true
         }
         else {
-        didUpdateInTime = false
+            didUpdateInTime = false
         }
         let date = datePickerInTime.date
         let components = Calendar.current.dateComponents([.hour, .minute], from: date)
@@ -200,8 +201,8 @@ class EditViewController: UIViewController {
     }
     @IBAction func saveButtonClicked(_ sender: Any) {
         
-        if didUpdateDate == false || didUpdateOutTime == false || didUpdateDate == false {
-        //save()
+        if didUpdateInTime == false || didUpdateOutTime == false || didUpdateDate == false {
+       
             let date = datePickerInTime.date
             let components = Calendar.current.dateComponents([.hour, .minute], from: date)
             
@@ -214,7 +215,6 @@ class EditViewController: UIViewController {
             outHour = componentsOut.hour!
             outMinute = componentsOut.minute!
             
-            //let minutesDifference = outMinute - inMinute
             let hoursDifference = outHour - inHour
             
             if hoursDifference < 0 && (12...24).contains(inHour) && (0...12).contains(outHour){
@@ -222,7 +222,6 @@ class EditViewController: UIViewController {
             }
             else {
                     self.save()
-                
             }
         }
         else {
