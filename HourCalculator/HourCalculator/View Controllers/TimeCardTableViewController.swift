@@ -63,12 +63,11 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.total), ascending: false)
             }
             else if userDefaults.integer(forKey: "timeCardsSort") == 4 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: true)
-            }
-            else if userDefaults.integer(forKey: "timeCardsSort") == 5 {
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: false)
             }
-            print("sort mode: \(userDefaults.integer(forKey: "timeCardsSort"))")
+            else if userDefaults.integer(forKey: "timeCardsSort") == 5 {
+                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: true)
+            }
             fetchrequest.sortDescriptors = [sort]
             return try context.fetch(fetchrequest)
             
@@ -89,9 +88,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        print(undo)
         if motion == .motionShake {
-            print(undo)
             if undo == 1 {
                 BugReporting.dismiss()
                 print("Why are you shaking me?")
@@ -225,6 +222,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     private var finishedLoadingInitialTableCells = false
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        DispatchQueue.main.async { [self] in
         
         var lastInitialDisplayableCell = false
         
@@ -246,16 +244,19 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight/2)
             cell.alpha = 0
             
-            UIView.animate(withDuration: 0.5, delay: 0.05*Double(indexPath.row), options: [.curveEaseInOut], animations: {
+            UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve], animations: {
                 cell.transform = CGAffineTransform(translationX: 0, y: 0)
                 cell.alpha = 1
             }, completion: nil)
+        }
         }
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
+            let alert = UIAlertController(title: "Warning", message: "You are about to delete a time card entry. Would you like to continue?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
+                
             predicateText = "\(timeCards[indexPath.row].id_number)"
             
             if timeCardInfo.count > 0 {
@@ -269,7 +270,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             let hourToDelete = self.timeCards[indexPath.row]
             self.context.delete(hourToDelete)
             
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
+            self.tableView.deleteRows(at: [indexPath], with: .left)
             noHoursStoredBackground()
             undo = 1
             if timeCards.count == 0 {
@@ -282,6 +283,11 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             }
             tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
             //(UIApplication.shared.delegate as! AppDelegate).saveContext()
+            }))
+            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {_ in
+                tableView.setEditing(false, animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -310,7 +316,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 nameToBeStored.name = userText
                 (UIApplication.shared.delegate as! AppDelegate).saveContext()
               
-                self.tableView.reloadRows(at: [indexPath], with: .fade)
+                self.tableView.reloadRows(at: [indexPath], with: .none)
                                
                 self.undo = 1
             })
@@ -340,7 +346,9 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             if timeCards[indexPath.row].name != nil && timeCards[indexPath.row].name != "Unknown" {
                 alert.addAction(removePrevious)
             }
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in
+                tableView.setEditing(false, animated: true)
+            }))
             alert.preferredAction = save
             self.present(alert, animated: true, completion: nil)
         }

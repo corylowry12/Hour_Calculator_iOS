@@ -28,16 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Siren.shared.rulesManager = RulesManager(globalRules: .persistent, showAlertAfterCurrentVersionHasBeenReleasedForDays: 5)
         
-        if userDefaults.integer(forKey: "theme") == 0 {
-            window?.overrideUserInterfaceStyle = .light
-        }
-        else if userDefaults.integer(forKey: "theme") == 1 {
-            window?.overrideUserInterfaceStyle = .dark
-        }
-        else if userDefaults.integer(forKey: "theme") == 2 {
-            window?.overrideUserInterfaceStyle = .unspecified
-        }
-        
         return true
         
     }
