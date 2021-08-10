@@ -25,14 +25,13 @@ class SettingsTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         
-        
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         let storedValue = UserDefaults.standard.bool(forKey: "StoredEmptyHours")
-
+        
         hourSwitch?.isOn = storedValue
         
         // Configure the view for the selected state

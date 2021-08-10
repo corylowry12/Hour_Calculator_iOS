@@ -71,13 +71,8 @@ class HistorySettingsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            /*if historyEnabled != indexPath.row {
-             tableView.cellForRow(at: [0, historyEnabled])?.accessoryType = .none
-             }
-             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark*/
             
             let userDefaults = UserDefaults.standard
-            //userDefaults.setValue(indexPath.row, forKey: "historyEnabled")
             
             if indexPath.row == 0 {
                 tableView.cellForRow(at: [0, userDefaults.integer(forKey: "historyEnabled")])?.accessoryType = .none
@@ -93,13 +88,8 @@ class HistorySettingsTableViewController: UITableViewController {
                 tabBarController?.tabBar.items?[1].isEnabled = false
                 tabBarController?.tabBar.items?[1].badgeValue = nil
             }
-            
         }
         else if indexPath.section == 1 {
-            /* if historySort != indexPath.row {
-             tableView.cellForRow(at: [1, historySort])?.accessoryType = .none
-             }
-             tableView.cellForRow(at: [1, indexPath.row])?.accessoryType = .checkmark*/
             
             let userDefaults = UserDefaults.standard
             
@@ -128,14 +118,10 @@ class HistorySettingsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        // Find any selected row in this section
         if let selectedIndexPath = tableView.indexPathsForSelectedRows?.first(where: {
             $0.section == indexPath.section
         }) {
-            // Deselect the row
             tableView.deselectRow(at: selectedIndexPath, animated: false)
-            // deselectRow doesn't fire the delegate method so need to
-            // unset the checkmark here
             tableView.cellForRow(at: selectedIndexPath)?.accessoryType = .none
         }
         return indexPath

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class TimeCardInfoTableViewCell : UITableViewCell {
-
+    
     @IBOutlet weak var inTimeLabel: UILabel!
     @IBOutlet weak var outTimeLabel: UILabel!
     @IBOutlet weak var totalHoursLabel: UILabel!

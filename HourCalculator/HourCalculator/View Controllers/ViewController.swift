@@ -44,7 +44,7 @@ class ViewController: UIViewController {
     var timeCards: [TimeCards] {
         
         do {
-           
+            
             return try context.fetch(TimeCards.fetchRequest())
             
         } catch {
@@ -162,7 +162,7 @@ class ViewController: UIViewController {
             window?.overrideUserInterfaceStyle = .unspecified
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.

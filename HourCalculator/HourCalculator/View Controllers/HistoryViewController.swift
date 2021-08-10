@@ -170,7 +170,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.addGestureRecognizer(longPressGesture)
         
         //let notificationName2 = NSNotification.Name("info")
-       // NotificationCenter.default.post(name: notificationName2, object: nil)
+        // NotificationCenter.default.post(name: notificationName2, object: nil)
         
         let notificationName = NSNotification.Name("Update")
         NotificationCenter.default.addObserver(self, selector: #selector(HistoryViewController.reloadTableView), name: notificationName, object: nil)
@@ -226,7 +226,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     override func viewDidAppear(_ animated: Bool) {
-       // let notificationName2 = NSNotification.Name("info")
+        // let notificationName2 = NSNotification.Name("info")
         //NotificationCenter.default.post(name: notificationName2, object: self)
         
         noHoursStoredBackground()
@@ -305,16 +305,16 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "HourItems", for: indexPath) as! TableViewCell
         DispatchQueue.main.async {
-        let inTime = String(hourItems.inTime!)
-        let outTime = String(hourItems.outTime!)
-        let totalHours = String(hourItems.totalHours!)
-        let date = hourItems.date!
-        
-        
-        cell.inTimeLabel.text = "In Time: \(inTime)"
-        cell.outTimeLabel.text = "Out Time: \(outTime)"
-        cell.totalHoursLabel.text = "Total Hours: \(totalHours)"
-        cell.dateLabel.text = "Date: \(date)"
+            let inTime = String(hourItems.inTime!)
+            let outTime = String(hourItems.outTime!)
+            let totalHours = String(hourItems.totalHours!)
+            let date = hourItems.date!
+            
+            
+            cell.inTimeLabel.text = "In Time: \(inTime)"
+            cell.outTimeLabel.text = "Out Time: \(outTime)"
+            cell.totalHoursLabel.text = "Total Hours: \(totalHours)"
+            cell.dateLabel.text = "Date: \(date)"
         }
         return cell
         
@@ -333,54 +333,83 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .destructive,
                                         title: "Delete") { (action, view, completionHandler) in
-            let hourToDelete = self.hourItems[indexPath.row]
-            self.context.delete(hourToDelete)
-            
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
-            
-            self.undo = 1
-            
-            self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-            
-            self.noHoursStoredBackground()
-            
-            if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
-                let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {_ in
-                    UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
+            let alert = UIAlertController(title: "Warning", message: "You are fixing to delete a single entry, would you like to continue?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
+                let hourToDelete = self.hourItems[indexPath.row]
+                self.context.delete(hourToDelete)
+                
+                self.tableView.deleteRows(at: [indexPath], with: .fade)
+                
+                self.undo = 1
+                
+                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                
+                self.noHoursStoredBackground()
+                
+                if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
+                    let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {_ in
+                        UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
+                    }
+                    ))
+                    self.present(alert, animated: true, completion: nil)
                 }
-                ))
-                self.present(alert, animated: true, completion: nil)
-            }
+            }))
+            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {_ in
+                completionHandler(false)
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
         let exportAction = UIContextualAction(style: .normal, title: "Export") { (action, view, completionHandler) in
-            let timeCards = TimeCards(context: self.context)
-            let date = "\(self.hourItems[indexPath.row].date ?? "Unknown")"
-            timeCards.week = date
-            
-            let hourToDelete = self.hourItems[indexPath.row]
-            self.total += Double(self.hourItems[indexPath.row].totalHours!)!
-            
-            self.context.delete(hourToDelete)
-            self.tableView.deleteRows(at: [indexPath], with: .left)
-            
-            self.undo = 1
-            
-            timeCards.total = self.total
-            timeCards.numberBeingExported = Int64(1)
-            UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve], animations: {
-                self.tableView.reloadData()
-            }, completion: nil)
-            self.noHoursStoredBackground()
-            self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-            self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-            if self.hourItems.count == 0 {
-                self.editButton.isEnabled = false
-                self.infoButton.isEnabled = false
-                self.deleteAllMenuButton.isEnabled = false
-                self.exportMenuButton.isEnabled = false
-            }
-            
+            let alert = UIAlertController(title: "Warning", message: "You are fixing to export a single hour. Would you like to continue?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
+                var random : Int32!
+                do {
+                    random = Int32.random(in: 1...500)
+                }
+                while self.timeCards.contains(where: { $0.id_number == random }) {
+                    random = Int32.random(in: 1...500)
+                }
+                
+                let timeCards = TimeCards(context: self.context)
+                let date = "\(self.hourItems[indexPath.row].date ?? "Unknown")"
+                timeCards.week = date
+                timeCards.id_number = random
+                
+                let hourToDelete = self.hourItems[indexPath.row]
+                self.total += Double(self.hourItems[indexPath.row].totalHours!)!
+                
+                let timeCardsInfo = TimeCardInfo(context: self.context)
+                timeCardsInfo.id_number = random
+                timeCardsInfo.intime = self.hourItems[indexPath.row].inTime
+                timeCardsInfo.outtime = self.hourItems[indexPath.row].outTime
+                timeCardsInfo.total_hours = self.hourItems[indexPath.row].totalHours
+                timeCardsInfo.date = self.hourItems[indexPath.row].date
+                
+                self.context.delete(hourToDelete)
+                self.tableView.deleteRows(at: [indexPath], with: .left)
+                
+                self.undo = 1
+                
+                timeCards.total = self.total
+                timeCards.numberBeingExported = Int64(1)
+                UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve], animations: {
+                    self.tableView.reloadData()
+                }, completion: nil)
+                self.noHoursStoredBackground()
+                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                if self.hourItems.count == 0 {
+                    self.editButton.isEnabled = false
+                    self.infoButton.isEnabled = false
+                    self.deleteAllMenuButton.isEnabled = false
+                    self.exportMenuButton.isEnabled = false
+                }
+            }))
+            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {_ in
+                completionHandler(false)
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
         let swipeActionConfig = UISwipeActionsConfiguration(actions: [action, exportAction])
         action.backgroundColor = .systemRed

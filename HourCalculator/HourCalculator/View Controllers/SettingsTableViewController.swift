@@ -132,10 +132,10 @@ class SettingsTableViewController: UITableViewController {
                 alert.dismiss(animated: true, completion: nil)
                 let alertLoading = UIAlertController(title: "Clearing Data...", message: nil, preferredStyle: .alert)
                 let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10,y: 5,width: 50, height: 50)) as UIActivityIndicatorView
-                    loadingIndicator.hidesWhenStopped = true
+                loadingIndicator.hidesWhenStopped = true
                 loadingIndicator.style = .medium
-                    loadingIndicator.startAnimating();
-                    alertLoading.view.addSubview(loadingIndicator)
+                loadingIndicator.startAnimating();
+                alertLoading.view.addSubview(loadingIndicator)
                 self.present(alertLoading, animated: true, completion: nil)
                 let when = DispatchTime.now() + 1
                 DispatchQueue.main.asyncAfter(deadline: when) {
@@ -157,10 +157,10 @@ class SettingsTableViewController: UITableViewController {
         
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Hours.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-
+        
         // get reference to the persistent container
         let persistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-
+        
         // perform the delete
         do {
             try persistentContainer.viewContext.execute(deleteRequest)
@@ -170,7 +170,7 @@ class SettingsTableViewController: UITableViewController {
         
         let fetchRequest_timeCards: NSFetchRequest<NSFetchRequestResult> = TimeCards.fetchRequest()
         let deleteRequest_timeCards = NSBatchDeleteRequest(fetchRequest: fetchRequest_timeCards)
-
+        
         // perform the delete
         do {
             try persistentContainer.viewContext.execute(deleteRequest_timeCards)

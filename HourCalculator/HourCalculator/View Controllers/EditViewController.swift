@@ -61,9 +61,6 @@ class EditViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        //DatePicker.sizeToFit()
-        //DatePicker.clipsToBounds = true
-        
         BugReporting.enabled = true
         
         if userDefaults.integer(forKey: "accent") == 0 {
@@ -86,9 +83,6 @@ class EditViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //let id = Hours(context: context).objectID
-        //print(id)
-        
         let os = ProcessInfo().operatingSystemVersion
         
         switch (os.majorVersion, os.minorVersion, os.patchVersion) {
@@ -106,12 +100,9 @@ class EditViewController: UIViewController {
         
         data = Int(defaults.string(forKey: "ID")!)!
         
-        //print(data)
-        
         let hourItemStored = hourItems[data].inTime
         let hourItemStored2 = hourItems[data].outTime
         let dateTaken = hourItems[data].date
-        //print("date2 \(dateTaken)")
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm a"
         let dateFormatterForDateTaken = DateFormatter()
@@ -260,7 +251,6 @@ class EditViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
             self.context.delete(hourToDelete)
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
-            //deleteButton.title = "\(hourToDelete)"
             let alert = UIAlertController(title: nil, message: "Entry Deleted   ✓", preferredStyle: .alert)
             alert.view.tintColor = UIColor.black
             self.present(alert, animated: true, completion: nil)
@@ -310,8 +300,6 @@ class EditViewController: UIViewController {
             }
             else {
                 dateLabel.text = "Total Hours: \(hours).\(minutes)"
-                
-                //let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
                 
                 let hoursToBeStored = hourItems[data]
                 
@@ -398,8 +386,6 @@ class EditViewController: UIViewController {
             }
             else {
                 dateLabel.text = "Total Hours: \(hours).\(minutes)"
-                
-                //let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
                 
                 let hoursToBeStored = hourItems[data]
                 

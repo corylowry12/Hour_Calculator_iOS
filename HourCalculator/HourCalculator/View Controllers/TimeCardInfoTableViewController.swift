@@ -68,7 +68,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             fetchrequest.sortDescriptors = [sort]
             
             return try context.fetch(fetchrequest)
-
+            
         } catch {
             
             print("Couldn't fetch data")
@@ -78,10 +78,10 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         return [TimeCardInfo]()
         
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -146,39 +146,39 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         DispatchQueue.main.async { [self] in
-        
-        var lastInitialDisplayableCell = false
-        
-        //change flag as soon as last displayable cell is being loaded (which will mean table has initially loaded)
-        if timeCards.count > 0 && !finishedLoadingInitialTableCells {
-            if let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows,
-               let lastIndexPath = indexPathsForVisibleRows.last, lastIndexPath.row == indexPath.row {
-                lastInitialDisplayableCell = true
-            }
-        }
-        
-        if !finishedLoadingInitialTableCells {
             
-            if lastInitialDisplayableCell {
-                finishedLoadingInitialTableCells = true
+            var lastInitialDisplayableCell = false
+            
+            //change flag as soon as last displayable cell is being loaded (which will mean table has initially loaded)
+            if timeCards.count > 0 && !finishedLoadingInitialTableCells {
+                if let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows,
+                   let lastIndexPath = indexPathsForVisibleRows.last, lastIndexPath.row == indexPath.row {
+                    lastInitialDisplayableCell = true
+                }
             }
             
-            //animates the cell as it is being displayed for the first time
-            cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight/2)
-            cell.alpha = 0
-            
-            UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve], animations: {
-                cell.transform = CGAffineTransform(translationX: 0, y: 0)
-                cell.alpha = 1
-            }, completion: nil)
-        }
+            if !finishedLoadingInitialTableCells {
+                
+                if lastInitialDisplayableCell {
+                    finishedLoadingInitialTableCells = true
+                }
+                
+                //animates the cell as it is being displayed for the first time
+                cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight/2)
+                cell.alpha = 0
+                
+                UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve], animations: {
+                    cell.transform = CGAffineTransform(translationX: 0, y: 0)
+                    cell.alpha = 1
+                }, completion: nil)
+            }
         }
     }
     
     @IBAction func textFieldClose(_ sender: UITextField) {
         if sender.text != "" && sender.text != nil {
             timeCards[userDefaults.integer(forKey: "index")].name = sender.text?.trimmingCharacters(in: .whitespaces)
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            (UIApplication.shared.delegate as! AppDelegate).saveContext()
         }
         else if sender.text?.trimmingCharacters(in: .whitespaces) == ""{
             timeCards[userDefaults.integer(forKey: "index")].name = nil
@@ -207,8 +207,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     @IBAction func textFieldTextChanged(_ sender: UITextField) {
         
         if sender.text != "" && sender.text != nil {
-        timeCards[userDefaults.integer(forKey: "index")].name = sender.text
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            timeCards[userDefaults.integer(forKey: "index")].name = sender.text
+            (UIApplication.shared.delegate as! AppDelegate).saveContext()
         }
         else if sender.text?.trimmingCharacters(in: .whitespaces) == ""{
             timeCards[userDefaults.integer(forKey: "index")].name = nil
@@ -218,7 +218,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
-            return false
+        return false
     }
     
     func addBannerViewToView(_ bannerView: GADBannerView) {

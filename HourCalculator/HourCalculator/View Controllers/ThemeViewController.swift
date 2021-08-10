@@ -74,28 +74,28 @@ class ThemeViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-                
-                let userDefaults = UserDefaults.standard
-                
-                if indexPath.row == 0 {
-                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
-                    view.window?.overrideUserInterfaceStyle = .light
-                    userDefaults.set(0, forKey: "theme")
-                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
-                }
-                else if indexPath.row == 1 {
-                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
-                    view.window?.overrideUserInterfaceStyle = .dark
-                    userDefaults.set(1, forKey: "theme")
-                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
-                }
-                else if indexPath.row == 2 {
-                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
-                    view.window?.overrideUserInterfaceStyle = .unspecified
-                    userDefaults.set(2, forKey: "theme")
-                    tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
-                }
-                }
+            
+            let userDefaults = UserDefaults.standard
+            
+            if indexPath.row == 0 {
+                tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
+                view.window?.overrideUserInterfaceStyle = .light
+                userDefaults.set(0, forKey: "theme")
+                tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
+            }
+            else if indexPath.row == 1 {
+                tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
+                view.window?.overrideUserInterfaceStyle = .dark
+                userDefaults.set(1, forKey: "theme")
+                tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
+            }
+            else if indexPath.row == 2 {
+                tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
+                view.window?.overrideUserInterfaceStyle = .unspecified
+                userDefaults.set(2, forKey: "theme")
+                tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
+            }
+        }
         else if indexPath.section == 1 {
             if indexPath.row == 0 {
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
