@@ -131,7 +131,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
                     (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext.rollback()
                     
-                    UIView.transition(with: self.tableView, duration: 0.25, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
+                    UIView.transition(with: self.tableView, duration: 0.25, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {self.tableView.reloadData()}, completion: nil)
                     
                     editMenuButton.isEnabled = true
                     infoButton.isEnabled = true
@@ -186,9 +186,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.exportMenuButton.isEnabled = false
         }
         
-        //bannerView = GADBannerView(adSize: kGADAdSizeBanner)
-        
-        //addBannerViewToView(bannerView)
+        addBannerViewToView(bannerView)
         
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         bannerView.rootViewController = self
@@ -226,8 +224,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        // let notificationName2 = NSNotification.Name("info")
-        //NotificationCenter.default.post(name: notificationName2, object: self)
         
         noHoursStoredBackground()
         
@@ -252,7 +248,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         Instabug.enabled = false
         
-        UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve], animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
             self.tableView.reloadData()
         }, completion: nil)
         
@@ -273,10 +269,8 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         noHoursStoredBackground()
-        
-        //let notificationName2 = NSNotification.Name("info")
-        //NotificationCenter.default.post(name: notificationName2, object: self)
-        UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve], animations: {
+    
+        UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
             self.tableView.reloadData()
         }, completion: nil)
         if hourItems.count > 0 {
@@ -377,7 +371,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 timeCards.id_number = random
                 
                 let hourToDelete = self.hourItems[indexPath.row]
-                self.total += Double(self.hourItems[indexPath.row].totalHours!)!
+                self.total = Double(self.hourItems[indexPath.row].totalHours!)!
                 
                 let timeCardsInfo = TimeCardInfo(context: self.context)
                 timeCardsInfo.id_number = random
@@ -393,7 +387,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 
                 timeCards.total = self.total
                 timeCards.numberBeingExported = Int64(1)
-                UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve], animations: {
+                UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
                     self.tableView.reloadData()
                 }, completion: nil)
                 self.noHoursStoredBackground()
@@ -462,7 +456,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 
                 var lastInitialDisplayableCell = false
                 
-                //change flag as soon as last displayable cell is being loaded (which will mean table has initially loaded)
                 if timeCards.count > 0 && !finishedLoadingInitialTableCells {
                     if let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows,
                        let lastIndexPath = indexPathsForVisibleRows.last, lastIndexPath.row == indexPath.row {
@@ -476,11 +469,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                         finishedLoadingInitialTableCells = true
                     }
                     
-                    //animates the cell as it is being displayed for the first time
                     cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight/2)
                     cell.alpha = 0
                     
-                    UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve], animations: {
+                    UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
                         cell.transform = CGAffineTransform(translationX: 0, y: 0)
                         cell.alpha = 1
                     }, completion: nil)
@@ -627,22 +619,47 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             ))
             self.present(alert, animated: true, completion: nil)
         }
-        
+        let alert = UIAlertController(title: "Warning", message: "You are fixing to delete selected hours. Would you like to continue?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
         if let indexPaths = tableView.indexPathsForSelectedRows {
             let sortedPaths = indexPaths.sorted {$0.row > $1.row}
+            //var y = 0
+            //for i in (0...sortedPaths.count - 1).reversed() {
+            /*for i in sortedPaths {
+             let x = i.row
+             let hourToDelete = self.hourItems[x]
+             self.context.delete(hourToDelete)
+             
+             tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
+             }*/
             
-            for i in (0...sortedPaths.count - 1).reversed() {
-                let hourToDelete = self.hourItems[i]
-                self.context.delete(hourToDelete)
-                
-                tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
+            var items = [Hours]()
+            for indexPath in sortedPaths {
+                items.append(hourItems[indexPath.row])
             }
             
-            self.tableView.deleteRows(at: indexPaths, with: .fade)
-            noHoursStoredBackground()
+            for item in items.reversed() {
+                if let index = hourItems.firstIndex(of: item) {
+                    let hourToDelete = self.hourItems[index]
+                    
+                    context.delete(hourToDelete)
+                    
+                }
+            }
             
+            self.tableView.deleteRows(at: sortedPaths, with: .fade)
+            noHoursStoredBackground()
+            tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
             undo = 1
         }
+            
+            tableView.setEditing(false, animated: true)
+            editButton.title = "Edit"
+            deleteSelectedButton.isHidden = true
+            
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
         
         if (hourItems.count == 0) {
             editButton.isEnabled = false
@@ -661,10 +678,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.editMenuButton.isEnabled = false
             exportMenuButton.isEnabled = false
         }
-        
-        tableView.setEditing(false, animated: true)
-        editButton.title = "Edit"
-        deleteSelectedButton.isHidden = true
         
     }
     
@@ -714,7 +727,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @objc func reloadTableView() {
-        UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve], animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
             self.tableView.reloadData()
         }, completion: nil)
         tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
@@ -727,27 +740,24 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         noHoursStoredBackground()
     }
     
+    func dateFromString(dateStr: String) -> NSDate {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+
+        // Eric D's suggestion, forcing locale to en_EN
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_EN") as Locale
+
+        return dateFormatter.date(from: dateStr)! as NSDate
+    }
+    
     @IBAction func exportButton(_ sender: Any) {
-        if tableView.isEditing == true {
-            tableView.setEditing(false, animated: true)
-            deleteSelectedButton.isHidden = true
-            editButton.title = "Edit"
-        }
-        
-        var random : Int32!
-        do {
-            random = Int32.random(in: 1...500)
-        }
-        while timeCards.contains(where: { $0.id_number == random }) {
-            random = Int32.random(in: 1...500)
-        }
         
         var hoursForExport: [Hours] {
             
             do {
-                //let sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)
                 let fetchrequest = NSFetchRequest<Hours>(entityName: "Hours")
-                //fetchrequest.sortDescriptors = [sort]
+                let sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)
+                fetchrequest.sortDescriptors = [sort]
                 return try context.fetch(fetchrequest)
                 
             } catch {
@@ -760,187 +770,257 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
         }
         
-        if hourItems.count > 7 {
-            let alert = UIAlertController(title: "Warning", message: "You have more than 7 hours stored, would you like to continue?", preferredStyle: .alert)
+        var random : Int32!
+        do {
+            random = Int32.random(in: 1...500)
+        }
+        while timeCards.contains(where: { $0.id_number == random }) {
+            random = Int32.random(in: 1...500)
+        }
+        
+        if tableView.isEditing == true {
+            let alert = UIAlertController(title: "Warning", message: "You are fixing to export selected hours. Would you like to continue?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
-                let timeCards = TimeCards(context: self.context)
-                var total = 0.0
-                
-                let date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unkown")"
-                timeCards.week = date
-                timeCards.numberBeingExported = Int64(self.hourItems.count)
-                
-                for i in (0...self.hourItems.count - 1) {
+                if let indexPaths = self.tableView.indexPathsForSelectedRows {
+                    let sortedPaths = indexPaths.sorted {$0.row > $1.row}
+                    let firstIndex = (sortedPaths.last?.row)!
+                    let lastIndex = (sortedPaths.first?.row)!
                     
-                    let timeCardsInfo = TimeCardInfo(context: self.context)
-                    timeCardsInfo.id_number = random
-                    timeCardsInfo.intime = hoursForExport[i].inTime
-                    timeCardsInfo.outtime = hoursForExport[i].outTime
-                    timeCardsInfo.total_hours = hoursForExport[i].totalHours
-                    timeCardsInfo.date = hoursForExport[i].date
+                    let timeCards = TimeCards(context: self.context)
+                    var total = 0.0
                     
-                }
-                
-                for i in (0...self.hourItems.count - 1).reversed() {
-                    let hourToDelete = hoursForExport[i]
-                    total += Double(hoursForExport[i].totalHours!)!
+                    let date = "\(hoursForExport[firstIndex].date ?? "Unknown")-\(hoursForExport[lastIndex].date ?? "Unkown")"
                     
-                    self.context.delete(hourToDelete)
-                    let index = [0, i] as IndexPath
-                    self.tableView.deleteRows(at: [index], with: .fade)
+                    timeCards.week = date
+                    timeCards.numberBeingExported = Int64(self.hourItems.count)
+                    
+                    var items = [Hours]()
+                    for indexPath in sortedPaths {
+                        items.append(self.hourItems[indexPath.row])
+                    }
+                    
+                    for item in items.reversed() {
+                        if let index = self.hourItems.firstIndex(of: item) {
+                            
+                            let timeCardsInfo = TimeCardInfo(context: self.context)
+                            timeCardsInfo.id_number = random
+                            timeCardsInfo.intime = hoursForExport[index].inTime
+                            timeCardsInfo.outtime = hoursForExport[index].outTime
+                            timeCardsInfo.total_hours = hoursForExport[index].totalHours
+                            timeCardsInfo.date = hoursForExport[index].date
+                            
+                            let hourToDelete = self.hourItems[index]
+                            total += Double(hoursForExport[index].totalHours!)!
+                            
+                            self.context.delete(hourToDelete)
+                            
+                        }
+                    }
+                    self.tableView.deleteRows(at: sortedPaths, with: .fade)
                     
                     timeCards.total = total
+                    timeCards.id_number = random
+                    self.noHoursStoredBackground()
+                    self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                    
+                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+                    self.undo = 1
+                    self.tableView.setEditing(false, animated: true)
                 }
-                timeCards.id_number = random
-                self.noHoursStoredBackground()
-                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                self.editButton.isEnabled = false
-                self.infoButton.isEnabled = false
-                self.deleteAllMenuButton.isEnabled = false
-                self.exportMenuButton.isEnabled = false
-                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                self.undo = 1
             }))
-            alert.addAction(UIAlertAction(title: "Just Export 7", style: .default, handler: {_ in
-                let timeCards = TimeCards(context: self.context)
-                var total = 0.0
-                let date = "\(hoursForExport[0].date ?? "Unknown")-\(hoursForExport[6].date ?? "Unkown")"
-                timeCards.week = date
-                
-                for i in (0...6) {
+            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {_ in
+                self.tableView.setEditing(false, animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            
+            //tableView.setEditing(false, animated: true)
+            deleteSelectedButton.isHidden = true
+            editButton.title = "Edit"
+        }
+        else {
+            if hourItems.count > 7 {
+                let alert = UIAlertController(title: "Warning", message: "You have more than 7 hours stored, would you like to continue?", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
+                    let timeCards = TimeCards(context: self.context)
+                    var total = 0.0
                     
-                    let timeCardsInfo = TimeCardInfo(context: self.context)
-                    timeCardsInfo.id_number = random
-                    timeCardsInfo.intime = hoursForExport[i].inTime
-                    timeCardsInfo.outtime = hoursForExport[i].outTime
-                    timeCardsInfo.total_hours = hoursForExport[i].totalHours
-                    timeCardsInfo.date = hoursForExport[i].date
+                    let date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unkown")"
+                    timeCards.week = date
+                    timeCards.numberBeingExported = Int64(self.hourItems.count)
                     
-                }
-                
-                for i in (0...6).reversed() {
-                    let hourToDelete = hoursForExport[i]
-                    total += Double(hoursForExport[i].totalHours!)!
+                    for i in (0...self.hourItems.count - 1) {
+                        
+                        let timeCardsInfo = TimeCardInfo(context: self.context)
+                        timeCardsInfo.id_number = random
+                        timeCardsInfo.intime = hoursForExport[i].inTime
+                        timeCardsInfo.outtime = hoursForExport[i].outTime
+                        timeCardsInfo.total_hours = hoursForExport[i].totalHours
+                        timeCardsInfo.date = hoursForExport[i].date
+                        
+                    }
                     
-                    self.context.delete(hourToDelete)
-                    let index = [0, i] as IndexPath
-                    self.tableView.deleteRows(at: [index], with: .fade)
-                    
-                    timeCards.total = total
-                }
-                timeCards.id_number = random
-                timeCards.numberBeingExported = Int64(7)
-                UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve], animations: {
-                    self.tableView.reloadData()
-                }, completion: nil)
-                self.noHoursStoredBackground()
-                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                if self.hourItems.count == 0 {
+                    for i in (0...self.hourItems.count - 1).reversed() {
+                        let hourToDelete = hoursForExport[i]
+                        total += Double(hoursForExport[i].totalHours!)!
+                        
+                        self.context.delete(hourToDelete)
+                        let index = [0, i] as IndexPath
+                        self.tableView.deleteRows(at: [index], with: .fade)
+                        
+                        timeCards.total = total
+                    }
+                    timeCards.id_number = random
+                    self.noHoursStoredBackground()
+                    self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
                     self.editButton.isEnabled = false
                     self.infoButton.isEnabled = false
                     self.deleteAllMenuButton.isEnabled = false
                     self.exportMenuButton.isEnabled = false
-                }
-                
-                self.undo = 1
-            }))
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        else if hourItems.count == 7 {
-            let alert = UIAlertController(title: "Warning", message: "You are fixing to export a weeks worth of hours, would you like to continue?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
-                let timeCards = TimeCards(context: self.context)
-                var total = 0.0
-                let date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unkown")"
-                timeCards.week = date
-                timeCards.numberBeingExported = Int64(self.hourItems.count)
-                
-                for i in (0...self.hourItems.count - 1) {
+                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+                    self.undo = 1
+                }))
+                alert.addAction(UIAlertAction(title: "Just Export 7", style: .default, handler: {_ in
+                    let timeCards = TimeCards(context: self.context)
+                    var total = 0.0
                     
-                    let timeCardsInfo = TimeCardInfo(context: self.context)
-                    timeCardsInfo.id_number = random
-                    timeCardsInfo.intime = hoursForExport[i].inTime
-                    timeCardsInfo.outtime = hoursForExport[i].outTime
-                    timeCardsInfo.total_hours = hoursForExport[i].totalHours
-                    timeCardsInfo.date = hoursForExport[i].date
+                    let date = "\(hoursForExport[0].date ?? "Unknown")-\(hoursForExport[6].date ?? "Unkown")"
+                    timeCards.week = date
                     
-                }
-                
-                for i in (0...self.hourItems.count - 1).reversed() {
-                    let hourToDelete = hoursForExport[i]
-                    total += Double(hoursForExport[i].totalHours!)!
+                    for i in (0...6) {
+                        
+                        let timeCardsInfo = TimeCardInfo(context: self.context)
+                        timeCardsInfo.id_number = random
+                        timeCardsInfo.intime = hoursForExport[i].inTime
+                        timeCardsInfo.outtime = hoursForExport[i].outTime
+                        timeCardsInfo.total_hours = hoursForExport[i].totalHours
+                        timeCardsInfo.date = hoursForExport[i].date
+                        
+                    }
                     
-                    self.context.delete(hourToDelete)
-                    let index = [0, i] as IndexPath
-                    self.tableView.deleteRows(at: [index], with: .fade)
+                    for i in (0...6).reversed() {
+                        let hourToDelete = hoursForExport[i]
+                        total += Double(hoursForExport[i].totalHours!)!
+                        
+                        self.context.delete(hourToDelete)
+                        let index = [0, i] as IndexPath
+                        self.tableView.deleteRows(at: [index], with: .fade)
+                        
+                        timeCards.total = total
+                    }
+                    timeCards.id_number = random
+                    timeCards.numberBeingExported = Int64(7)
+                    UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
+                        self.tableView.reloadData()
+                    }, completion: nil)
+                    self.noHoursStoredBackground()
+                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+                    self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                    if self.hourItems.count == 0 {
+                        self.editButton.isEnabled = false
+                        self.infoButton.isEnabled = false
+                        self.deleteAllMenuButton.isEnabled = false
+                        self.exportMenuButton.isEnabled = false
+                    }
+                    
+                    self.undo = 1
+                }))
+                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            else if hourItems.count == 7 {
+                let alert = UIAlertController(title: "Warning", message: "You are fixing to export a weeks worth of hours, would you like to continue?", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
+                    let timeCards = TimeCards(context: self.context)
+                    var total = 0.0
+                    let date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unkown")"
+                    timeCards.week = date
+                    timeCards.numberBeingExported = Int64(self.hourItems.count)
+                    
+                    for i in (0...self.hourItems.count - 1) {
+                        
+                        let timeCardsInfo = TimeCardInfo(context: self.context)
+                        timeCardsInfo.id_number = random
+                        timeCardsInfo.intime = hoursForExport[i].inTime
+                        timeCardsInfo.outtime = hoursForExport[i].outTime
+                        timeCardsInfo.total_hours = hoursForExport[i].totalHours
+                        timeCardsInfo.date = hoursForExport[i].date
+                        
+                    }
+                    
+                    for i in (0...self.hourItems.count - 1).reversed() {
+                        let hourToDelete = hoursForExport[i]
+                        total += Double(hoursForExport[i].totalHours!)!
+                        
+                        self.context.delete(hourToDelete)
+                        let index = [0, i] as IndexPath
+                        self.tableView.deleteRows(at: [index], with: .fade)
+                        
+                        timeCards.total = total
+                    }
+                    timeCards.id_number = random
+                    self.noHoursStoredBackground()
+                    self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                    self.editButton.isEnabled = false
+                    self.infoButton.isEnabled = false
+                    self.deleteAllMenuButton.isEnabled = false
+                    self.exportMenuButton.isEnabled = false
+                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+                    self.undo = 1
+                }))
+                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                let alert = UIAlertController(title: "Warning", message: "You have less than a weeks worth of hours, would you like to continue?", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
+                    let timeCards = TimeCards(context: self.context)
+                    
+                    var total = 0.0
+                    var date : String!
+                    if self.hourItems.count > 1 {
+                        date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unkown")"
+                    }
+                    else {
+                        date = "\(hoursForExport.first!.date ?? "Unknown")"
+                    }
+                    timeCards.week = date
+                    timeCards.numberBeingExported = Int64(self.hourItems.count)
+                    
+                    for i in (0...hourItems.count - 1) {
+                        
+                        let timeCardsInfo = TimeCardInfo(context: self.context)
+                        timeCardsInfo.id_number = random
+                        timeCardsInfo.intime = hoursForExport[i].inTime
+                        timeCardsInfo.outtime = hoursForExport[i].outTime
+                        timeCardsInfo.total_hours = hoursForExport[i].totalHours
+                        timeCardsInfo.date = hoursForExport[i].date
+                        
+                    }
+                    for i in (0...self.hourItems.count - 1).reversed() {
+                        let hourToDelete = hoursForExport[i]
+                        total += Double(hoursForExport[i].totalHours!)!
+                        
+                        self.context.delete(hourToDelete)
+                        let index = [0, i] as IndexPath
+                        self.tableView.deleteRows(at: [index], with: .fade)
+                        
+                    }
                     
                     timeCards.total = total
-                }
-                timeCards.id_number = random
-                self.noHoursStoredBackground()
-                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                self.editButton.isEnabled = false
-                self.infoButton.isEnabled = false
-                self.deleteAllMenuButton.isEnabled = false
-                self.exportMenuButton.isEnabled = false
-                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                self.undo = 1
-            }))
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        else {
-            let alert = UIAlertController(title: "Warning", message: "You have less than a weeks worth of hours, would you like to continue?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
-                let timeCards = TimeCards(context: self.context)
-                
-                var total = 0.0
-                var date : String!
-                if self.hourItems.count > 1 {
-                    date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unkown")"
-                }
-                else {
-                    date = "\(hoursForExport.first!.date ?? "Unknown")"
-                }
-                timeCards.week = date
-                timeCards.numberBeingExported = Int64(self.hourItems.count)
-                
-                for i in (0...hourItems.count - 1) {
+                    timeCards.id_number = random
                     
-                    let timeCardsInfo = TimeCardInfo(context: self.context)
-                    timeCardsInfo.id_number = random
-                    timeCardsInfo.intime = hoursForExport[i].inTime
-                    timeCardsInfo.outtime = hoursForExport[i].outTime
-                    timeCardsInfo.total_hours = hoursForExport[i].totalHours
-                    timeCardsInfo.date = hoursForExport[i].date
-                    
-                }
-                for i in (0...self.hourItems.count - 1).reversed() {
-                    let hourToDelete = hoursForExport[i]
-                    total += Double(hoursForExport[i].totalHours!)!
-                    
-                    self.context.delete(hourToDelete)
-                    let index = [0, i] as IndexPath
-                    self.tableView.deleteRows(at: [index], with: .fade)
-                    
-                }
-                
-                timeCards.total = total
-                timeCards.id_number = random
-                
-                noHoursStoredBackground()
-                tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                editButton.isEnabled = false
-                infoButton.isEnabled = false
-                deleteAllMenuButton.isEnabled = false
-                exportMenuButton.isEnabled = false
-                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                undo = 1
-            }))
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+                    noHoursStoredBackground()
+                    tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                    editButton.isEnabled = false
+                    infoButton.isEnabled = false
+                    deleteAllMenuButton.isEnabled = false
+                    exportMenuButton.isEnabled = false
+                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+                    undo = 1
+                }))
+                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         }
     }
 }

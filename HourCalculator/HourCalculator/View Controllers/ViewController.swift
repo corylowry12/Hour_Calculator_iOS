@@ -169,7 +169,7 @@ class ViewController: UIViewController {
         if userDefaults.value(forKey: "timeCardsSort") == nil {
             userDefaults.set(0, forKey: "timeCardsSort")
         }
-        //addBannerViewToView(bannerView)
+        addBannerViewToView(bannerView)
         
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         bannerView.rootViewController = self

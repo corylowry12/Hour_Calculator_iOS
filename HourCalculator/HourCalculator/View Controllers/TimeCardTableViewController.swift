@@ -28,10 +28,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         
         do {
             let fetchrequest = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
-            //let predicate = userDefaults.value(forKey: "id")
             fetchrequest.predicate = NSPredicate(format: "id_number == %@", predicateText!)
-            //let sort = NSSortDescriptor(key: #keyPath(TimeCardInfo.date), ascending: false)
-            //fetchrequest.sortDescriptors = [sort]
             
             return try context.fetch(fetchrequest)
             
@@ -124,7 +121,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //addBannerViewToView(bannerView)
+        addBannerViewToView(bannerView)
         
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         bannerView.rootViewController = self
@@ -226,7 +223,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             
             var lastInitialDisplayableCell = false
             
-            //change flag as soon as last displayable cell is being loaded (which will mean table has initially loaded)
             if timeCards.count > 0 && !finishedLoadingInitialTableCells {
                 if let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows,
                    let lastIndexPath = indexPathsForVisibleRows.last, lastIndexPath.row == indexPath.row {
@@ -240,7 +236,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                     finishedLoadingInitialTableCells = true
                 }
                 
-                //animates the cell as it is being displayed for the first time
                 cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight/2)
                 cell.alpha = 0
                 
@@ -282,7 +277,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                     })
                 }
                 tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
-                //(UIApplication.shared.delegate as! AppDelegate).saveContext()
             }))
             alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {_ in
                 tableView.setEditing(false, animated: true)
@@ -422,7 +416,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             userDefaults.setValue(indexPath.row, forKey: "index")
             userDefaults.setValue(total, forKey: "total")
             userDefaults.setValue(weekOf, forKey: "week")
-            //print("id is: \(id)")
             
             performSegue(withIdentifier: "timeCardInfo", sender: nil)
         }
