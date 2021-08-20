@@ -13,6 +13,7 @@ class HistorySettingsTableViewController: UITableViewController {
     
     let historyEnabled = UserDefaults.standard.integer(forKey: "historyEnabled")
     let historySort = UserDefaults.standard.integer(forKey: "historySort")
+    let historyAutomaticDeletion = UserDefaults.standard.integer(forKey: "automaticDeletion")
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -58,8 +59,11 @@ class HistorySettingsTableViewController: UITableViewController {
         
         let indexPathSort = IndexPath(row: historySort, section: 1)
         
+        let indexPathAutomaticDeletion = IndexPath(row: historyAutomaticDeletion, section: 2)
+        
         tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathSort)
+        tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathAutomaticDeletion)
         
         print(userDefaults.integer(forKey: "historyEnabled"))
         
@@ -93,26 +97,38 @@ class HistorySettingsTableViewController: UITableViewController {
             
             let userDefaults = UserDefaults.standard
             
-            if indexPath.row == 0 {
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
-                userDefaults.set(0, forKey: "historySort")
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
-            }
+            tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
+            userDefaults.set(indexPath.row, forKey: "historySort")
+            tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
             
-            else if indexPath.row == 1 {
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
-                userDefaults.set(1, forKey: "historySort")
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
-            }
-            else if indexPath.row == 2 {
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
-                userDefaults.set(2, forKey: "historySort")
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
-            }
-            else if indexPath.row == 3 {
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
-                userDefaults.set(3, forKey: "historySort")
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
+        }
+        else if indexPath.section == 2 {
+            
+            let userDefaults = UserDefaults.standard
+            
+            tableView.cellForRow(at: [2, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .none
+            userDefaults.set(indexPath.row, forKey: "automaticDeletion")
+            tableView.cellForRow(at: [2, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .checkmark
+            
+            if userDefaults.integer(forKey: "automaticDeletion") < hourItems.count &&
+                userDefaults.integer(forKey: "automaticDeletion") != 0 {
+                let alert = UIAlertController(title: "Warning", message: "You have more hours stored then entries allowed. Would you like to delete them?", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
+                    for i in (0...hourItems.count).reversed() {
+                        if i > userDefaults.integer(forKey: "automaticDeletion") {
+                            let hourToDelete = hourItems.first
+                            context.delete(hourToDelete!)
+                        }
+                    }
+                    (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                    tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
+                }))
+                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
+                    tableView.cellForRow(at: [2, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .none
+                    userDefaults.set(0, forKey: "automaticDeletion")
+                    tableView.cellForRow(at: [2, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .checkmark
+                }))
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
