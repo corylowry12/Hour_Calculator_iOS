@@ -25,6 +25,7 @@
 		32629E0326825FD9006632F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32629E0126825FD9006632F2 /* LaunchScreen.storyboard */; };
 		32629E0E26825FD9006632F2 /* HourCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E0D26825FD9006632F2 /* HourCalculatorTests.swift */; };
 		32629E1926825FD9006632F2 /* HourCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */; };
+		327241C326CF806E0022E5EA /* teal_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 327241C226CF806E0022E5EA /* teal_logo.png */; };
 		327254302686A421000C6236 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542F2686A421000C6236 /* EditViewController.swift */; };
 		3272C60A269799D400091268 /* TimeCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272C609269799D400091268 /* TimeCardTableViewCell.swift */; };
 		32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */; };
@@ -107,6 +108,7 @@
 		32629E1426825FD9006632F2 /* HourCalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HourCalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCalculatorUITests.swift; sourceTree = "<group>"; };
 		32629E1A26825FD9006632F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		327241C226CF806E0022E5EA /* teal_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = teal_logo.png; sourceTree = "<group>"; };
 		3272542F2686A421000C6236 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		3272C609269799D400091268 /* TimeCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardTableViewCell.swift; sourceTree = "<group>"; };
 		32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				3204410026BA718600B7F254 /* Resources */,
 				32A2C0F62696C12600EABD3C /* blue_logo.png */,
 				32A2C0F52696C12600EABD3C /* orange_logo.png */,
+				327241C226CF806E0022E5EA /* teal_logo.png */,
 				32A2C0F72696C12600EABD3C /* purple_logo.png */,
 				32A2C0F82696C12600EABD3C /* red_logo.png */,
 				32830189268BAE330042AAE7 /* Storyboards */,
@@ -412,6 +415,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32A2C0FA2696C12700EABD3C /* blue_logo.png in Resources */,
+				327241C326CF806E0022E5EA /* teal_logo.png in Resources */,
 				32A2C0FB2696C12700EABD3C /* purple_logo.png in Resources */,
 				320440FF26BA716400B7F254 /* Profanity.json in Resources */,
 				32A2C0FC2696C12700EABD3C /* red_logo.png in Resources */,
