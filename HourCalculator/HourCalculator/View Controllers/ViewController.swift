@@ -92,18 +92,15 @@ class ViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        //dateLabel.text = ""
         self.dismiss(animated: false, completion: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         dateLabel.text = nil
-        //bannerView.delegate = nil
     }
     
     override func viewWillAppear(_ animated: Bool) {
         
-        //view.layer.shadowPath = UIBezierPath(rect: view.bounds).cgPath
         let os = ProcessInfo().operatingSystemVersion
         
         switch (os.majorVersion, os.minorVersion, os.patchVersion) {
@@ -160,6 +157,10 @@ class ViewController: UIViewController {
         }
         else if userDefaults.integer(forKey: "theme") == 2 {
             window?.overrideUserInterfaceStyle = .unspecified
+        }
+        
+        if userDefaults.value(forKey: "automaticDeletion") == nil {
+            userDefaults.setValue(0, forKey: "automaticDeletion")
         }
     }
     
@@ -234,7 +235,6 @@ class ViewController: UIViewController {
         
     }
     
-    //var outTime : String
     var outHour : Int = 0
     var outMinute : Int = 0
     
@@ -288,23 +288,8 @@ class ViewController: UIViewController {
     }
     
     func PMtoAM(date : Date, inHour : Int, inMinute : Int, outHour : Int, outMinute : Int, minutesDifference : Int, hoursDifference : Int) {
-        //let hoursToBeStored = Hours(context: context)
-        //hoursDifference = hoursDifference + 24
+        
         let hoursDifference = hoursDifference + 24
-        //let date = datePicker.date
-        //let components = Calendar.current.dateComponents([.hour, .minute], from: date)
-        
-        //inHour = components.hour!
-        //inMinute = components.minute!
-        
-        //let outDate = datePickerOutTime.date
-        //let componentsOut = Calendar.current.dateComponents([.hour, .minute], from: outDate)
-        
-        //outHour = componentsOut.hour!
-        //outMinute = componentsOut.minute!
-        
-        //let minutesDifference = outMinute - inMinute
-        //let hoursDifference = outHour - inHour + 24
         
         if minutesDifference < 0 {
             let minutesDecimal : Double = Double(minutesDifference) / 60.00
@@ -422,6 +407,13 @@ class ViewController: UIViewController {
                 }
             }
         }
+     
+        if userDefaults.value(forKey: "automaticDeletion") as! Int != 0 && hourItems.count > userDefaults.value(forKey: "automaticDeletion") as! Int {
+           
+            let hourToDelete = hourItems.first
+            context.delete(hourToDelete!)
+        }
+        
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         if userDefaults.integer(forKey: "historyEnabled") == 0 {
             tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
@@ -432,7 +424,7 @@ class ViewController: UIViewController {
     }
     
     func AMtoPM(date : Date, inHour : Int, inMinute : Int, outHour : Int, outMinute : Int, minutesDifference : Int, hoursDifference : Int) {
-        //let hoursToBeStored = Hours(context: context)
+        
         if hoursDifference < 0 {
             dateLabel.text = "In time can not be greater than out time"
         }
@@ -492,7 +484,6 @@ class ViewController: UIViewController {
                         hoursToBeStored.inTime = inTime
                         hoursToBeStored.outTime = outTime
                         hoursToBeStored.totalHours = "\(hours).\(minutes)"
-                        //hoursToBeStored.date = Date()
                         let today = dateDatePicker.date
                         let formatter1 = DateFormatter()
                         formatter1.dateFormat = "MM/dd/yyyy"
@@ -510,7 +501,6 @@ class ViewController: UIViewController {
             dateLabel.text = "Total Hours: \(hoursDifference).\(minutesFormatted)"
             
             let total = "\(hoursDifference).\(minutesFormatted)"
-            //let totalDouble = Double(total)
             
             if total == "0.0" {
                 if userDefaults.bool(forKey: "StoredEmptyHours") == true {
@@ -563,6 +553,13 @@ class ViewController: UIViewController {
                 }
             }
         }
+        
+        if userDefaults.value(forKey: "automaticDeletion") as! Int != 0 && hourItems.count > userDefaults.value(forKey: "automaticDeletion") as! Int {
+           
+            let hourToDelete = hourItems.first
+            context.delete(hourToDelete!)
+        }
+        
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         if userDefaults.integer(forKey: "historyEnabled") == 0 {
             tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
