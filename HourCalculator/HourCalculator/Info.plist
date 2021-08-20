@@ -12,6 +12,13 @@
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
+			<key>teal_logo</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>teal_logo</string>
+				</array>
+			</dict>
 			<key>blue_logo</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
