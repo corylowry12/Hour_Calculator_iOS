@@ -36,31 +36,6 @@ class GalleryViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     @objc func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
-        /*let p = longPressGesture.location(in: collectionView)
-        let indexPath = collectionView.indexPathForItem(at: p)
-        if indexPath == nil {
-            print("Long press failed")
-        }
-        else if longPressGesture.state == UIGestureRecognizer.State.began {
-            //let currentCell = collectionView.cellForItem(at: indexPath!) as! GalleryCollectionViewCell
-            collectionView.cellForItem(at: indexPath!)?.isSelected = true
-            //currentCell.backgroundColor = UIColor.systemGray2
-            //currentCell.checkMarkImageView.isHidden = false
-            //currentCell.checkMarkImageView.image = UIImage(systemName: "checkmark.seal.fill")
-            
-            if collectionView.indexPathsForSelectedItems != nil {
-                shareButton.isEnabled = true
-            }
-            
-            UIButton.animate(withDuration: 0.08,
-                             animations: { [self] in
-                                collectionView.cellForItem(at: indexPath!)!.transform = CGAffineTransform(scaleX: 0.975, y: 0.96)
-                             },
-                             completion: { finish in
-                                UIButton.animate(withDuration: 0.08, animations: { [self] in
-                                    collectionView.cellForItem(at: indexPath!)!.transform = CGAffineTransform.identity
-                                })
-                             })*/
         
         if (gestureRecognizer.state != .began) {
                 return
@@ -74,7 +49,6 @@ class GalleryViewController: UIViewController, UICollectionViewDelegate, UIColle
                 }
                 let currentCell = collectionView.cellForItem(at: indexPath) as! GalleryCollectionViewCell
                 collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredVertically)
-                print("collection: \(collectionView.indexPathsForSelectedItems)")
                 currentCell.backgroundColor = UIColor.systemGray2
                 currentCell.checkMarkImageView.isHidden = false
                 currentCell.checkMarkImageView.image = UIImage(systemName: "checkmark.seal.fill")
