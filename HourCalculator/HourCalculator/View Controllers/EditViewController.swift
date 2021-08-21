@@ -439,4 +439,3 @@ class EditViewController: UIViewController {
         didUpdateDate = true
     }
 }
-

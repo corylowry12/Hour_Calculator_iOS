@@ -65,6 +65,8 @@
 	<string>ca-app-pub-4546055219731501~4456783748</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>needs access to this to take a picture</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>needs access to your microphone so you can attach voice notes.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

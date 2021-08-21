@@ -154,45 +154,80 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         imageView.addGestureRecognizer(tapRecognizer)
         
         if timeCard[timeCard.count - 1].image != nil {
-            imageView.image = UIImage(data: timeCard[timeCard.count - 1].image!)
-            imageView.backgroundColor = UIColor.clear
+            DispatchQueue.main.async { [self] in
+                let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width: imageView.frame.width, height: imageView.frame.height))
+                
+                UIView.transition(with: self.imageView,
+                                  duration: 1.0,
+                                  options: [.allowAnimatedContent, .curveEaseInOut, .transitionCrossDissolve],
+                                  animations: {
+                                    imageView.image = resized
+                                  },
+                                  completion: nil)
+            }
         }
         else {
             setImageView()
         }
+        
+    }
+    
+    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
+        let size = image.size
+        
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        
+        // Figure out what our orientation is, and use that to form the rectangle
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        }
+        
+        // This is the rect that we've calculated out and this is what is actually used below
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        // Actually do the resizing to the rect using the ImageContext stuff
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
     }
     
     func setImageView() {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: imageView.frame.width, height: imageView.frame.height))
-            label.text = "There is currently no\nimage stored for this entry"
-            imageView.image = UIImage.imageWithLabel(label: label)
+        label.text = "There is currently no\nimage stored for this entry"
+        imageView.image = UIImage.imageWithLabel(label: label)
     }
     
     var newImageView = UIImageView()
     
     @objc func imageTapped() {
-        print("image Tapped")
         
         if timeCard[timeCard.count - 1].image != nil {
             let alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
-            let newImage = UIImage(data: timeCard[timeCard.count - 1].image!)
-            newImageView.isUserInteractionEnabled = true
-            self.newImageView.frame = UIScreen.main.bounds
+                newImageView.isUserInteractionEnabled = true
+                self.newImageView.frame = UIScreen.main.bounds
                 let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullScreenImage))
                 newImageView.addGestureRecognizer(tap)
                 self.view.addSubview(newImageView)
-            UIView.transition(with: self.newImageView,
-                              duration: 0.5,
-                               options: [.allowAnimatedContent, .transitionCrossDissolve],
-                               animations: {
-                                self.newImageView.image = newImage
-                                self.newImageView.backgroundColor = .black
-                                self.newImageView.contentMode = .scaleAspectFit
-                                self.navigationController?.isNavigationBarHidden = true
-                                self.tabBarController?.tabBar.isHidden = true
-                               },
-                               completion: nil)
+                self.newImageView.contentMode = .scaleAspectFit
+                UIView.transition(with: self.newImageView,
+                                  duration: 0.75,
+                                  options: [.allowAnimatedContent, .curveEaseInOut, .transitionCrossDissolve],
+                                  animations: {
+                                        let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width:  newImageView.frame.width, height: newImageView.frame.height))
+                                        newImageView.image = resized
+                                        self.newImageView.backgroundColor = .black
+                                        self.navigationController?.isNavigationBarHidden = true
+                                        self.tabBarController?.tabBar.isHidden = true
+                                  },
+                                  completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Remove Image", style: .default, handler: { [self] _ in
                 setImageView()
@@ -202,48 +237,48 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             alert.addAction(UIAlertAction(title: "Choose a new image", style: .default, handler: { _ in
                 let alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .alert)
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
-                
-                                let imagePickerController = UIImagePickerController()
-                                imagePickerController.delegate = self;
-                                imagePickerController.sourceType = .camera
-                                self.present(imagePickerController, animated: true, completion: nil)
-                            
-                }))
+                    alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
+                        
+                        let imagePickerController = UIImagePickerController()
+                        imagePickerController.delegate = self;
+                        imagePickerController.sourceType = .camera
+                        self.present(imagePickerController, animated: true, completion: nil)
+                        
+                    }))
                 }
                 alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
-                
-                        let imagePickerController = UIImagePickerController()
-                                    imagePickerController.delegate = self;
-                                    imagePickerController.sourceType = .photoLibrary
-                                    self.present(imagePickerController, animated: true, completion: nil)
-    
+                    
+                    let imagePickerController = UIImagePickerController()
+                    imagePickerController.delegate = self;
+                    imagePickerController.sourceType = .photoLibrary
+                    self.present(imagePickerController, animated: true, completion: nil)
+                    
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
-    }
+        }
         else {
             let alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .alert)
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
-            
-                            let imagePickerController = UIImagePickerController()
-                            imagePickerController.delegate = self;
-                            imagePickerController.sourceType = .camera
-                            self.present(imagePickerController, animated: true, completion: nil)
-                        
-            }))
+                alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
+                    
+                    let imagePickerController = UIImagePickerController()
+                    imagePickerController.delegate = self;
+                    imagePickerController.sourceType = .camera
+                    self.present(imagePickerController, animated: true, completion: nil)
+                    
+                }))
             }
             alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
-            
-                    let imagePickerController = UIImagePickerController()
-                                imagePickerController.delegate = self;
-                                imagePickerController.sourceType = .photoLibrary
-                                self.present(imagePickerController, animated: true, completion: nil)
-
+                
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.delegate = self;
+                imagePickerController.sourceType = .photoLibrary
+                self.present(imagePickerController, animated: true, completion: nil)
+                
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -252,7 +287,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     
     @objc func dismissFullScreenImage() {
         self.navigationController?.isNavigationBarHidden = false
-            self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = false
         newImageView.removeFromSuperview()
         newImageView.image = nil
     }
@@ -273,7 +308,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return timeCard.count
     }
     
@@ -325,17 +359,19 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         let hourItems = timeCard[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "timeCardCell", for: indexPath) as! TimeCardInfoTableViewCell
-       
-        let inTime = hourItems.intime
-        let outTime = hourItems.outtime
-        let totalHours = hourItems.total_hours
-        let date = hourItems.date!
         
-        cell.inTimeLabel.text = "In Time: \(inTime ?? "Unknown")"
-        cell.outTimeLabel.text = "Out Time: \(outTime ?? "Unknown")"
-        cell.totalHoursLabel.text = "Total Hours: \(totalHours ?? "Unknown")"
-        cell.dateLabel.text = "Date: \(date)"
-        
+        DispatchQueue.main.async {
+            
+            let inTime = hourItems.intime
+            let outTime = hourItems.outtime
+            let totalHours = hourItems.total_hours
+            let date = hourItems.date!
+            
+            cell.inTimeLabel.text = "In Time: \(inTime ?? "Unknown")"
+            cell.outTimeLabel.text = "Out Time: \(outTime ?? "Unknown")"
+            cell.totalHoursLabel.text = "Total Hours: \(totalHours ?? "Unknown")"
+            cell.dateLabel.text = "Date: \(date)"
+        }
         return cell
     }
     @IBAction func textFieldTextChanged(_ sender: UITextField) {
@@ -360,24 +396,24 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         if timeCard[timeCard.count - 1].image != nil {
             let alert = UIAlertController(title: "Warning", message: "There is already an image stored. What would you like to do?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
-               
-                let newImage = UIImage(data: timeCard[timeCard.count - 1].image!)
+                
                 newImageView.isUserInteractionEnabled = true
                 self.newImageView.frame = UIScreen.main.bounds
-                    let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullScreenImage))
-                    newImageView.addGestureRecognizer(tap)
-                    self.view.addSubview(newImageView)
+                let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullScreenImage))
+                newImageView.addGestureRecognizer(tap)
+                self.view.addSubview(newImageView)
+                self.newImageView.contentMode = .scaleAspectFit
                 UIView.transition(with: self.newImageView,
-                                  duration: 0.5,
-                                   options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                   animations: {
-                                    self.newImageView.image = newImage
-                                    self.newImageView.backgroundColor = .black
-                                    self.newImageView.contentMode = .scaleAspectFit
-                                    self.navigationController?.isNavigationBarHidden = true
-                                    self.tabBarController?.tabBar.isHidden = true
-                                   },
-                                   completion: nil)
+                                  duration: 0.75,
+                                  options: [.allowAnimatedContent, .curveEaseInOut, .transitionCrossDissolve],
+                                  animations: {
+                                        let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width:  newImageView.frame.width, height: newImageView.frame.height))
+                                        newImageView.image = resized
+                                        self.newImageView.backgroundColor = .black
+                                        self.navigationController?.isNavigationBarHidden = true
+                                        self.tabBarController?.tabBar.isHidden = true
+                                  },
+                                  completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Remove Image", style: .default, handler: { [self] _ in
                 setImageView()
@@ -387,22 +423,22 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             alert.addAction(UIAlertAction(title: "Choose a new image", style: .default, handler: { _ in
                 let alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .alert)
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
-                
-                                let imagePickerController = UIImagePickerController()
-                                imagePickerController.delegate = self;
-                                imagePickerController.sourceType = .camera
-                                self.present(imagePickerController, animated: true, completion: nil)
-                            
-                }))
+                    alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
+                        
+                        let imagePickerController = UIImagePickerController()
+                        imagePickerController.delegate = self;
+                        imagePickerController.sourceType = .camera
+                        self.present(imagePickerController, animated: true, completion: nil)
+                        
+                    }))
                 }
                 alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
-                
-                        let imagePickerController = UIImagePickerController()
-                                    imagePickerController.delegate = self;
-                                    imagePickerController.sourceType = .photoLibrary
-                                    self.present(imagePickerController, animated: true, completion: nil)
-    
+                    
+                    let imagePickerController = UIImagePickerController()
+                    imagePickerController.delegate = self;
+                    imagePickerController.sourceType = .photoLibrary
+                    self.present(imagePickerController, animated: true, completion: nil)
+                    
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
@@ -412,21 +448,22 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         }
         else {
             let alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .alert)
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
                     let imagePickerController = UIImagePickerController()
                     imagePickerController.delegate = self;
                     imagePickerController.sourceType = .camera
                     self.present(imagePickerController, animated: true, completion: nil)
-            }))
-                }
+                }))
+            }
             
-        else {
-            let imagePickerController = UIImagePickerController()
-                        imagePickerController.delegate = self;
-                        imagePickerController.sourceType = .photoLibrary
-                        self.present(imagePickerController, animated: true, completion: nil)
-        }
+            alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.delegate = self;
+                imagePickerController.sourceType = .photoLibrary
+                self.present(imagePickerController, animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
         

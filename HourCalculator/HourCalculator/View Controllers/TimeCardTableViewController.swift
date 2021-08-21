@@ -407,17 +407,20 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             self.present(alert, animated: true, completion: nil)
         }
         else {
-            let id = timeCards[indexPath.row].id_number
-            let name = timeCards[indexPath.row].name
-            let total = timeCards[indexPath.row].total
-            let weekOf = timeCards[indexPath.row].week
-            userDefaults.setValue(id, forKey: "id")
-            userDefaults.setValue(name, forKey: "name")
+            //DispatchQueue.main.async { [self] in
+            //let id = timeCards[indexPath.row].id_number
+            //let name = timeCards[indexPath.row].name
+            //let total = timeCards[indexPath.row].total
+            //let weekOf = timeCards[indexPath.row].week
+            userDefaults.setValue(timeCards[indexPath.row].id_number, forKey: "id")
+            userDefaults.setValue(timeCards[indexPath.row].name, forKey: "name")
             userDefaults.setValue(indexPath.row, forKey: "index")
-            userDefaults.setValue(total, forKey: "total")
-            userDefaults.setValue(weekOf, forKey: "week")
+            userDefaults.setValue(timeCards[indexPath.row].total, forKey: "total")
+            userDefaults.setValue(timeCards[indexPath.row].week, forKey: "week")
+                
+                performSegue(withIdentifier: "timeCardInfo", sender: nil)
             
-            performSegue(withIdentifier: "timeCardInfo", sender: nil)
+            //}
         }
     }
     
