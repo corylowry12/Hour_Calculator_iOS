@@ -26,8 +26,6 @@
 		32629E0E26825FD9006632F2 /* HourCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E0D26825FD9006632F2 /* HourCalculatorTests.swift */; };
 		32629E1926825FD9006632F2 /* HourCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */; };
 		327241C326CF806E0022E5EA /* teal_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 327241C226CF806E0022E5EA /* teal_logo.png */; };
-		327241C526D1716E0022E5EA /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 327241C426D1716E0022E5EA /* GalleryViewController.swift */; };
-		327241C726D172810022E5EA /* GalleryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 327241C626D172810022E5EA /* GalleryCollectionViewCell.swift */; };
 		327254302686A421000C6236 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542F2686A421000C6236 /* EditViewController.swift */; };
 		3272C60A269799D400091268 /* TimeCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272C609269799D400091268 /* TimeCardTableViewCell.swift */; };
 		32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */; };
@@ -111,8 +109,6 @@
 		32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCalculatorUITests.swift; sourceTree = "<group>"; };
 		32629E1A26825FD9006632F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		327241C226CF806E0022E5EA /* teal_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = teal_logo.png; sourceTree = "<group>"; };
-		327241C426D1716E0022E5EA /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
-		327241C626D172810022E5EA /* GalleryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewCell.swift; sourceTree = "<group>"; };
 		3272542F2686A421000C6236 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		3272C609269799D400091268 /* TimeCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardTableViewCell.swift; sourceTree = "<group>"; };
 		32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -261,8 +257,6 @@
 				32629DFA26825FD7006632F2 /* ViewController.swift */,
 				322C563F26BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift */,
 				322C564126BDC32900A4E8DD /* TimeCardInfoTableViewController.swift */,
-				327241C426D1716E0022E5EA /* GalleryViewController.swift */,
-				327241C626D172810022E5EA /* GalleryCollectionViewCell.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -573,9 +567,7 @@
 				328498482687D3F30092D22F /* ThemeViewController.swift in Sources */,
 				3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */,
 				320440FD26BA6E5D00B7F254 /* ProfanityFilter.swift in Sources */,
-				327241C526D1716E0022E5EA /* GalleryViewController.swift in Sources */,
 				328498462687BE280092D22F /* SettingsTableViewCell.swift in Sources */,
-				327241C726D172810022E5EA /* GalleryCollectionViewCell.swift in Sources */,
 				327254302686A421000C6236 /* EditViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -760,7 +752,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -768,7 +760,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.7;
+				MARKETING_VERSION = 1.3.8;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
@@ -789,7 +781,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -797,7 +789,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.7;
+				MARKETING_VERSION = 1.3.8;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;

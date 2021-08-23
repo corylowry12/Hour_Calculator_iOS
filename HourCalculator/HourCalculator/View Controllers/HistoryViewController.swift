@@ -387,9 +387,9 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 
                 timeCards.total = self.total
                 timeCards.numberBeingExported = Int64(1)
-                UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
-                    self.tableView.reloadData()
-                }, completion: nil)
+                //UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
+                   // self.tableView.reloadData()
+                //}, completion: nil)
                 self.noHoursStoredBackground()
                 self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
                 self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
