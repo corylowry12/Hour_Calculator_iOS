@@ -94,6 +94,27 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         
     }
     
+    var gallery: [Gallery] {
+        
+        do {
+            let fetchrequest = NSFetchRequest<Gallery>(entityName: "Gallery")
+            let predicate = userDefaults.value(forKey: "id")
+            fetchrequest.predicate = NSPredicate(format: "id_number == %@", predicate as! CVarArg)
+            let sort = NSSortDescriptor(key: #keyPath(Gallery.date), ascending: false)
+            fetchrequest.sortDescriptors = [sort]
+            
+            return try context.fetch(fetchrequest)
+            
+        } catch {
+            
+            print("Couldn't fetch data")
+            
+        }
+        
+        return [Gallery]()
+        
+    }
+    
     var timeCardInfo: [TimeCardInfo] {
         
         do {
