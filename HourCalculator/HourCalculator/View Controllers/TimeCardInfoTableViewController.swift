@@ -162,6 +162,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        gallery[0].name = textField.text
     }
     
     override func viewWillAppear(_ animated: Bool) {
