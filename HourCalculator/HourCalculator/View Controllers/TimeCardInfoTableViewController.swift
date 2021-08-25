@@ -172,8 +172,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             self.navigationItem.title = "Time Card Info"
         }
         else {
-            textField.text = userDefaults.string(forKey: "name")
-            self.navigationItem.title = userDefaults.string(forKey: "name")
             textField.text = timeCards[userDefaults.integer(forKey:"index")].name
             self.navigationItem.title = timeCards[userDefaults.integer(forKey:"index")].name
         }
