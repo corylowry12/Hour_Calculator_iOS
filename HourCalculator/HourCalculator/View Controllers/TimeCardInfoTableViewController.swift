@@ -148,6 +148,20 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         bannerView.rootViewController = self
         bannerView.load(GADRequest())
         
+        previousButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75).cgColor
+        previousButton.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+        previousButton.layer.shadowOpacity = 1.0
+        previousButton.layer.shadowRadius = 5.0
+        previousButton.layer.masksToBounds = false
+        
+        nextButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75).cgColor
+        nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+        nextButton.layer.shadowOpacity = 1.0
+        nextButton.layer.shadowRadius = 5.0
+        nextButton.layer.masksToBounds = false
+        
+    }
+    
     }
     
     override func viewWillAppear(_ animated: Bool) {
