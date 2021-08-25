@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		320440FD26BA6E5D00B7F254 /* ProfanityFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320440FC26BA6E5D00B7F254 /* ProfanityFilter.swift */; };
 		320440FF26BA716400B7F254 /* Profanity.json in Resources */ = {isa = PBXBuildFile; fileRef = 320440FE26BA716400B7F254 /* Profanity.json */; };
+		32088B1526D4982E00B62C2A /* GalleryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32088B1426D4982E00B62C2A /* GalleryCollectionViewCell.swift */; };
+		32088B1726D4984500B62C2A /* GalleryCollectionViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32088B1626D4984500B62C2A /* GalleryCollectionViewViewController.swift */; };
+		32088B1926D5FCAC00B62C2A /* TimeCardSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32088B1826D5FCAC00B62C2A /* TimeCardSettingsViewController.swift */; };
 		322C564026BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322C563F26BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift */; };
 		322C564226BDC32900A4E8DD /* TimeCardInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322C564126BDC32900A4E8DD /* TimeCardInfoTableViewController.swift */; };
 		323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323DD8F12685984D00332BA3 /* TableViewCell.swift */; };
@@ -85,6 +88,9 @@
 		1FBAF998FAC7B6F8E9136640 /* Pods_HourCalculatorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculatorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		320440FC26BA6E5D00B7F254 /* ProfanityFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfanityFilter.swift; sourceTree = "<group>"; };
 		320440FE26BA716400B7F254 /* Profanity.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Profanity.json; sourceTree = "<group>"; };
+		32088B1426D4982E00B62C2A /* GalleryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewCell.swift; sourceTree = "<group>"; };
+		32088B1626D4984500B62C2A /* GalleryCollectionViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewViewController.swift; sourceTree = "<group>"; };
+		32088B1826D5FCAC00B62C2A /* TimeCardSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardSettingsViewController.swift; sourceTree = "<group>"; };
 		322C563F26BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardInfoTableViewCell.swift; sourceTree = "<group>"; };
 		322C564126BDC32900A4E8DD /* TimeCardInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardInfoTableViewController.swift; sourceTree = "<group>"; };
 		323DD8F12685984D00332BA3 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
@@ -257,6 +263,9 @@
 				32629DFA26825FD7006632F2 /* ViewController.swift */,
 				322C563F26BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift */,
 				322C564126BDC32900A4E8DD /* TimeCardInfoTableViewController.swift */,
+				32088B1426D4982E00B62C2A /* GalleryCollectionViewCell.swift */,
+				32088B1626D4984500B62C2A /* GalleryCollectionViewViewController.swift */,
+				32088B1826D5FCAC00B62C2A /* TimeCardSettingsViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -551,7 +560,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				325A41CB26856ABF00B098C9 /* StoredHours.xcdatamodeld in Sources */,
+				32088B1526D4982E00B62C2A /* GalleryCollectionViewCell.swift in Sources */,
 				3254AFA1268E71FB005B13E5 /* HistorySettingsTableViewController.swift in Sources */,
+				32088B1726D4984500B62C2A /* GalleryCollectionViewViewController.swift in Sources */,
 				322C564026BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift in Sources */,
 				32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */,
 				325568512689C13F00CC7ACD /* TabBarController.swift in Sources */,
@@ -562,6 +573,7 @@
 				322C564226BDC32900A4E8DD /* TimeCardInfoTableViewController.swift in Sources */,
 				32629DF926825FD7006632F2 /* SceneDelegate.swift in Sources */,
 				325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */,
+				32088B1926D5FCAC00B62C2A /* TimeCardSettingsViewController.swift in Sources */,
 				3272C60A269799D400091268 /* TimeCardTableViewCell.swift in Sources */,
 				323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */,
 				328498482687D3F30092D22F /* ThemeViewController.swift in Sources */,

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Gallery" representedClassName="Gallery" syncable="YES" codeGenerationType="class">
-        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="date" optional="YES" attributeType="String"/>
         <attribute name="fullSize" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="id_number" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="thumbnail" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
     </entity>
@@ -32,6 +33,6 @@
         <element name="Hours" positionX="-63" positionY="-18" width="128" height="89"/>
         <element name="TimeCardInfo" positionX="-63" positionY="63" width="128" height="134"/>
         <element name="TimeCards" positionX="-63" positionY="9" width="128" height="104"/>
-        <element name="Gallery" positionX="-63" positionY="72" width="128" height="89"/>
+        <element name="Gallery" positionX="-63" positionY="72" width="128" height="104"/>
     </elements>
 </model>
