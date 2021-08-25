@@ -191,6 +191,10 @@ class ViewController: UIViewController {
             userDefaults.set(0, forKey: "historySort")
         }
         
+        if userDefaults.value(forKey: "saveImages") == nil {
+            userDefaults.set(0, forKey: "saveImages")
+        }
+        
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
         if userDefaults.value(forKey: "appVersion") == nil || userDefaults.value(forKey: "appVersion") as? String != appVersion {
