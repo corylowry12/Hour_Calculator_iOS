@@ -24,6 +24,26 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     
     var predicateText: String!
     
+    var gallery: [Gallery] {
+        
+        do {
+            let fetchrequest = NSFetchRequest<Gallery>(entityName: "Gallery")
+            fetchrequest.predicate = NSPredicate(format: "id_number == %@", predicateText!)
+            let sort = NSSortDescriptor(key: #keyPath(Gallery.date), ascending: false)
+            fetchrequest.sortDescriptors = [sort]
+            
+            return try context.fetch(fetchrequest)
+            
+        } catch {
+            
+            print("Couldn't fetch data")
+            
+        }
+        
+        return [Gallery]()
+        
+    }
+    
     var timeCardInfo: [TimeCardInfo] {
         
         do {
@@ -264,6 +284,11 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 
                 let hourToDelete = self.timeCards[indexPath.row]
                 self.context.delete(hourToDelete)
+                
+                if gallery.count > 0 {
+                let galleryToDelete = self.gallery[0]
+                self.context.delete(galleryToDelete)
+                }
                 
                 self.tableView.deleteRows(at: [indexPath], with: .left)
                 noHoursStoredBackground()
