@@ -174,6 +174,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         else {
             textField.text = userDefaults.string(forKey: "name")
             self.navigationItem.title = userDefaults.string(forKey: "name")
+            textField.text = timeCards[userDefaults.integer(forKey:"index")].name
+            self.navigationItem.title = timeCards[userDefaults.integer(forKey:"index")].name
         }
         let total = round(Double(userDefaults.string(forKey: "total")!)! * 100.0) / 100.0
         totalHoursLabel.text = "Total Hours: \(total)"
