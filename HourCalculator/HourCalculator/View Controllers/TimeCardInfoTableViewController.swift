@@ -190,19 +190,28 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         
         if userDefaults.integer(forKey: "accent") == 0 {
             textField.backgroundColor = UIColor(rgb: 0x26A69A)
+            previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
+            nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
             textField.backgroundColor = UIColor(rgb: 0x7841c4)
+            previousButton.backgroundColor = UIColor(rgb: 0x7841c4)
+            nextButton.backgroundColor = UIColor(rgb: 0x7841c4)
         }
         else if userDefaults.integer(forKey: "accent") == 2 {
             textField.backgroundColor = UIColor(rgb: 0x347deb)
-            
+            previousButton.backgroundColor = UIColor(rgb: 0x347deb)
+            nextButton.backgroundColor = UIColor(rgb: 0x347deb)
         }
         else if userDefaults.integer(forKey: "accent") == 3 {
             textField.backgroundColor = UIColor(rgb: 0xfc783a)
+            previousButton.backgroundColor = UIColor(rgb: 0xfc783a)
+            nextButton.backgroundColor = UIColor(rgb: 0xfc783a)
         }
         else if userDefaults.integer(forKey: "accent") == 4 {
             textField.backgroundColor = UIColor(rgb: 0xc41d1d)
+            previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+            nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
         }
         textField.tintColor = UIColor.systemGray2
         view.backgroundColor = tableView.backgroundColor
