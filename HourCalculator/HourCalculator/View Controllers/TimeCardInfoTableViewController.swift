@@ -167,7 +167,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if userDefaults.string(forKey: "name") == nil || userDefaults.string(forKey: "name")?.trimmingCharacters(in: .whitespaces) == "" ||  userDefaults.string(forKey: "name") == "Unknown" {
+        if timeCards[userDefaults.integer(forKey:"index")].name == nil || timeCards[userDefaults.integer(forKey:"index")].name?.trimmingCharacters(in: .whitespaces) == "" ||  timeCards[userDefaults.integer(forKey:"index")].name == "Unknown" {
             textField.text = "Unknown"
             self.navigationItem.title = "Time Card Info"
         }
