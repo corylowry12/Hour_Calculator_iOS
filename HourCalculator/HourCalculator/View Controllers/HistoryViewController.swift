@@ -380,6 +380,9 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 timeCardsInfo.total_hours = self.hourItems[indexPath.row].totalHours
                 timeCardsInfo.date = self.hourItems[indexPath.row].date
                 
+                let gallery = Gallery(context: self.context)
+                gallery.id_number = random
+                
                 self.context.delete(hourToDelete)
                 self.tableView.deleteRows(at: [indexPath], with: .left)
                 
@@ -787,6 +790,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     let lastIndex = (sortedPaths.first?.row)!
                     
                     let timeCards = TimeCards(context: self.context)
+                    let gallery = Gallery(context: self.context)
                     var total = 0.0
                     
                     let date = "\(hoursForExport[firstIndex].date ?? "Unknown")-\(hoursForExport[lastIndex].date ?? "Unkown")"
@@ -820,6 +824,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     
                     timeCards.total = total
                     timeCards.id_number = random
+                    gallery.id_number = random
                     self.noHoursStoredBackground()
                     self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
                     
@@ -842,6 +847,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 let alert = UIAlertController(title: "Warning", message: "You have more than 7 hours stored, would you like to continue?", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                     let timeCards = TimeCards(context: self.context)
+                    let gallery = Gallery(context: self.context)
                     var total = 0.0
                     
                     let date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unkown")"
@@ -870,6 +876,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                         timeCards.total = total
                     }
                     timeCards.id_number = random
+                    gallery.id_number = random
                     self.noHoursStoredBackground()
                     self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
                     self.editButton.isEnabled = false
@@ -881,6 +888,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 }))
                 alert.addAction(UIAlertAction(title: "Just Export 7", style: .default, handler: {_ in
                     let timeCards = TimeCards(context: self.context)
+                    let gallery = Gallery(context: self.context)
                     var total = 0.0
                     
                     let date = "\(hoursForExport[0].date ?? "Unknown")-\(hoursForExport[6].date ?? "Unkown")"
@@ -908,6 +916,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                         timeCards.total = total
                     }
                     timeCards.id_number = random
+                    gallery.id_number = random
                     timeCards.numberBeingExported = Int64(7)
                     UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
                         self.tableView.reloadData()
@@ -931,6 +940,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 let alert = UIAlertController(title: "Warning", message: "You are fixing to export a weeks worth of hours, would you like to continue?", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                     let timeCards = TimeCards(context: self.context)
+                    let gallery = Gallery(context: self.context)
                     var total = 0.0
                     let date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unkown")"
                     timeCards.week = date
@@ -958,6 +968,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                         timeCards.total = total
                     }
                     timeCards.id_number = random
+                    gallery.id_number = random
                     self.noHoursStoredBackground()
                     self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
                     self.editButton.isEnabled = false
@@ -974,6 +985,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 let alert = UIAlertController(title: "Warning", message: "You have less than a weeks worth of hours, would you like to continue?", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
                     let timeCards = TimeCards(context: self.context)
+                    let gallery = Gallery(context: self.context)
                     
                     var total = 0.0
                     var date : String!
@@ -1008,6 +1020,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     
                     timeCards.total = total
                     timeCards.id_number = random
+                    gallery.id_number = random
                     
                     noHoursStoredBackground()
                     tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
