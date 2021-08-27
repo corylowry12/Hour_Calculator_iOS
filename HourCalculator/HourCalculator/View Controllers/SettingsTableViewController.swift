@@ -121,12 +121,12 @@ class SettingsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath == [5, 0] {
+        if indexPath == [6, 0] {
             if let url = URL(string: "https://apps.apple.com/us/app/hour-calculator-decimal/id1574062704") {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }
-        if indexPath == [6, 0] {
+        if indexPath == [7, 0] {
             let alert = UIAlertController(title: "Clear App Data?", message: "Would you like to clear app data? This will delete all stored data!", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                 alert.dismiss(animated: true, completion: nil)
@@ -174,6 +174,32 @@ class SettingsTableViewController: UITableViewController {
         // perform the delete
         do {
             try persistentContainer.viewContext.execute(deleteRequest_timeCards)
+        } catch let error as NSError {
+            print(error)
+        }
+        
+        let fetchRequestTimeCardInfo: NSFetchRequest<NSFetchRequestResult> = TimeCardInfo.fetchRequest()
+        let deleteRequestTimeCardInfo = NSBatchDeleteRequest(fetchRequest: fetchRequestTimeCardInfo)
+        
+        // get reference to the persistent container
+        let persistentContainerTimeCardInfo = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+        
+        // perform the delete
+        do {
+            try persistentContainerTimeCardInfo.viewContext.execute(deleteRequestTimeCardInfo)
+        } catch let error as NSError {
+            print(error)
+        }
+        
+        let fetchRequestGallery: NSFetchRequest<NSFetchRequestResult> = Gallery.fetchRequest()
+        let deleteRequestGallery = NSBatchDeleteRequest(fetchRequest: fetchRequestGallery)
+        
+        // get reference to the persistent container
+        let persistentContainerGallery = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+        
+        // perform the delete
+        do {
+            try persistentContainerGallery.viewContext.execute(deleteRequestGallery)
         } catch let error as NSError {
             print(error)
         }

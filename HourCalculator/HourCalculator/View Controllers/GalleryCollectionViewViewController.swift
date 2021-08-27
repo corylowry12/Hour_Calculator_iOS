@@ -11,8 +11,12 @@ import CoreData
 
 class GalleryCollectionViewViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet var collectionView: UICollectionView!
     @IBOutlet weak var shareButton: UIBarButtonItem!
+    
+    var index : Int!
+    
+    var arrayIndex = [Int]()
     
     var imageViewHidden = true
     
@@ -24,7 +28,7 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             let fetchrequest = NSFetchRequest<Gallery>(entityName: "Gallery")
             fetchrequest.predicate = NSPredicate(format: "thumbnail != nil")
             fetchrequest.predicate = NSPredicate(format: "fullSize != nil")
-            let sort = NSSortDescriptor(key: #keyPath(Gallery.date), ascending: true)
+            let sort = NSSortDescriptor(key: #keyPath(Gallery.date), ascending: false)
             fetchrequest.sortDescriptors = [sort]
             
             return try context.fetch(fetchrequest)
@@ -70,6 +74,10 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             imageViewHidden = false
             let cell = collectionView.cellForItem(at: indexPath!) as! GalleryCollectionViewCell
             
+            if !arrayIndex.contains(indexPath!.row) {
+                arrayIndex.append(indexPath!.row)
+            }
+            
             imageViewHidden = false
             shareButton.isEnabled = true
             for i in 0...gallery.count - 1 {
@@ -104,36 +112,49 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         longPressGesture.minimumPressDuration = 0.5
         collectionView.addGestureRecognizer(longPressGesture)
     }
-    
+   
     override func viewWillAppear(_ animated: Bool) {
         shareButton.isEnabled = false
-        collectionView.reloadData()
+        collectionView!.reloadData()
+        collectionView!.collectionViewLayout.invalidateLayout()
+        collectionView!.layoutSubviews()
         print("hello world: \(gallery.count)")
         
         noImagesStoredBackground()
+        
+        print("hello world")
     }
     
-    private var finishedLoadingInitialTableCells = false
+    override func viewWillDisappear(_ animated: Bool) {
+        imageViewHidden = true
+        if #available(iOS 14.0, *) {
+            collectionView.isEditing = false
+        }
+    }
+    
+    /*private var finishedLoadingInitialTableCells = false
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if gallery.count > 0 {
-            DispatchQueue.main.async {
+            //DispatchQueue.main.async {
     
                     cell.alpha = 0
                     
                     UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
-                        cell.transform = CGAffineTransform(translationX: 0, y: 0)
                         cell.alpha = 1
                     }, completion: nil)
-                }
+                //}
             }
-        }
-    
-    let newImageView = UIImageView()
+        }*/
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if #available(iOS 14.0, *) {
             if collectionView.isEditing == true {
+                
+                if arrayIndex.contains(indexPath.row) {
+                    arrayIndex = arrayIndex.filter { $0 != indexPath.row }
+                         }
+                
                 let cell = collectionView.cellForItem(at: indexPath) as! GalleryCollectionViewCell
                 UIButton.animate(withDuration: 0.05,
                                  animations: {
@@ -161,6 +182,11 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if #available(iOS 14.0, *) {
             if collectionView.isEditing == true {
+                
+                if !arrayIndex.contains(indexPath.row) {
+                        arrayIndex.append(indexPath.row)
+                     }
+                
                 let cell = collectionView.cellForItem(at: indexPath) as! GalleryCollectionViewCell
                 UIButton.animate(withDuration: 0.05,
                                  animations: {
@@ -172,35 +198,11 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
                                  completion: nil)
             }
             else {
-                newImageView.isUserInteractionEnabled = true
-                self.newImageView.frame = UIScreen.main.bounds
-                let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullScreenImage))
-                newImageView.addGestureRecognizer(tap)
-                self.view.addSubview(newImageView)
-                self.newImageView.contentMode = .scaleAspectFit
-                UIView.transition(with: view,
-                                  duration: 0.50,
-                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                  animations: { [self] in
-                                    //let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width:  newImageView.frame.width, height: newImageView.frame.height))
-                                    
-                                    newImageView.image = UIImage(data: gallery[indexPath.row].fullSize!)
-                                    
-                                    self.newImageView.backgroundColor = .black
-                                    self.navigationController?.isNavigationBarHidden = true
-                                    self.tabBarController?.tabBar.isHidden = true
-                                  },
-                                  completion: nil)
+                index = indexPath.row
+                performSegue(withIdentifier: "viewImage", sender: nil)
                 print("the index is \(indexPath.row)")
             }
         }
-    }
-    
-    @objc func dismissFullScreenImage() {
-        self.navigationController?.isNavigationBarHidden = false
-        self.tabBarController?.tabBar.isHidden = false
-        newImageView.removeFromSuperview()
-        newImageView.image = nil
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -212,44 +214,54 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "galleryCell", for: indexPath) as! GalleryCollectionViewCell
+        let galleryCell = collectionView.dequeueReusableCell(withReuseIdentifier: "galleryCell", for: indexPath) as! GalleryCollectionViewCell
         
-        if gallery[indexPath.row].thumbnail != nil && gallery[indexPath.row].fullSize != nil {
-            let galleryCell = collectionView.dequeueReusableCell(withReuseIdentifier: "galleryCell", for: indexPath) as! GalleryCollectionViewCell
-            
-            if imageViewHidden == true {
-                galleryCell.checkMark.isHidden = true
+            if arrayIndex.contains(indexPath.row) {
+                galleryCell.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
+                galleryCell.backgroundColor = .systemGray2
+                galleryCell.checkMark.image = UIImage(systemName: "checkmark.seal.fill")
             }
             else {
-                galleryCell.checkMark.isHidden = false
+                galleryCell.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                galleryCell.backgroundColor = .systemGray5
+                galleryCell.checkMark.image = UIImage(systemName: "checkmark.seal")
             }
-            
-            galleryCell.layer.cornerRadius = 10
-            
-                galleryCell.backgroundColor = UIColor.systemGray5
+            print("selected index is: \(arrayIndex)")
+        
+        
+        if imageViewHidden == true {
+            galleryCell.checkMark.isHidden = true
+        }
+        else {
+            galleryCell.checkMark.isHidden = false
+        }
+        
+       DispatchQueue.main.async { [self] in
+        if gallery[indexPath.row].thumbnail != nil && gallery[indexPath.row].fullSize != nil {
+            //let galleryCell = collectionView.dequeueReusableCell(withReuseIdentifier: "galleryCell", for: indexPath) as! GalleryCollectionViewCell
             
             galleryCell.layer.shadowColor = UIColor.black.cgColor
             galleryCell.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-            galleryCell.layer.shadowRadius = 6.0
+            galleryCell.layer.shadowRadius = 4.0
             galleryCell.layer.shadowOpacity = 0.75
-            galleryCell.layer.masksToBounds = false
+            //galleryCell.layer.masksToBounds = false
             galleryCell.layer.shadowPath = UIBezierPath(roundedRect: galleryCell.bounds, cornerRadius: 10).cgPath
             
             galleryCell.galleryImage.image = UIImage(data: gallery[indexPath.row].thumbnail!)
-            if gallery[indexPath.row].name == nil {
+            if gallery[indexPath.row].name == nil || gallery[indexPath.row].name == "" {
                 galleryCell.nameLabel.text = "Unknown"
             }
             else {
                 galleryCell.nameLabel.text = gallery[indexPath.row].name
             }
-            return galleryCell
+            //return galleryCell
         }
         else {
-            cell.isHidden = true
-            cell.layer.borderColor = UIColor.white.cgColor
+            galleryCell.isHidden = true
+            galleryCell.layer.borderColor = UIColor.white.cgColor
         }
-        
-        return cell
+        }
+        return galleryCell
     }
     @IBAction func shareButton(_ sender: UIBarButtonItem) {
         
@@ -264,14 +276,21 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         }
         let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-        
+        activityViewController.excludedActivityTypes = [.postToFacebook, .postToFlickr, .postToTwitter, .postToWeibo, .postToVimeo, .postToTencentWeibo, .addToReadingList]
+        print("count is: \(images.count)")
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
         
         activityViewController.completionWithItemsHandler = { [self]
             (activity, success, items, error) in
-            for i in 0...gallery.count - 1 {
-                let cell = collectionView.cellForItem(at: IndexPath(row: i, section: 0)) as! GalleryCollectionViewCell
+            if #available(iOS 14.0, *) {
+                collectionView.isEditing = false
+            }
+            imageViewHidden = false
+            arrayIndex.removeAll()
+           for i in (0...gallery.count - 1).reversed() {
+                self.collectionView.layoutIfNeeded()
+                if let cell = collectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? GalleryCollectionViewCell {
                 UIButton.animate(withDuration: 0.05,
                                  animations: {
                                     cell.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
@@ -280,7 +299,19 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
                                     cell.checkMark.isHidden = true
                                  },
                                  completion: nil)
+                }
+            
             }
                 }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "viewImage" {
+            let dvc = segue.destination as! ImageViewController
+          
+            dvc.newImage = UIImage(data: gallery[index].fullSize!)
+            dvc.name = gallery[index].name
+            dvc.index = index
+        }
     }
 }

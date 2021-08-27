@@ -330,7 +330,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 }
                 else {
                     userText = textField!.text?.trimmingCharacters(in: .whitespaces)
-                    userText.censor()
                 }
                 nameToBeStored.name = userText
                 (UIApplication.shared.delegate as! AppDelegate).saveContext()
@@ -391,7 +390,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 }
                 else {
                     userText = textField!.text?.trimmingCharacters(in: .whitespaces)
-                    userText.censor()
                 }
                 nameToBeStored.name = userText
                 (UIApplication.shared.delegate as! AppDelegate).saveContext()

@@ -437,5 +437,9 @@ class EditViewController: UIViewController {
         didUpdateInTime = true
         didUpdateOutTime = true
         didUpdateDate = true
+        
+        if userDefaults.integer(forKey: "dismissEdit") == 0 {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
 }

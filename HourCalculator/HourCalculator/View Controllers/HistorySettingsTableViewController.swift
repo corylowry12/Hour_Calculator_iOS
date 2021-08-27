@@ -61,9 +61,12 @@ class HistorySettingsTableViewController: UITableViewController {
         
         let indexPathAutomaticDeletion = IndexPath(row: historyAutomaticDeletion, section: 2)
         
+        let indexPathEditDismiss = IndexPath(row: userDefaults.integer(forKey: "dismissEdit"), section: 3)
+        
         tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathSort)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathAutomaticDeletion)
+        tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathEditDismiss)
         
         print(userDefaults.integer(forKey: "historyEnabled"))
         
@@ -130,7 +133,16 @@ class HistorySettingsTableViewController: UITableViewController {
                 }))
                 self.present(alert, animated: true, completion: nil)
             }
+            
         }
+        else if indexPath.section == 3 {
+            let userDefaults = UserDefaults.standard
+            
+            tableView.cellForRow(at: [3, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .none
+            userDefaults.set(indexPath.row, forKey: "dismissEdit")
+            tableView.cellForRow(at: [3, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .checkmark
+            print("hello world")
+    }
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

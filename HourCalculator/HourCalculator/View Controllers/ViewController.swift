@@ -162,6 +162,10 @@ class ViewController: UIViewController {
         if userDefaults.value(forKey: "automaticDeletion") == nil {
             userDefaults.setValue(0, forKey: "automaticDeletion")
         }
+        
+        if userDefaults.value(forKey: "dismissEdit") == nil {
+            userDefaults.setValue(1, forKey: "dismissEdit")
+        }
     }
     
     override func viewDidLoad() {

@@ -12,9 +12,30 @@ import GoogleMobileAds
 
 extension UIImage {
     class func imageWithLabel(label: UILabel) -> UIImage {
+        
+        let userDefaults = UserDefaults.standard
+        
         UIGraphicsBeginImageContextWithOptions(label.bounds.size, false, 0.0)
         label.textAlignment = .center
         label.numberOfLines = 0
+        
+        if userDefaults.integer(forKey: "accent") == 0 {
+            label.textColor = UIColor(rgb: 0x26A69A)
+        }
+        else if userDefaults.integer(forKey: "accent") == 1 {
+            label.textColor = UIColor(rgb: 0x7841c4)
+           
+        }
+        else if userDefaults.integer(forKey: "accent") == 2 {
+            label.textColor = UIColor(rgb: 0x347deb)
+        }
+        else if userDefaults.integer(forKey: "accent") == 3 {
+            label.textColor = UIColor(rgb: 0xfc783a)
+        }
+        else if userDefaults.integer(forKey: "accent") == 4 {
+            label.textColor = UIColor(rgb: 0xc41d1d)
+        }
+        
         label.layer.render(in: UIGraphicsGetCurrentContext()!)
         let img = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -33,6 +54,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var previousButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
+    
+    var image : UIImage!
     
     let userDefaults = UserDefaults.standard
     
@@ -165,10 +188,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        gallery[0].name = textField.text
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         if timeCards[userDefaults.integer(forKey:"index")].name == nil || timeCards[userDefaults.integer(forKey:"index")].name?.trimmingCharacters(in: .whitespaces) == "" ||  timeCards[userDefaults.integer(forKey:"index")].name == "Unknown" {
             textField.text = "Unknown"
@@ -218,6 +237,12 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         }
         textField.tintColor = UIColor.systemGray2
         view.backgroundColor = tableView.backgroundColor
+        
+        imageView.layoutIfNeeded()
+        imageView.layer.cornerRadius = 15
+        imageView.layer.masksToBounds = true
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         
         imageView.isUserInteractionEnabled = true
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
@@ -269,36 +294,18 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     
     func setImageView() {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: imageView.frame.width, height: imageView.frame.height))
-        label.text = "There is currently no\nimage stored for this entry"
+        label.text = "There is currently no image stored for this entry"
         imageView.image = UIImage.imageWithLabel(label: label)
     }
-    
-    var newImageView = UIImageView()
     
     @objc func imageTapped() {
         
         if timeCard[timeCard.count - 1].image != nil {
             let alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
-                newImageView.isUserInteractionEnabled = true
-                self.newImageView.frame = UIScreen.main.bounds
-                let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullScreenImage))
-                newImageView.addGestureRecognizer(tap)
-                self.view.addSubview(newImageView)
-                self.newImageView.contentMode = .scaleAspectFit
-                UIView.transition(with: self.newImageView,
-                                  duration: 0.50,
-                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                  animations: {
-                                    //let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width:  newImageView.frame.width, height: newImageView.frame.height))
-                                    
-                                    newImageView.image = UIImage(data: timeCard[timeCard.count - 1].image!)
-                                    
-                                    self.newImageView.backgroundColor = .black
-                                    self.navigationController?.isNavigationBarHidden = true
-                                    self.tabBarController?.tabBar.isHidden = true
-                                  },
-                                  completion: nil)
+                
+                image = UIImage(data: timeCard[timeCard.count - 1].image!)
+                performSegue(withIdentifier: "viewImage", sender: nil)
             }))
             alert.addAction(UIAlertAction(title: "Go To Gallery", style: .default, handler: { _ in
                 self.performSegue(withIdentifier: "gallery", sender: self)
@@ -327,18 +334,27 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 self.present(alert, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
+                
                 UIView.transition(with: self.imageView,
-                                  duration: 1.0,
-                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                  animations: { [self] in
-                                    setImageView()
-                                  },
-                                  completion: nil)
-                timeCard[timeCard.count - 1].image = nil
-                gallery[0].thumbnail = nil
-                gallery[0].date = nil
-                gallery[0].fullSize = nil
-                (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                                                  duration: 1.0,
+                                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                                  animations: { [self] in
+                                                    setImageView()
+                                                  },
+                                                  completion: nil)
+                                timeCard[timeCard.count - 1].image = nil
+                if gallery.count > 0 {
+                    if gallery[0].thumbnail != nil {
+                                gallery[0].thumbnail = nil
+                    }
+                    if gallery[0].date != nil {
+                                gallery[0].date = nil
+                    }
+                    if gallery[0].fullSize != nil {
+                        gallery[0].fullSize = nil
+                    }
+                }
+                                (UIApplication.shared.delegate as! AppDelegate).saveContext()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -368,13 +384,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         }
     }
     
-    @objc func dismissFullScreenImage() {
-        self.navigationController?.isNavigationBarHidden = false
-        self.tabBarController?.tabBar.isHidden = false
-        newImageView.removeFromSuperview()
-        newImageView.image = nil
-    }
-    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.dismiss(animated: true, completion: nil)
         cameraIsBeingUsed = false
@@ -391,22 +400,36 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                           },
                           completion: nil)
         
-        //imageView.backgroundColor = UIColor.clear
         self.dismiss(animated: true, completion: nil)
         
         DispatchQueue.main.async { [self] in
             let jpegData = image?.jpegData(compressionQuality: 1.0)
-            //let resize = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 1000, height: 1000))
+            
             timeCard[timeCard.count - 1].image = jpegData
+            if gallery.count > 0 {
             gallery[0].thumbnail = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 156, height: 156)).jpegData(compressionQuality: 1.0)
             gallery[0].fullSize = jpegData
+                let today = Date()
+                let formatter1 = DateFormatter()
+                formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
+                let dateFormatted = formatter1.string(from: today)
+                
+                gallery[0].date = dateFormatted
+            }
+            else if gallery.count == 0 {
+                let galleryContext = Gallery(context: self.context)
+                galleryContext.id_number = Int32(userDefaults.integer(forKey: "id"))
+                
+                gallery[0].thumbnail = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 124, height: 128)).jpegData(compressionQuality: 1.0)
+                gallery[0].fullSize = jpegData
+                    let today = Date()
+                    let formatter1 = DateFormatter()
+                    formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
+                    let dateFormatted = formatter1.string(from: today)
+                    
+                    gallery[0].date = dateFormatted
+            }
             
-            let today = Date()
-            let formatter1 = DateFormatter()
-            formatter1.dateFormat = "MM/dd/yyyy"
-            let dateFormatted = formatter1.string(from: today)
-            
-            gallery[0].date = dateFormatted
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
             if cameraIsBeingUsed == true && userDefaults.integer(forKey: "saveImages") == 0 {
                 UIImageWriteToSavedPhotosAlbum(imageView.image!, nil, nil, nil)
@@ -479,18 +502,26 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         
         return cell
     }
-    @IBAction func textFieldTextChanged(_ sender: UITextField) {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        if sender.text != "" && sender.text != nil {
-            timeCards[userDefaults.integer(forKey: "index")].name = sender.text
-            timeCardInfo[timeCardInfo.count - 1].name = sender.text?.trimmingCharacters(in: .whitespaces)
+        
+        if textField.text != "" && textField.text != nil {
+            timeCards[userDefaults.integer(forKey: "index")].name = textField.text
+            timeCardInfo[timeCardInfo.count - 1].name = textField.text?.trimmingCharacters(in: .whitespaces)
+            gallery[0].name = textField.text?.trimmingCharacters(in: .whitespaces)
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
+           
         }
-        else if sender.text?.trimmingCharacters(in: .whitespaces) == ""{
+        else if textField.text?.trimmingCharacters(in: .whitespaces) == ""{
             timeCards[userDefaults.integer(forKey: "index")].name = nil
-            timeCardInfo[timeCardInfo.count - 1].name = sender.text?.trimmingCharacters(in: .whitespaces)
+            timeCardInfo[timeCardInfo.count - 1].name = nil
+            gallery[0].name = nil
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
         }
+
+        print("hello world")
+        return range.location < 16
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -504,25 +535,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             let alert = UIAlertController(title: "Warning", message: "There is already an image stored. What would you like to do?", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
                 
-                newImageView.isUserInteractionEnabled = true
-                self.newImageView.frame = UIScreen.main.bounds
-                let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullScreenImage))
-                newImageView.addGestureRecognizer(tap)
-                self.view.addSubview(newImageView)
-                self.newImageView.contentMode = .scaleAspectFit
-                UIView.transition(with: self.newImageView,
-                                  duration: 0.50,
-                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                  animations: {
-                                    //let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width:  newImageView.frame.width, height: newImageView.frame.height))
-                                    
-                                    newImageView.image = UIImage(data: timeCard[timeCard.count - 1].image!)
-                                    
-                                    self.newImageView.backgroundColor = .black
-                                    self.navigationController?.isNavigationBarHidden = true
-                                    self.tabBarController?.tabBar.isHidden = true
-                                  },
-                                  completion: nil)
+                image = UIImage(data: timeCard[timeCard.count - 1].image!)
+                performSegue(withIdentifier: "viewImage", sender: nil)
                 
             }))
             alert.addAction(UIAlertAction(title: "Go To Gallery", style: .default, handler: { _ in
@@ -553,18 +567,19 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 self.present(alert, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
+            
                 UIView.transition(with: self.imageView,
-                                  duration: 1.0,
-                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                  animations: { [self] in
-                                    setImageView()
-                                  },
-                                  completion: nil)
-                timeCard[timeCard.count - 1].image = nil
-                gallery[0].thumbnail = nil
-                gallery[0].date = nil
-                gallery[0].fullSize = nil
-                (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                                                  duration: 1.0,
+                                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                                  animations: { [self] in
+                                                    setImageView()
+                                                  },
+                                                  completion: nil)
+                                timeCard[timeCard.count - 1].image = nil
+                                gallery[0].thumbnail = nil
+                                gallery[0].date = nil
+                                gallery[0].fullSize = nil
+                                (UIApplication.shared.delegate as! AppDelegate).saveContext()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -622,7 +637,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         })
     }
     @IBAction func previousButton(_ sender: UIButton) {
-        
+    
         UIButton.animate(withDuration: 0.05,
                          animations: { [self] in
                             sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
@@ -648,7 +663,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             let id = timeCards[userDefaults.integer(forKey: "index") - 1].id_number
             userDefaults.setValue(id, forKey: "id")
             userDefaults.setValue(userDefaults.integer(forKey:"index") - 1, forKey: "index")
-            UIView.transition(with: self.tableView, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
+            UIView.transition(with: view, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
                 self.tableView.reloadData()
                 
                 if timeCards[userDefaults.integer(forKey:"index")].name == nil || timeCards[userDefaults.integer(forKey:"index")].name?.trimmingCharacters(in: .whitespaces) == "" ||  timeCards[userDefaults.integer(forKey:"index")].name == "Unknown" {
@@ -673,7 +688,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             
             if timeCard[timeCard.count - 1].image != nil {
                 DispatchQueue.main.async { [self] in
-                    //let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width: imageView.frame.width, height: imageView.frame.height))
                     
                     UIView.transition(with: self.imageView,
                                       duration: 0.50,
@@ -685,7 +699,13 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 }
             }
             else {
-                setImageView()
+                UIView.transition(with: self.imageView,
+                                  duration: 0.50,
+                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                  animations: { [self] in
+                                    setImageView()
+                                  },
+                                  completion: nil)
             }
         }
         else {
@@ -697,27 +717,28 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                                 sender.backgroundColor = UIColor.red
                              },
                              completion: { finish in
-                                UIButton.animate(withDuration: 0.05, animations: { [self] in
-                                    sender.transform = CGAffineTransform.identity
-                                    if userDefaults.integer(forKey: "accent") == 0 {
-                                        previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
-                                    }
-                                    else if userDefaults.integer(forKey: "accent") == 1 {
-                                        previousButton.backgroundColor = UIColor(rgb: 0x7841c4)
-                                    }
-                                    else if userDefaults.integer(forKey: "accent") == 2 {
-                                        
-                                        previousButton.backgroundColor = UIColor(rgb: 0x347deb)
-                                    }
-                                    else if userDefaults.integer(forKey: "accent") == 3 {
-                                        
-                                        previousButton.backgroundColor = UIColor(rgb: 0xfc783a)
-                                    }
-                                    else if userDefaults.integer(forKey: "accent") == 4 {
-                                        
-                                        previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-                                    }
-                                })
+                                UIButton.animate(withDuration: 0.30,
+                                                 animations: { [self] in
+                                                    if userDefaults.integer(forKey: "accent") == 0 {
+                                                        previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
+                                                    }
+                                                    else if userDefaults.integer(forKey: "accent") == 1 {
+                                                        previousButton.backgroundColor = UIColor(rgb: 0x7841c4)
+                                                    }
+                                                    else if userDefaults.integer(forKey: "accent") == 2 {
+                                                        
+                                                        previousButton.backgroundColor = UIColor(rgb: 0x347deb)
+                                                    }
+                                                    else if userDefaults.integer(forKey: "accent") == 3 {
+                                                        
+                                                        previousButton.backgroundColor = UIColor(rgb: 0xfc783a)
+                                                    }
+                                                    else if userDefaults.integer(forKey: "accent") == 4 {
+                                                        
+                                                        previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+                                                    }
+                                                 },
+                                                 completion: nil)
                              })
         }
     }
@@ -749,8 +770,9 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             let id = timeCards[userDefaults.integer(forKey: "index") + 1].id_number
             userDefaults.setValue(id, forKey: "id")
             userDefaults.setValue(userDefaults.integer(forKey:"index") + 1, forKey: "index")
-            UIView.transition(with: self.tableView, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
-                self.tableView.reloadData()
+            UIView.transition(with: view, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
+                
+                tableView.reloadData()
                 if timeCards[userDefaults.integer(forKey:"index")].name == nil || timeCards[userDefaults.integer(forKey:"index")].name?.trimmingCharacters(in: .whitespaces) == "" ||  timeCards[userDefaults.integer(forKey:"index")].name == "Unknown" {
                     textField.text = "Unknown"
                     self.navigationItem.title = "Time Card Info"
@@ -767,12 +789,12 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 }
                 else {
                     weekOfLabel.text = "Week Of: \(timeCards[userDefaults.integer(forKey:"index")].week ?? "Unknown")"
+                    
                 }
             }, completion: nil)
             
             if timeCard[timeCard.count - 1].image != nil {
                 DispatchQueue.main.async { [self] in
-                    //let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width: imageView.frame.width, height: imageView.frame.height))
                     
                     UIView.transition(with: self.imageView,
                                       duration: 0.50,
@@ -784,7 +806,13 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 }
             }
             else {
-                setImageView()
+                UIView.transition(with: self.imageView,
+                                  duration: 0.50,
+                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                  animations: { [self] in
+                                    setImageView()
+                                  },
+                                  completion: nil)
             }
         }
         else {
@@ -796,28 +824,38 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                                 sender.backgroundColor = UIColor.red
                              },
                              completion: { finish in
-                                UIButton.animate(withDuration: 0.05, animations: { [self] in
-                                    sender.transform = CGAffineTransform.identity
-                                    if userDefaults.integer(forKey: "accent") == 0 {
-                                        nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
-                                    }
-                                    else if userDefaults.integer(forKey: "accent") == 1 {
-                                        nextButton.backgroundColor = UIColor(rgb: 0x7841c4)
-                                    }
-                                    else if userDefaults.integer(forKey: "accent") == 2 {
-                                        
-                                        nextButton.backgroundColor = UIColor(rgb: 0x347deb)
-                                    }
-                                    else if userDefaults.integer(forKey: "accent") == 3 {
-                                        
-                                        nextButton.backgroundColor = UIColor(rgb: 0xfc783a)
-                                    }
-                                    else if userDefaults.integer(forKey: "accent") == 4 {
-                                        
-                                        nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-                                    }
-                                })
+                                UIButton.animate(withDuration: 0.30,
+                                                 animations: { [self] in
+                                                    if userDefaults.integer(forKey: "accent") == 0 {
+                                                        nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
+                                                    }
+                                                    else if userDefaults.integer(forKey: "accent") == 1 {
+                                                        nextButton.backgroundColor = UIColor(rgb: 0x7841c4)
+                                                    }
+                                                    else if userDefaults.integer(forKey: "accent") == 2 {
+                                                        
+                                                        nextButton.backgroundColor = UIColor(rgb: 0x347deb)
+                                                    }
+                                                    else if userDefaults.integer(forKey: "accent") == 3 {
+                                                        
+                                                        nextButton.backgroundColor = UIColor(rgb: 0xfc783a)
+                                                    }
+                                                    else if userDefaults.integer(forKey: "accent") == 4 {
+                                                        
+                                                        nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+                                                    }
+                                                 },
+                                                 completion: nil)
                              })
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "viewImage" {
+            let dvc = segue.destination as! ImageViewController
+            dvc.newImage = image
+            dvc.name = textField.text
+            dvc.index = -1
         }
     }
 }
