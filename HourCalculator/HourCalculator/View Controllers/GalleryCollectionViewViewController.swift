@@ -5,7 +5,6 @@
 //  Created by Cory Lowry on 8/23/21.
 //
 
-import Foundation
 import UIKit
 import CoreData
 
@@ -95,7 +94,7 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
                              completion: nil)
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -112,7 +111,7 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         longPressGesture.minimumPressDuration = 0.5
         collectionView.addGestureRecognizer(longPressGesture)
     }
-   
+    
     override func viewWillAppear(_ animated: Bool) {
         shareButton.isEnabled = false
         collectionView!.reloadData()
@@ -133,19 +132,19 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
     }
     
     /*private var finishedLoadingInitialTableCells = false
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if gallery.count > 0 {
-            //DispatchQueue.main.async {
-    
-                    cell.alpha = 0
-                    
-                    UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
-                        cell.alpha = 1
-                    }, completion: nil)
-                //}
-            }
-        }*/
+     
+     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+     if gallery.count > 0 {
+     //DispatchQueue.main.async {
+     
+     cell.alpha = 0
+     
+     UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
+     cell.alpha = 1
+     }, completion: nil)
+     //}
+     }
+     }*/
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if #available(iOS 14.0, *) {
@@ -153,7 +152,7 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
                 
                 if arrayIndex.contains(indexPath.row) {
                     arrayIndex = arrayIndex.filter { $0 != indexPath.row }
-                         }
+                }
                 
                 let cell = collectionView.cellForItem(at: indexPath) as! GalleryCollectionViewCell
                 UIButton.animate(withDuration: 0.05,
@@ -184,8 +183,8 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             if collectionView.isEditing == true {
                 
                 if !arrayIndex.contains(indexPath.row) {
-                        arrayIndex.append(indexPath.row)
-                     }
+                    arrayIndex.append(indexPath.row)
+                }
                 
                 let cell = collectionView.cellForItem(at: indexPath) as! GalleryCollectionViewCell
                 UIButton.animate(withDuration: 0.05,
@@ -212,21 +211,21 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return gallery.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let galleryCell = collectionView.dequeueReusableCell(withReuseIdentifier: "galleryCell", for: indexPath) as! GalleryCollectionViewCell
         
-            if arrayIndex.contains(indexPath.row) {
-                galleryCell.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
-                galleryCell.backgroundColor = .systemGray2
-                galleryCell.checkMark.image = UIImage(systemName: "checkmark.seal.fill")
-            }
-            else {
-                galleryCell.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-                galleryCell.backgroundColor = .systemGray5
-                galleryCell.checkMark.image = UIImage(systemName: "checkmark.seal")
-            }
-            print("selected index is: \(arrayIndex)")
+        if arrayIndex.contains(indexPath.row) {
+            galleryCell.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
+            galleryCell.backgroundColor = .systemGray2
+            galleryCell.checkMark.image = UIImage(systemName: "checkmark.seal.fill")
+        }
+        else {
+            galleryCell.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            galleryCell.backgroundColor = .systemGray5
+            galleryCell.checkMark.image = UIImage(systemName: "checkmark.seal")
+        }
+        print("selected index is: \(arrayIndex)")
         
         
         if imageViewHidden == true {
@@ -236,30 +235,30 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             galleryCell.checkMark.isHidden = false
         }
         
-       DispatchQueue.main.async { [self] in
-        if gallery[indexPath.row].thumbnail != nil && gallery[indexPath.row].fullSize != nil {
-            //let galleryCell = collectionView.dequeueReusableCell(withReuseIdentifier: "galleryCell", for: indexPath) as! GalleryCollectionViewCell
-            
-            galleryCell.layer.shadowColor = UIColor.black.cgColor
-            galleryCell.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-            galleryCell.layer.shadowRadius = 4.0
-            galleryCell.layer.shadowOpacity = 0.75
-            //galleryCell.layer.masksToBounds = false
-            galleryCell.layer.shadowPath = UIBezierPath(roundedRect: galleryCell.bounds, cornerRadius: 10).cgPath
-            
-            galleryCell.galleryImage.image = UIImage(data: gallery[indexPath.row].thumbnail!)
-            if gallery[indexPath.row].name == nil || gallery[indexPath.row].name == "" {
-                galleryCell.nameLabel.text = "Unknown"
+        DispatchQueue.main.async { [self] in
+            if gallery[indexPath.row].thumbnail != nil && gallery[indexPath.row].fullSize != nil {
+                //let galleryCell = collectionView.dequeueReusableCell(withReuseIdentifier: "galleryCell", for: indexPath) as! GalleryCollectionViewCell
+                
+                galleryCell.layer.shadowColor = UIColor.black.cgColor
+                galleryCell.layer.shadowOffset = CGSize(width: 0, height: 2.0)
+                galleryCell.layer.shadowRadius = 4.0
+                galleryCell.layer.shadowOpacity = 0.75
+                //galleryCell.layer.masksToBounds = false
+                galleryCell.layer.shadowPath = UIBezierPath(roundedRect: galleryCell.bounds, cornerRadius: 10).cgPath
+                
+                galleryCell.galleryImage.image = UIImage(data: gallery[indexPath.row].thumbnail!)
+                if gallery[indexPath.row].name == nil || gallery[indexPath.row].name == "" {
+                    galleryCell.nameLabel.text = "Unknown"
+                }
+                else {
+                    galleryCell.nameLabel.text = gallery[indexPath.row].name
+                }
+                //return galleryCell
             }
             else {
-                galleryCell.nameLabel.text = gallery[indexPath.row].name
+                galleryCell.isHidden = true
+                galleryCell.layer.borderColor = UIColor.white.cgColor
             }
-            //return galleryCell
-        }
-        else {
-            galleryCell.isHidden = true
-            galleryCell.layer.borderColor = UIColor.white.cgColor
-        }
         }
         return galleryCell
     }
@@ -288,27 +287,28 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             }
             imageViewHidden = false
             arrayIndex.removeAll()
-           for i in (0...gallery.count - 1).reversed() {
+            shareButton.isEnabled = false
+            for i in (0...gallery.count - 1).reversed() {
                 self.collectionView.layoutIfNeeded()
                 if let cell = collectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? GalleryCollectionViewCell {
-                UIButton.animate(withDuration: 0.05,
-                                 animations: {
-                                    cell.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-                                    cell.backgroundColor = .systemGray5
-                                    cell.checkMark.image = UIImage(systemName: "checkmark.seal")
-                                    cell.checkMark.isHidden = true
-                                 },
-                                 completion: nil)
+                    UIButton.animate(withDuration: 0.05,
+                                     animations: {
+                                        cell.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                                        cell.backgroundColor = .systemGray5
+                                        cell.checkMark.image = UIImage(systemName: "checkmark.seal")
+                                        cell.checkMark.isHidden = true
+                                     },
+                                     completion: nil)
                 }
-            
+                
             }
-                }
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "viewImage" {
             let dvc = segue.destination as! ImageViewController
-          
+            
             dvc.newImage = UIImage(data: gallery[index].fullSize!)
             dvc.name = gallery[index].name
             dvc.index = index

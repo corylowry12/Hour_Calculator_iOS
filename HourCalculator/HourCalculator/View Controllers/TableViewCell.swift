@@ -10,11 +10,8 @@ import UIKit
 class TableViewCell: UITableViewCell {
     
     @IBOutlet weak var inTimeLabel: UILabel!
-    
     @IBOutlet weak var outTimeLabel: UILabel!
-    
     @IBOutlet weak var totalHoursLabel: UILabel!
-    
     @IBOutlet weak var dateLabel: UILabel!
     
     

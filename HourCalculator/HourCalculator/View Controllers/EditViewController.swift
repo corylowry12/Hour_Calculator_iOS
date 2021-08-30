@@ -231,7 +231,15 @@ class EditViewController: UIViewController {
                 let notificationName = NSNotification.Name("Update")
                 NotificationCenter.default.post(name: notificationName, object: nil)
             } ))
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
+                let alert = UIAlertController(title: "Are you sure?", message: "Are you sure you would like to exit without saving?", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+                    self.dismiss(animated: true, completion: nil)
+                    self.dismiss(animated: true, completion: nil)
+                }))
+                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }))
             
             self.present(alert, animated: true, completion: nil)
         } else {

@@ -53,19 +53,19 @@ class ImageViewController: UIViewController {
         }
         
         if index != -1 {
-        let swipeGestureLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.LeftSwipeAction(_:)))
-        swipeGestureLeft.direction = .left
-        self.imageView.addGestureRecognizer(swipeGestureLeft)
-        
-        let swipeGestureRight = UISwipeGestureRecognizer(target: self, action: #selector(self.RightSwipeAction(_:)))
-        swipeGestureRight.direction = .right
-        self.imageView.addGestureRecognizer(swipeGestureRight)
+            let swipeGestureLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.LeftSwipeAction(_:)))
+            swipeGestureLeft.direction = .left
+            self.imageView.addGestureRecognizer(swipeGestureLeft)
+            
+            let swipeGestureRight = UISwipeGestureRecognizer(target: self, action: #selector(self.RightSwipeAction(_:)))
+            swipeGestureRight.direction = .right
+            self.imageView.addGestureRecognizer(swipeGestureRight)
         }
         
         DispatchQueue.main.async { [self] in
-        
-        imageView.image = newImage
-        
+            
+            imageView.image = newImage
+            
         }
     }
     
@@ -77,14 +77,14 @@ class ImageViewController: UIViewController {
         super.viewDidLoad()
         
         imageView.isUserInteractionEnabled = true
-    
+        
     }
     
     @objc func RightSwipeAction( _ recognizer : UISwipeGestureRecognizer){
         
         if recognizer.direction == .right{
             var frame = imageView.frame
-           print("Right Swiped")
+            print("Right Swiped")
             if (gallery.count - 1) >= index && index > 0 && gallery[index - 1].id_number != 0 {
                 frame.origin.x += 400.0
                 index = index - 1
@@ -94,7 +94,7 @@ class ImageViewController: UIViewController {
                     imageView.image = UIImage(data: gallery[index].fullSize!)
                 }
                 else {
-                imageView.image = UIImage(data: gallery[index].fullSize!)
+                    imageView.image = UIImage(data: gallery[index].fullSize!)
                 }
                 
                 if gallery[index].name != nil {
@@ -106,8 +106,8 @@ class ImageViewController: UIViewController {
                 
                 UIView.animate(withDuration: 0.50) {
                     self.imageView.frame = frame
-                    }
-              
+                }
+                
                 let swipeGestureRight = UISwipeGestureRecognizer(target: self, action: #selector(self.RightSwipeAction(_:)))
                 swipeGestureRight.direction = .right
                 self.imageView.addGestureRecognizer(swipeGestureRight)
@@ -129,7 +129,7 @@ class ImageViewController: UIViewController {
     }
     
     @objc func LeftSwipeAction( _ recognizer : UISwipeGestureRecognizer){
-
+        
         var frame = imageView.frame
         
         if recognizer.direction == .left {
@@ -144,12 +144,12 @@ class ImageViewController: UIViewController {
                     imageView.image = UIImage(data: gallery[index].fullSize!)
                 }
                 else {
-                imageView.image = UIImage(data: gallery[index].fullSize!)
+                    imageView.image = UIImage(data: gallery[index].fullSize!)
                 }
                 
                 UIView.animate(withDuration: 0.50) {
                     self.imageView.frame = frame
-                    }
+                }
                 
                 if gallery[index].name != nil {
                     self.title = gallery[index].name

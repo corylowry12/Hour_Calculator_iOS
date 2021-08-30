@@ -24,7 +24,7 @@ extension UIImage {
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
             label.textColor = UIColor(rgb: 0x7841c4)
-           
+            
         }
         else if userDefaults.integer(forKey: "accent") == 2 {
             label.textColor = UIColor(rgb: 0x347deb)
@@ -336,25 +336,25 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
                 
                 UIView.transition(with: self.imageView,
-                                                  duration: 1.0,
-                                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                                  animations: { [self] in
-                                                    setImageView()
-                                                  },
-                                                  completion: nil)
-                                timeCard[timeCard.count - 1].image = nil
+                                  duration: 1.0,
+                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                  animations: { [self] in
+                                    setImageView()
+                                  },
+                                  completion: nil)
+                timeCard[timeCard.count - 1].image = nil
                 if gallery.count > 0 {
                     if gallery[0].thumbnail != nil {
-                                gallery[0].thumbnail = nil
+                        gallery[0].thumbnail = nil
                     }
                     if gallery[0].date != nil {
-                                gallery[0].date = nil
+                        gallery[0].date = nil
                     }
                     if gallery[0].fullSize != nil {
                         gallery[0].fullSize = nil
                     }
                 }
-                                (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                (UIApplication.shared.delegate as! AppDelegate).saveContext()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -407,8 +407,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             
             timeCard[timeCard.count - 1].image = jpegData
             if gallery.count > 0 {
-            gallery[0].thumbnail = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 156, height: 156)).jpegData(compressionQuality: 1.0)
-            gallery[0].fullSize = jpegData
+                gallery[0].thumbnail = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 156, height: 156)).jpegData(compressionQuality: 1.0)
+                gallery[0].fullSize = jpegData
                 let today = Date()
                 let formatter1 = DateFormatter()
                 formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
@@ -422,12 +422,12 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 
                 gallery[0].thumbnail = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 124, height: 128)).jpegData(compressionQuality: 1.0)
                 gallery[0].fullSize = jpegData
-                    let today = Date()
-                    let formatter1 = DateFormatter()
-                    formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
-                    let dateFormatted = formatter1.string(from: today)
-                    
-                    gallery[0].date = dateFormatted
+                let today = Date()
+                let formatter1 = DateFormatter()
+                formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
+                let dateFormatted = formatter1.string(from: today)
+                
+                gallery[0].date = dateFormatted
             }
             
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
@@ -511,7 +511,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             timeCardInfo[timeCardInfo.count - 1].name = textField.text?.trimmingCharacters(in: .whitespaces)
             gallery[0].name = textField.text?.trimmingCharacters(in: .whitespaces)
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
-           
+            
         }
         else if textField.text?.trimmingCharacters(in: .whitespaces) == ""{
             timeCards[userDefaults.integer(forKey: "index")].name = nil
@@ -519,7 +519,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             gallery[0].name = nil
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
         }
-
+        
         print("hello world")
         return range.location < 16
     }
@@ -567,19 +567,19 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 self.present(alert, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
-            
+                
                 UIView.transition(with: self.imageView,
-                                                  duration: 1.0,
-                                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                                  animations: { [self] in
-                                                    setImageView()
-                                                  },
-                                                  completion: nil)
-                                timeCard[timeCard.count - 1].image = nil
-                                gallery[0].thumbnail = nil
-                                gallery[0].date = nil
-                                gallery[0].fullSize = nil
-                                (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                                  duration: 1.0,
+                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                  animations: { [self] in
+                                    setImageView()
+                                  },
+                                  completion: nil)
+                timeCard[timeCard.count - 1].image = nil
+                gallery[0].thumbnail = nil
+                gallery[0].date = nil
+                gallery[0].fullSize = nil
+                (UIApplication.shared.delegate as! AppDelegate).saveContext()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -637,33 +637,33 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         })
     }
     @IBAction func previousButton(_ sender: UIButton) {
-    
-        UIButton.animate(withDuration: 0.05,
-                         animations: { [self] in
-                            sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-                            previousButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-                            previousButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-                            previousButton.layer.shadowOpacity = 0.0
-                            previousButton.layer.shadowRadius = 0.0
-                            previousButton.layer.masksToBounds = false
-                         },
-                         completion: { finish in
-                            UIButton.animate(withDuration: 0.05, animations: { [self] in
-                                sender.transform = CGAffineTransform.identity
-                                previousButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75).cgColor
-                                previousButton.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
-                                previousButton.layer.shadowOpacity = 1.0
-                                previousButton.layer.shadowRadius = 5.0
-                                previousButton.layer.masksToBounds = false
-                            })
-                         })
         
         if (timeCards.count - 1) >= userDefaults.integer(forKey: "index") && userDefaults.integer(forKey: "index") > 0 && timeCards[userDefaults.integer(forKey: "index") - 1].id_number != 0 {
+            
+            UIButton.animate(withDuration: 0.05,
+                             animations: { [self] in
+                                sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+                                previousButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+                                previousButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+                                previousButton.layer.shadowOpacity = 0.0
+                                previousButton.layer.shadowRadius = 0.0
+                                previousButton.layer.masksToBounds = false
+                             },
+                             completion: { finish in
+                                UIButton.animate(withDuration: 0.05, animations: { [self] in
+                                    sender.transform = CGAffineTransform.identity
+                                    previousButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75).cgColor
+                                    previousButton.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+                                    previousButton.layer.shadowOpacity = 1.0
+                                    previousButton.layer.shadowRadius = 5.0
+                                    previousButton.layer.masksToBounds = false
+                                })
+                             })
             
             let id = timeCards[userDefaults.integer(forKey: "index") - 1].id_number
             userDefaults.setValue(id, forKey: "id")
             userDefaults.setValue(userDefaults.integer(forKey:"index") - 1, forKey: "index")
-            UIView.transition(with: view, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
+            UIView.transition(with: tableView, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
                 self.tableView.reloadData()
                 
                 if timeCards[userDefaults.integer(forKey:"index")].name == nil || timeCards[userDefaults.integer(forKey:"index")].name?.trimmingCharacters(in: .whitespaces) == "" ||  timeCards[userDefaults.integer(forKey:"index")].name == "Unknown" {
@@ -676,13 +676,19 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 }
                 
                 let total = round(Double(timeCards[userDefaults.integer(forKey:"index")].total) * 100.0) / 100.0
-                totalHoursLabel.text = "Total Hours: \(total)"
-                if timeCards[userDefaults.value(forKey: "index") as! Int].numberBeingExported == 1 {
-                    weekOfLabel.text = "Day Of: \(timeCards[userDefaults.integer(forKey:"index")].week ?? "Unknown")"
-                }
-                else {
-                    weekOfLabel.text = "Week Of: \(timeCards[userDefaults.integer(forKey:"index")].week ?? "Unknown")"
-                }
+                UIView.transition(with: totalHoursLabel, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
+                    totalHoursLabel.text = "Total Hours: \(total)"
+                }, completion: nil)
+                
+                UIView.transition(with: weekOfLabel, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
+                    
+                    if timeCards[userDefaults.value(forKey: "index") as! Int].numberBeingExported == 1 {
+                        weekOfLabel.text = "Day Of: \(timeCards[userDefaults.integer(forKey:"index")].week ?? "Unknown")"
+                    }
+                    else {
+                        weekOfLabel.text = "Week Of: \(timeCards[userDefaults.integer(forKey:"index")].week ?? "Unknown")"
+                    }
+                }, completion: nil)
                 
             }, completion: nil)
             
@@ -744,35 +750,36 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     @IBAction func nextButton(_ sender: UIButton) {
         
-        UIButton.animate(withDuration: 0.05,
-                         animations: { [self] in
-                            sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-                            nextButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-                            nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-                            nextButton.layer.shadowOpacity = 0.0
-                            nextButton.layer.shadowRadius = 0.0
-                            nextButton.layer.masksToBounds = false
-                         },
-                         completion: { finish in
-                            UIButton.animate(withDuration: 0.05, animations: { [self] in
-                                sender.transform = CGAffineTransform.identity
-                                nextButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75).cgColor
-                                nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
-                                nextButton.layer.shadowOpacity = 1.0
-                                nextButton.layer.shadowRadius = 5.0
-                                nextButton.layer.masksToBounds = false
-                            })
-                         })
-        
         if (timeCards.count - 1) > userDefaults.integer(forKey: "index") && (timeCardInfo.count - 1) >= (userDefaults.integer(forKey: "index") + 1) {
+            
+            UIButton.animate(withDuration: 0.05,
+                             animations: { [self] in
+                                sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+                                nextButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+                                nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+                                nextButton.layer.shadowOpacity = 0.0
+                                nextButton.layer.shadowRadius = 0.0
+                                nextButton.layer.masksToBounds = false
+                             },
+                             completion: { finish in
+                                UIButton.animate(withDuration: 0.05, animations: { [self] in
+                                    sender.transform = CGAffineTransform.identity
+                                    nextButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75).cgColor
+                                    nextButton.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+                                    nextButton.layer.shadowOpacity = 1.0
+                                    nextButton.layer.shadowRadius = 5.0
+                                    nextButton.layer.masksToBounds = false
+                                })
+                             })
             
             print("index is \(userDefaults.integer(forKey: "index"))")
             let id = timeCards[userDefaults.integer(forKey: "index") + 1].id_number
             userDefaults.setValue(id, forKey: "id")
             userDefaults.setValue(userDefaults.integer(forKey:"index") + 1, forKey: "index")
-            UIView.transition(with: view, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
+            UIView.transition(with: tableView, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
                 
                 tableView.reloadData()
+                
                 if timeCards[userDefaults.integer(forKey:"index")].name == nil || timeCards[userDefaults.integer(forKey:"index")].name?.trimmingCharacters(in: .whitespaces) == "" ||  timeCards[userDefaults.integer(forKey:"index")].name == "Unknown" {
                     textField.text = "Unknown"
                     self.navigationItem.title = "Time Card Info"
@@ -783,14 +790,19 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 }
                 
                 let total = round(Double(timeCards[userDefaults.integer(forKey:"index")].total) * 100.0) / 100.0
-                totalHoursLabel.text = "Total Hours: \(total)"
-                if timeCards[userDefaults.value(forKey: "index") as! Int].numberBeingExported == 1 {
-                    weekOfLabel.text = "Day Of: \(timeCards[userDefaults.integer(forKey:"index")].week ?? "Unknown")"
-                }
-                else {
-                    weekOfLabel.text = "Week Of: \(timeCards[userDefaults.integer(forKey:"index")].week ?? "Unknown")"
+                UIView.transition(with: totalHoursLabel, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
+                    totalHoursLabel.text = "Total Hours: \(total)"
+                }, completion: nil)
+                
+                UIView.transition(with: weekOfLabel, duration: 0.50, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: { [self] in
                     
-                }
+                    if timeCards[userDefaults.value(forKey: "index") as! Int].numberBeingExported == 1 {
+                        weekOfLabel.text = "Day Of: \(timeCards[userDefaults.integer(forKey:"index")].week ?? "Unknown")"
+                    }
+                    else {
+                        weekOfLabel.text = "Week Of: \(timeCards[userDefaults.integer(forKey:"index")].week ?? "Unknown")"
+                    }
+                }, completion: nil)
             }, completion: nil)
             
             if timeCard[timeCard.count - 1].image != nil {

@@ -25,7 +25,7 @@ class TimeCardSettingsViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         let indexPath = IndexPath(row: userDefaults.integer(forKey: "saveImages"), section: 0)
-      
+        
         tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
     }

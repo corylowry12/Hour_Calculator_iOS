@@ -415,9 +415,9 @@ class ViewController: UIViewController {
                 }
             }
         }
-     
+        
         if userDefaults.value(forKey: "automaticDeletion") as! Int != 0 && hourItems.count > userDefaults.value(forKey: "automaticDeletion") as! Int {
-           
+            
             let hourToDelete = hourItems.first
             context.delete(hourToDelete!)
         }
@@ -563,7 +563,7 @@ class ViewController: UIViewController {
         }
         
         if userDefaults.value(forKey: "automaticDeletion") as! Int != 0 && hourItems.count > userDefaults.value(forKey: "automaticDeletion") as! Int {
-           
+            
             let hourToDelete = hourItems.first
             context.delete(hourToDelete!)
         }
