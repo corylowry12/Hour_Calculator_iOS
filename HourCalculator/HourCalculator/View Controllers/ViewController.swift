@@ -91,10 +91,6 @@ class ViewController: UIViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        self.dismiss(animated: false, completion: nil)
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         dateLabel.text = nil
     }
@@ -211,8 +207,6 @@ class ViewController: UIViewController {
         if userDefaults.value(forKey: "outtime") != nil {
             datePickerOutTime.date = userDefaults.value(forKey: "outtime") as! Date
         }
-        
-        userDefaults.removeObject(forKey: "ID")
         
         if userDefaults.integer(forKey: "historyEnabled") == 0 {
             tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)

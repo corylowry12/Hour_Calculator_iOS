@@ -13,6 +13,7 @@
 		322C564026BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322C563F26BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift */; };
 		322C564226BDC32900A4E8DD /* TimeCardInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322C564126BDC32900A4E8DD /* TimeCardInfoTableViewController.swift */; };
 		323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323DD8F12685984D00332BA3 /* TableViewCell.swift */; };
+		324248B826E0800C00C7BC62 /* MappingModel.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 324248B726E0800C00C7BC62 /* MappingModel.xcmappingmodel */; };
 		3254AFA1268E71FB005B13E5 /* HistorySettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3254AFA0268E71FB005B13E5 /* HistorySettingsTableViewController.swift */; };
 		325568512689C13F00CC7ACD /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325568502689C13F00CC7ACD /* TabBarController.swift */; };
 		325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C72685634100B098C9 /* HistoryViewController.swift */; };
@@ -46,9 +47,9 @@
 		32A2C0FB2696C12700EABD3C /* purple_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F72696C12600EABD3C /* purple_logo.png */; };
 		32A2C0FC2696C12700EABD3C /* red_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F82696C12600EABD3C /* red_logo.png */; };
 		32F52A85268AD02E00BD9E2F /* Siren in Frameworks */ = {isa = PBXBuildFile; productRef = 32F52A84268AD02E00BD9E2F /* Siren */; };
-		8EBFF1BECC367AF00B69B1B7 /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7E439F5BEC8084EDAA07AE7 /* Pods_HourCalculator_HourCalculatorUITests.framework */; };
-		CA7ACF3A92246E7174EA765A /* Pods_HourCalculator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78117CE8367C288DD1FB8D9E /* Pods_HourCalculator.framework */; };
-		F1B687497A45B0096F66D4D2 /* Pods_HourCalculatorTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBAF998FAC7B6F8E9136640 /* Pods_HourCalculatorTests.framework */; };
+		8EF53F490587A01053E52F1C /* Pods_HourCalculator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6578745A48FD1221C4B5F8E5 /* Pods_HourCalculator.framework */; };
+		F3926611903E915AA160F608 /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7675E8946F8B81AC8D693FE5 /* Pods_HourCalculator_HourCalculatorUITests.framework */; };
+		F6607A63DABD37D66663D569 /* Pods_HourCalculatorTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9119C3FC6C816449264A4FA6 /* Pods_HourCalculatorTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,15 +83,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		007C9DA652A7BA321ED99152 /* Pods-HourCalculator-HourCalculatorUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator-HourCalculatorUITests.release.xcconfig"; path = "Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests.release.xcconfig"; sourceTree = "<group>"; };
-		07071AF7D665A8B2321A7983 /* Pods-HourCalculator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator.release.xcconfig"; path = "Target Support Files/Pods-HourCalculator/Pods-HourCalculator.release.xcconfig"; sourceTree = "<group>"; };
-		1FBAF998FAC7B6F8E9136640 /* Pods_HourCalculatorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculatorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		32088B1426D4982E00B62C2A /* GalleryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewCell.swift; sourceTree = "<group>"; };
 		32088B1626D4984500B62C2A /* GalleryCollectionViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewViewController.swift; sourceTree = "<group>"; };
 		32088B1826D5FCAC00B62C2A /* TimeCardSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardSettingsViewController.swift; sourceTree = "<group>"; };
 		322C563F26BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardInfoTableViewCell.swift; sourceTree = "<group>"; };
 		322C564126BDC32900A4E8DD /* TimeCardInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardInfoTableViewController.swift; sourceTree = "<group>"; };
 		323DD8F12685984D00332BA3 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		324248B626DF204300C7BC62 /* StoredHours 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "StoredHours 2.xcdatamodel"; sourceTree = "<group>"; };
+		324248B726E0800C00C7BC62 /* MappingModel.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = MappingModel.xcmappingmodel; sourceTree = "<group>"; };
 		3254AFA0268E71FB005B13E5 /* HistorySettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySettingsTableViewController.swift; sourceTree = "<group>"; };
 		3255684F26897A1700CC7ACD /* HourCalculator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HourCalculator.entitlements; sourceTree = "<group>"; };
 		325568502689C13F00CC7ACD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -130,12 +130,15 @@
 		32A2C0F62696C12600EABD3C /* blue_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_logo.png; sourceTree = "<group>"; };
 		32A2C0F72696C12600EABD3C /* purple_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple_logo.png; sourceTree = "<group>"; };
 		32A2C0F82696C12600EABD3C /* red_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_logo.png; sourceTree = "<group>"; };
-		3A4CD3E2571A5A1B832169C0 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		6ACE95D94FCA8F4454E6F3F8 /* Pods-HourCalculatorTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculatorTests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculatorTests/Pods-HourCalculatorTests.debug.xcconfig"; sourceTree = "<group>"; };
-		78117CE8367C288DD1FB8D9E /* Pods_HourCalculator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C7E439F5BEC8084EDAA07AE7 /* Pods_HourCalculator_HourCalculatorUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator_HourCalculatorUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E257965B77F2B2FE0708C0AC /* Pods-HourCalculatorTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculatorTests.release.xcconfig"; path = "Target Support Files/Pods-HourCalculatorTests/Pods-HourCalculatorTests.release.xcconfig"; sourceTree = "<group>"; };
-		EC40FA8D36E6B294FE68967E /* Pods-HourCalculator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculator/Pods-HourCalculator.debug.xcconfig"; sourceTree = "<group>"; };
+		5A3A88E5FBB842C09EBFEE65 /* Pods-HourCalculatorTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculatorTests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculatorTests/Pods-HourCalculatorTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6578745A48FD1221C4B5F8E5 /* Pods_HourCalculator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7675E8946F8B81AC8D693FE5 /* Pods_HourCalculator_HourCalculatorUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator_HourCalculatorUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9119C3FC6C816449264A4FA6 /* Pods_HourCalculatorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculatorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAAE3E313AEA1E5A83CD7C9D /* Pods-HourCalculatorTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculatorTests.release.xcconfig"; path = "Target Support Files/Pods-HourCalculatorTests/Pods-HourCalculatorTests.release.xcconfig"; sourceTree = "<group>"; };
+		B661E331C3A67C73F8048DFB /* Pods-HourCalculator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator.release.xcconfig"; path = "Target Support Files/Pods-HourCalculator/Pods-HourCalculator.release.xcconfig"; sourceTree = "<group>"; };
+		C78A63FBADD9C7F924EC57EB /* Pods-HourCalculator-HourCalculatorUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator-HourCalculatorUITests.release.xcconfig"; path = "Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests.release.xcconfig"; sourceTree = "<group>"; };
+		E2E8C7353E7BD0328E9A33F8 /* Pods-HourCalculator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculator/Pods-HourCalculator.debug.xcconfig"; sourceTree = "<group>"; };
+		F94E7E33EBA639477AF4E6B9 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,9 +151,9 @@
 				329B5212269141790012E307 /* GoogleAppMeasurement.xcframework in Frameworks */,
 				329B521F269141A90012E307 /* PromisesObjC.xcframework in Frameworks */,
 				329B521C2691419E0012E307 /* nanopb.xcframework in Frameworks */,
-				CA7ACF3A92246E7174EA765A /* Pods_HourCalculator.framework in Frameworks */,
 				329B5222269141B20012E307 /* UserMessagingPlatform.xcframework in Frameworks */,
 				329B5216269141840012E307 /* GoogleMobileAds.xcframework in Frameworks */,
+				8EF53F490587A01053E52F1C /* Pods_HourCalculator.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1B687497A45B0096F66D4D2 /* Pods_HourCalculatorTests.framework in Frameworks */,
+				F6607A63DABD37D66663D569 /* Pods_HourCalculatorTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,7 +169,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EBFF1BECC367AF00B69B1B7 /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */,
+				F3926611903E915AA160F608 /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +210,7 @@
 				32830188268BAE050042AAE7 /* View Controllers */,
 				3255684F26897A1700CC7ACD /* HourCalculator.entitlements */,
 				32629DF626825FD7006632F2 /* AppDelegate.swift */,
+				324248B726E0800C00C7BC62 /* MappingModel.xcmappingmodel */,
 				32629DF826825FD7006632F2 /* SceneDelegate.swift */,
 				32629DFF26825FD9006632F2 /* Assets.xcassets */,
 				32629E0426825FD9006632F2 /* Info.plist */,
@@ -277,9 +281,9 @@
 				329B5218269141910012E307 /* GoogleUtilities.xcframework */,
 				329B5215269141840012E307 /* GoogleMobileAds.xcframework */,
 				329B5211269141790012E307 /* GoogleAppMeasurement.xcframework */,
-				78117CE8367C288DD1FB8D9E /* Pods_HourCalculator.framework */,
-				C7E439F5BEC8084EDAA07AE7 /* Pods_HourCalculator_HourCalculatorUITests.framework */,
-				1FBAF998FAC7B6F8E9136640 /* Pods_HourCalculatorTests.framework */,
+				6578745A48FD1221C4B5F8E5 /* Pods_HourCalculator.framework */,
+				7675E8946F8B81AC8D693FE5 /* Pods_HourCalculator_HourCalculatorUITests.framework */,
+				9119C3FC6C816449264A4FA6 /* Pods_HourCalculatorTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -287,12 +291,12 @@
 		C57BCD1BFE3520B69AA98BE7 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				EC40FA8D36E6B294FE68967E /* Pods-HourCalculator.debug.xcconfig */,
-				07071AF7D665A8B2321A7983 /* Pods-HourCalculator.release.xcconfig */,
-				3A4CD3E2571A5A1B832169C0 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */,
-				007C9DA652A7BA321ED99152 /* Pods-HourCalculator-HourCalculatorUITests.release.xcconfig */,
-				6ACE95D94FCA8F4454E6F3F8 /* Pods-HourCalculatorTests.debug.xcconfig */,
-				E257965B77F2B2FE0708C0AC /* Pods-HourCalculatorTests.release.xcconfig */,
+				E2E8C7353E7BD0328E9A33F8 /* Pods-HourCalculator.debug.xcconfig */,
+				B661E331C3A67C73F8048DFB /* Pods-HourCalculator.release.xcconfig */,
+				F94E7E33EBA639477AF4E6B9 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */,
+				C78A63FBADD9C7F924EC57EB /* Pods-HourCalculator-HourCalculatorUITests.release.xcconfig */,
+				5A3A88E5FBB842C09EBFEE65 /* Pods-HourCalculatorTests.debug.xcconfig */,
+				AAAE3E313AEA1E5A83CD7C9D /* Pods-HourCalculatorTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -304,12 +308,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 32629E1D26825FD9006632F2 /* Build configuration list for PBXNativeTarget "HourCalculator" */;
 			buildPhases = (
-				E51E0391FF58414B0A2EDD5A /* [CP] Check Pods Manifest.lock */,
+				FEBC4A31FC891DF725B12AAE /* [CP] Check Pods Manifest.lock */,
 				32629DEF26825FD7006632F2 /* Sources */,
 				32629DF026825FD7006632F2 /* Frameworks */,
 				32629DF126825FD7006632F2 /* Resources */,
-				4B5CB860ECC769ED5CC01A21 /* [CP] Embed Pods Frameworks */,
 				32A2C0622692911800EABD3C /* Embed App Clips */,
+				46CC34435073884AE02268EC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -327,7 +331,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 32629E2026825FD9006632F2 /* Build configuration list for PBXNativeTarget "HourCalculatorTests" */;
 			buildPhases = (
-				74A5EE8BED1E1F1C9890AC74 /* [CP] Check Pods Manifest.lock */,
+				A01D3BA88D49419B565FBF9B /* [CP] Check Pods Manifest.lock */,
 				32629E0526825FD9006632F2 /* Sources */,
 				32629E0626825FD9006632F2 /* Frameworks */,
 				32629E0726825FD9006632F2 /* Resources */,
@@ -346,11 +350,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 32629E2326825FD9006632F2 /* Build configuration list for PBXNativeTarget "HourCalculatorUITests" */;
 			buildPhases = (
-				40CDC3CEB14567FD6537D630 /* [CP] Check Pods Manifest.lock */,
+				47FB8F1B3BFBA8A11222AB3A /* [CP] Check Pods Manifest.lock */,
 				32629E1026825FD9006632F2 /* Sources */,
 				32629E1126825FD9006632F2 /* Frameworks */,
 				32629E1226825FD9006632F2 /* Resources */,
-				0FB7949AAC34FFB814927926 /* [CP] Embed Pods Frameworks */,
+				CB9FFDA0282F8FE8CADE5083 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -440,24 +444,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0FB7949AAC34FFB814927926 /* [CP] Embed Pods Frameworks */ = {
+		46CC34435073884AE02268EC /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		40CDC3CEB14567FD6537D630 /* [CP] Check Pods Manifest.lock */ = {
+		47FB8F1B3BFBA8A11222AB3A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -479,24 +483,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4B5CB860ECC769ED5CC01A21 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		74A5EE8BED1E1F1C9890AC74 /* [CP] Check Pods Manifest.lock */ = {
+		A01D3BA88D49419B565FBF9B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -518,7 +505,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E51E0391FF58414B0A2EDD5A /* [CP] Check Pods Manifest.lock */ = {
+		CB9FFDA0282F8FE8CADE5083 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FEBC4A31FC891DF725B12AAE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -549,6 +553,7 @@
 			files = (
 				325A41CB26856ABF00B098C9 /* StoredHours.xcdatamodeld in Sources */,
 				32088B1526D4982E00B62C2A /* GalleryCollectionViewCell.swift in Sources */,
+				324248B826E0800C00C7BC62 /* MappingModel.xcmappingmodel in Sources */,
 				3254AFA1268E71FB005B13E5 /* HistorySettingsTableViewController.swift in Sources */,
 				32088B1726D4984500B62C2A /* GalleryCollectionViewViewController.swift in Sources */,
 				322C564026BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift in Sources */,
@@ -744,7 +749,7 @@
 		};
 		32629E1E26825FD9006632F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EC40FA8D36E6B294FE68967E /* Pods-HourCalculator.debug.xcconfig */;
+			baseConfigurationReference = E2E8C7353E7BD0328E9A33F8 /* Pods-HourCalculator.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -752,7 +757,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 45;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -760,7 +765,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.9;
+				MARKETING_VERSION = 1.4.4;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
@@ -773,7 +778,7 @@
 		};
 		32629E1F26825FD9006632F2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 07071AF7D665A8B2321A7983 /* Pods-HourCalculator.release.xcconfig */;
+			baseConfigurationReference = B661E331C3A67C73F8048DFB /* Pods-HourCalculator.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -781,7 +786,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 45;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -789,7 +794,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.9;
+				MARKETING_VERSION = 1.4.4;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
@@ -802,7 +807,7 @@
 		};
 		32629E2126825FD9006632F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6ACE95D94FCA8F4454E6F3F8 /* Pods-HourCalculatorTests.debug.xcconfig */;
+			baseConfigurationReference = 5A3A88E5FBB842C09EBFEE65 /* Pods-HourCalculatorTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -825,7 +830,7 @@
 		};
 		32629E2226825FD9006632F2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E257965B77F2B2FE0708C0AC /* Pods-HourCalculatorTests.release.xcconfig */;
+			baseConfigurationReference = AAAE3E313AEA1E5A83CD7C9D /* Pods-HourCalculatorTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -848,7 +853,7 @@
 		};
 		32629E2426825FD9006632F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3A4CD3E2571A5A1B832169C0 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */;
+			baseConfigurationReference = F94E7E33EBA639477AF4E6B9 /* Pods-HourCalculator-HourCalculatorUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -869,7 +874,7 @@
 		};
 		32629E2526825FD9006632F2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 007C9DA652A7BA321ED99152 /* Pods-HourCalculator-HourCalculatorUITests.release.xcconfig */;
+			baseConfigurationReference = C78A63FBADD9C7F924EC57EB /* Pods-HourCalculator-HourCalculatorUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -952,9 +957,10 @@
 		325A41C926856ABF00B098C9 /* StoredHours.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				324248B626DF204300C7BC62 /* StoredHours 2.xcdatamodel */,
 				325A41CA26856ABF00B098C9 /* StoredHours.xcdatamodel */,
 			);
-			currentVersion = 325A41CA26856ABF00B098C9 /* StoredHours.xcdatamodel */;
+			currentVersion = 324248B626DF204300C7BC62 /* StoredHours 2.xcdatamodel */;
 			path = StoredHours.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

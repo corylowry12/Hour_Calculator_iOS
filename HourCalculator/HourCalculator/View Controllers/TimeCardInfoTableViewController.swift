@@ -248,18 +248,18 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         imageView.addGestureRecognizer(tapRecognizer)
         
-        if timeCard[timeCard.count - 1].image != nil {
-            DispatchQueue.main.async { [self] in
-                let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width: imageView.frame.width, height: imageView.frame.height))
-                
-                UIView.transition(with: self.imageView,
-                                  duration: 1.0,
-                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                  animations: { [self] in
-                                    imageView.image = resized
-                                  },
-                                  completion: nil)
-            }
+            if timeCard[timeCard.count - 1].image != nil {
+                DispatchQueue.main.async { [self] in
+                    let resized = self.resizeImage(image: UIImage(data: timeCard[timeCard.count - 1].image!)!, targetSize: CGSize(width: imageView.frame.width, height: imageView.frame.height))
+                    
+                    UIView.transition(with: self.imageView,
+                                      duration: 1.0,
+                                      options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                      animations: { [self] in
+                                        imageView.image = resized
+                                      },
+                                      completion: nil)
+                }
         }
         else {
             setImageView()
@@ -300,65 +300,67 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     
     @objc func imageTapped() {
         
-        if timeCard[timeCard.count - 1].image != nil {
-            let alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
-                
-                image = UIImage(data: timeCard[timeCard.count - 1].image!)
-                performSegue(withIdentifier: "viewImage", sender: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "Go To Gallery", style: .default, handler: { _ in
-                self.performSegue(withIdentifier: "gallery", sender: self)
-            }))
-            alert.addAction(UIAlertAction(title: "Choose a new image", style: .default, handler: { _ in
-                let alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
+       // if timeCard.indices.contains(timeCard.count - 1) {
+            if timeCard[timeCard.count - 1].image != nil {
+                let alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
+                    
+                    image = UIImage(data: timeCard[timeCard.count - 1].image!)
+                    performSegue(withIdentifier: "viewImage", sender: nil)
+                }))
+                alert.addAction(UIAlertAction(title: "Go To Gallery", style: .default, handler: { _ in
+                    self.performSegue(withIdentifier: "gallery", sender: self)
+                }))
+                alert.addAction(UIAlertAction(title: "Choose a new image", style: .default, handler: { _ in
+                    let alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
+                    if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                        alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
+                            
+                            let imagePickerController = UIImagePickerController()
+                            imagePickerController.delegate = self;
+                            imagePickerController.sourceType = .camera
+                            self.present(imagePickerController, animated: true, completion: nil)
+                            self.cameraIsBeingUsed = true
+                        }))
+                    }
+                    alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
                         
                         let imagePickerController = UIImagePickerController()
                         imagePickerController.delegate = self;
-                        imagePickerController.sourceType = .camera
+                        imagePickerController.sourceType = .photoLibrary
                         self.present(imagePickerController, animated: true, completion: nil)
-                        self.cameraIsBeingUsed = true
+                        
                     }))
-                }
-                alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }))
+                alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
                     
-                    let imagePickerController = UIImagePickerController()
-                    imagePickerController.delegate = self;
-                    imagePickerController.sourceType = .photoLibrary
-                    self.present(imagePickerController, animated: true, completion: nil)
-                    
+                    UIView.transition(with: self.imageView,
+                                      duration: 1.0,
+                                      options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                      animations: { [self] in
+                                        setImageView()
+                                      },
+                                      completion: nil)
+                    timeCard[timeCard.count - 1].image = nil
+                    if gallery.count > 0 {
+                        if gallery[0].thumbnail != nil {
+                            gallery[0].thumbnail = nil
+                        }
+                        if gallery[0].date != nil {
+                            gallery[0].date = nil
+                        }
+                        if gallery[0].fullSize != nil {
+                            gallery[0].fullSize = nil
+                        }
+                    }
+                    (UIApplication.shared.delegate as! AppDelegate).saveContext()
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
-                
-                UIView.transition(with: self.imageView,
-                                  duration: 1.0,
-                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                  animations: { [self] in
-                                    setImageView()
-                                  },
-                                  completion: nil)
-                timeCard[timeCard.count - 1].image = nil
-                if gallery.count > 0 {
-                    if gallery[0].thumbnail != nil {
-                        gallery[0].thumbnail = nil
-                    }
-                    if gallery[0].date != nil {
-                        gallery[0].date = nil
-                    }
-                    if gallery[0].fullSize != nil {
-                        gallery[0].fullSize = nil
-                    }
-                }
-                (UIApplication.shared.delegate as! AppDelegate).saveContext()
-            }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
+            }
+        //}
         else {
             let alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
@@ -390,51 +392,87 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
-        
-        UIView.transition(with: self.imageView,
-                          duration: 1.0,
-                          options: [.allowAnimatedContent, .transitionCrossDissolve],
-                          animations: { [self] in
-                            imageView.image = image
-                          },
-                          completion: nil)
         
         self.dismiss(animated: true, completion: nil)
+        let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         
-        DispatchQueue.main.async { [self] in
-            let jpegData = image?.jpegData(compressionQuality: 1.0)
+        let jpegData = image?.jpegData(compressionQuality: 1.0)
+        //if timeCard.indices.contains(timeCard.count - 1) {
             
-            timeCard[timeCard.count - 1].image = jpegData
-            if gallery.count > 0 {
-                gallery[0].thumbnail = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 156, height: 156)).jpegData(compressionQuality: 1.0)
-                gallery[0].fullSize = jpegData
-                let today = Date()
-                let formatter1 = DateFormatter()
-                formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
-                let dateFormatted = formatter1.string(from: today)
-                
-                gallery[0].date = dateFormatted
-            }
-            else if gallery.count == 0 {
-                let galleryContext = Gallery(context: self.context)
-                galleryContext.id_number = Int32(userDefaults.integer(forKey: "id"))
-                
-                gallery[0].thumbnail = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 124, height: 128)).jpegData(compressionQuality: 1.0)
-                gallery[0].fullSize = jpegData
-                let today = Date()
-                let formatter1 = DateFormatter()
-                formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
-                let dateFormatted = formatter1.string(from: today)
-                
-                gallery[0].date = dateFormatted
-            }
+            UIView.transition(with: self.imageView,
+                              duration: 1.0,
+                              options: [.allowAnimatedContent, .transitionCrossDissolve],
+                              animations: { [self] in
+                                imageView.image = image
+                              },
+                              completion: nil)
+            
+            //DispatchQueue.main.async { [self] in
+        /*if timeCard.indices.contains(timeCard.count - 1) {
+            print("is it empty")
+        }
+        else {
+            let timeCard = TimeCardInfo(context: context)
+            timeCard.image = jpegData
+            timeCard.id_number = Int32(userDefaults.integer(forKey: "id"))
+        }*/
+      
+            
+                timeCard[timeCard.count - 1].image = jpegData
+            
+        
+        
+               if gallery.count > 0 {
+                    gallery[0].thumbnail = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 156, height: 156)).jpegData(compressionQuality: 1.0)
+                    gallery[0].fullSize = jpegData
+                    let today = Date()
+                    let formatter1 = DateFormatter()
+                    formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
+                    let dateFormatted = formatter1.string(from: today)
+                    
+                    gallery[0].date = dateFormatted
+                }
+               else if gallery.count == 0 {
+                    let galleryContext = Gallery(context: self.context)
+                    galleryContext.id_number = Int32(userDefaults.integer(forKey: "id"))
+                    
+                    gallery[0].thumbnail = resizeImage(image: UIImage(data: jpegData!)!, targetSize: CGSize(width: 124, height: 128)).jpegData(compressionQuality: 1.0)
+                    gallery[0].fullSize = jpegData
+                    let today = Date()
+                    let formatter1 = DateFormatter()
+                    formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
+                    let dateFormatted = formatter1.string(from: today)
+                    
+                    gallery[0].date = dateFormatted
+                }
+        //}
+           /* else {
+                UIView.transition(with: self.imageView,
+                                  duration: 1.0,
+                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                  animations: { [self] in
+                                    imageView.backgroundColor = UIColor.red
+                                    let label = UILabel(frame: CGRect(x: 0, y: 0, width: imageView.frame.width, height: imageView.frame.height))
+                                    label.text = "There was an error"
+                                    imageView.image = UIImage.imageWithLabel(label: label)
+                                  },
+                                  completion: { _ in
+                                    UIView.transition(with: self.imageView,
+                                                      duration: 5.0,
+                                                      options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                                      animations: { [self] in
+                                                        imageView.backgroundColor = UIColor.clear
+                                                        setImageView()
+                                                      },
+                                                      completion: nil)
+                                  })
+            }*/
             
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
             if cameraIsBeingUsed == true && userDefaults.integer(forKey: "saveImages") == 0 {
                 UIImageWriteToSavedPhotosAlbum(imageView.image!, nil, nil, nil)
+                cameraIsBeingUsed = false
             }
-        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -493,12 +531,12 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         let inTime = hourItems.intime
         let outTime = hourItems.outtime
         let totalHours = hourItems.total_hours
-        let date = hourItems.date!
+        let date = hourItems.date
         
         cell.inTimeLabel.text = "In Time: \(inTime ?? "Unknown")"
         cell.outTimeLabel.text = "Out Time: \(outTime ?? "Unknown")"
         cell.totalHoursLabel.text = "Total Hours: \(totalHours ?? "Unknown")"
-        cell.dateLabel.text = "Date: \(date)"
+        cell.dateLabel.text = "Date: \(date ?? "Unknown")"
         
         return cell
     }
@@ -531,6 +569,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     
     @IBAction func addButtonClicked(_ sender: Any) {
         
+        //if timeCard.indices.contains(timeCard.count - 1) {
         if timeCard[timeCard.count - 1].image != nil {
             let alert = UIAlertController(title: "Warning", message: "There is already an image stored. What would you like to do?", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
@@ -583,6 +622,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
+       // }
         }
         else {
             let alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
@@ -692,6 +732,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 
             }, completion: nil)
             
+            //if timeCard.indices.contains(timeCard.count - 1) {
             if timeCard[timeCard.count - 1].image != nil {
                 DispatchQueue.main.async { [self] in
                     
@@ -703,6 +744,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                                       },
                                       completion: nil)
                 }
+          // }
             }
             else {
                 UIView.transition(with: self.imageView,
@@ -750,7 +792,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     @IBAction func nextButton(_ sender: UIButton) {
         
-        if (timeCards.count - 1) > userDefaults.integer(forKey: "index") && (timeCardInfo.count - 1) >= (userDefaults.integer(forKey: "index") + 1) {
+        //if (timeCards.count - 1) > userDefaults.integer(forKey: "index") && (timeCardInfo.count - 1) >= (userDefaults.integer(forKey: "index") + 1) {
+        if (timeCards.count - 1) >= userDefaults.integer(forKey: "index") + 1 && userDefaults.integer(forKey: "index") < timeCards.count - 1 && timeCards[userDefaults.integer(forKey: "index") + 1].id_number != 0 {
             
             UIButton.animate(withDuration: 0.05,
                              animations: { [self] in
@@ -805,6 +848,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 }, completion: nil)
             }, completion: nil)
             
+           // if timeCard.indices.contains(timeCard.count - 1) {
             if timeCard[timeCard.count - 1].image != nil {
                 DispatchQueue.main.async { [self] in
                     
@@ -816,6 +860,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                                       },
                                       completion: nil)
                 }
+          // }
             }
             else {
                 UIView.transition(with: self.imageView,

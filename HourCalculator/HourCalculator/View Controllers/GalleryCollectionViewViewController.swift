@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class GalleryCollectionViewViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class GalleryCollectionViewViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet weak var shareButton: UIBarButtonItem!
@@ -110,6 +110,7 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPressGesture.minimumPressDuration = 0.5
         collectionView.addGestureRecognizer(longPressGesture)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -122,6 +123,7 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         noImagesStoredBackground()
         
         print("hello world")
+    
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -130,6 +132,8 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             collectionView.isEditing = false
         }
     }
+    
+    
     
     /*private var finishedLoadingInitialTableCells = false
      
@@ -145,6 +149,14 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
      //}
      }
      }*/
+   
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            let padding: CGFloat =  80
+            let collectionViewSize = collectionView.frame.size.width - padding
+            
+            return CGSize(width: collectionViewSize/2, height: 170)
+        }
+
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if #available(iOS 14.0, *) {
@@ -212,6 +224,8 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         return gallery.count
     }
     
+    
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let galleryCell = collectionView.dequeueReusableCell(withReuseIdentifier: "galleryCell", for: indexPath) as! GalleryCollectionViewCell
         
@@ -264,19 +278,54 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
     }
     @IBAction func shareButton(_ sender: UIBarButtonItem) {
         
-        var images = [UIImage]()
+        let alert = UIAlertController(title: "Share", message: "What would you like to share?", preferredStyle: .actionSheet)
+        var imagesAndNames: String!
+        var images: String!
+        var names: String!
+        if collectionView.indexPathsForSelectedItems?.count == 1 {
+            imagesAndNames = "Image and Name"
+            images = "Image"
+            names = "Name"
+        }
+        else {
+            imagesAndNames = "Images and Names"
+            images = "Images"
+            names = "Names"
+        }
+        if collectionView.indexPathsForSelectedItems?.count == 1 {
+        alert.addAction(UIAlertAction(title: "Image and Name", style: .default, handler: { [self] _ in
+            
+            var names = ""
+            var images : UIImage!
         
         // set up activity view controller
-        
+       
         for i in collectionView.indexPathsForSelectedItems! {
-            images.append(UIImage(data: gallery[i.row].fullSize!)!)
+            images = UIImage(data: gallery[i.row].fullSize!)
+          
             print("is is equal to: \(i)")
             
+            var name = gallery[i.row].name
+            if name == nil {
+                    //names = names + " Unknown"
+                    names.append("Unknown")
+            
+            }
+            else {
+               
+                    //names = names + " \(gallery[i.row].name!)"
+                    names = gallery[i.row].name!
+            }
+            print("is is equal to: \(i)")
+            
+            
         }
-        let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
+            
+            //let activities: [AnyObject] = [images, names as AnyObject]
+            let activityViewController = UIActivityViewController(activityItems: [images, names], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-        activityViewController.excludedActivityTypes = [.postToFacebook, .postToFlickr, .postToTwitter, .postToWeibo, .postToVimeo, .postToTencentWeibo, .addToReadingList]
-        print("count is: \(images.count)")
+     
+      //  print("count is: \(images.count)")
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
         
@@ -303,6 +352,112 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
                 
             }
         }
+        }))
+        }
+        alert.addAction(UIAlertAction(title: images, style: .default, handler: { [self] _ in
+            var images = [UIImage]()
+            
+            // set up activity view controller
+            
+            for i in collectionView.indexPathsForSelectedItems! {
+                images.append(UIImage(data: gallery[i.row].fullSize!)!)
+               
+            }
+            
+            let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+            
+            print("count is: \(images.count)")
+            // present the view controller
+            self.present(activityViewController, animated: true, completion: nil)
+            
+            activityViewController.completionWithItemsHandler = { [self]
+                (activity, success, items, error) in
+                if #available(iOS 14.0, *) {
+                    collectionView.isEditing = false
+                }
+                imageViewHidden = false
+                arrayIndex.removeAll()
+                shareButton.isEnabled = false
+                for i in (0...gallery.count - 1).reversed() {
+                    self.collectionView.layoutIfNeeded()
+                    if let cell = collectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? GalleryCollectionViewCell {
+                        UIButton.animate(withDuration: 0.05,
+                                         animations: {
+                                            cell.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                                            cell.backgroundColor = .systemGray5
+                                            cell.checkMark.image = UIImage(systemName: "checkmark.seal")
+                                            cell.checkMark.isHidden = true
+                                         },
+                                         completion: nil)
+                    }
+                    
+                }
+            }
+        }))
+        alert.addAction(UIAlertAction(title: names, style: .default, handler: { [self] _ in
+            
+            var names = ""
+            
+            // set up activity view controller
+            var x = 0
+            for i in collectionView.indexPathsForSelectedItems! {
+                var name = gallery[i.row].name
+                if name == nil {
+                    if x >= 1 {
+                        names = names + " Unknown"
+                    }
+                    else {
+                        names = names + "Unknown"
+                    }
+                }
+                else {
+                    if x >= 1 {
+                        names = names + " \(gallery[i.row].name!)"
+                    }
+                    else {
+                        names = names + gallery[i.row].name!
+                    }
+                }
+                print("is is equal to: \(i)")
+                x += 1
+            }
+    
+            let nameItem = "Hello world"
+            let item : [Any] = [names as Any]
+            
+            let activityViewController = UIActivityViewController(activityItems: item, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+         
+            // present the view controller
+            self.present(activityViewController, animated: true, completion: nil)
+            
+            activityViewController.completionWithItemsHandler = { [self]
+                (activity, success, items, error) in
+                if #available(iOS 14.0, *) {
+                    collectionView.isEditing = false
+                }
+                imageViewHidden = false
+                arrayIndex.removeAll()
+                shareButton.isEnabled = false
+                for i in (0...gallery.count - 1).reversed() {
+                    self.collectionView.layoutIfNeeded()
+                    if let cell = collectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? GalleryCollectionViewCell {
+                        UIButton.animate(withDuration: 0.05,
+                                         animations: {
+                                            cell.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                                            cell.backgroundColor = .systemGray5
+                                            cell.checkMark.image = UIImage(systemName: "checkmark.seal")
+                                            cell.checkMark.isHidden = true
+                                         },
+                                         completion: nil)
+                    }
+                    
+                }
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
