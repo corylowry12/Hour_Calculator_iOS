@@ -30,8 +30,6 @@ class HowToTableViewController: UITableViewController {
         
         tableView.tableFooterView = UIView()
         
-        tableView.layer.cornerRadius = 15
-        
         BugReporting.enabled = true
         
         /* if userDefaults.integer(forKey: "accent") == 0 {
@@ -95,7 +93,6 @@ class HowToTableViewController: UITableViewController {
         if indexPath.section == 0 {
             if isSelected == false {
                 if indexPath.row == 0 {
-                    tableView.cellForRow(at: [0, 0])?.layer.cornerRadius = 15
                     return 44
                 }
                 //tableView.layer.cornerRadius = 15
@@ -108,9 +105,11 @@ class HowToTableViewController: UITableViewController {
             }
             else {
                 if indexPath.row == 1 {
+                        tableView.cellForRow(at: [0, 1])?.backgroundColor = setTableViewCellColor()
                     return 44
                 }
                 if indexPath.row == 2 {
+                    tableView.cellForRow(at: [0, 2])?.backgroundColor = setTableViewCellColor()
                     return 44
                 }
             }
@@ -149,15 +148,42 @@ class HowToTableViewController: UITableViewController {
             if isSelected == false {
             isSelected = true
             print("hello world")
+                let downArrow = UIImage(systemName: "chevron.up")
+                tableView.cellForRow(at: indexPath)?.accessoryView = UIImageView(image: downArrow)
             tableView.beginUpdates()
+           
+                
             tableView.endUpdates()
             }
             else {
                 isSelected = false
                 print("hello world")
+                let downArrow = UIImage(systemName: "chevron.down")
+                tableView.cellForRow(at: indexPath)?.accessoryView?.transform = CGAffineTransform(rotationAngle: 90)
+                tableView.cellForRow(at: indexPath)?.accessoryView = UIImageView(image: downArrow)
                 tableView.beginUpdates()
                 tableView.endUpdates()
             }
         }
+    }
+    
+    func setTableViewCellColor() -> UIColor {
+        var color = UIColor(rgb: 0x26A69A)
+        if userDefaults.integer(forKey: "accent") == 0 {
+            color = UIColor(rgb: 0x26A69A)
+        }
+        else if userDefaults.integer(forKey: "accent") == 1 {
+            color = UIColor(rgb: 0x7841c4)
+        }
+        else if userDefaults.integer(forKey: "accent") == 2 {
+            color = UIColor(rgb: 0x347deb)
+        }
+        else if userDefaults.integer(forKey: "accent") == 3 {
+            color = UIColor(rgb: 0xfc783a)
+        }
+        else if userDefaults.integer(forKey: "accent") == 4 {
+            color = UIColor(rgb: 0xc41d1d)
+        }
+        return color
     }
 }
