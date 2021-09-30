@@ -9,7 +9,6 @@ import UIKit
 import GoogleMobileAds
 import CoreData
 import SwipeableTabBarController
-import Instabug
 
 class HistoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -125,7 +124,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake {
             if undo == 1 {
-                BugReporting.dismiss()
+    
                 print("Why are you shaking me?")
                 let alert = UIAlertController(title: "Undo", message: "Would you like to undo recent hour deletion?", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
@@ -146,11 +145,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 }))
                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
-            }
-            else if undo == 0 {
-                BugReporting.enabled = true
-                Instabug.enabled = true
-                Instabug.show()
             }
         }
     }
@@ -245,8 +239,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewWillAppear(true)
         
         view.backgroundColor = tableView.backgroundColor
-        
-        Instabug.enabled = false
         
         UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
             self.tableView.reloadData()
@@ -701,15 +693,16 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             var rounded = 0.0
             
             let count = self.hourItems.count - 1
-            
+            print("count is \(count)")
             self.total = 0.0
             do {
                 if self.hourItems.count > 0 {
                     for n in 0...count {
                         self.total += Double(self.hourItems[n].totalHours!)!
-                        rounded = round(self.total * 100) / 100.00
-                        self.totalHoursText = "Total Hours: \(rounded)"
+
                     }
+                    rounded = round(self.total * 100.00) / 100.00
+                    self.totalHoursText = "Total Hours: \(rounded)"
                 }
                 else {
                     self.totalHoursText = "Total Hours: 0"

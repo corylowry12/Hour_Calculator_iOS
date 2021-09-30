@@ -9,7 +9,6 @@ import UIKit
 import GoogleMobileAds
 import CoreData
 import Siren
-import Instabug
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,8 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         GADMobileAds.sharedInstance().start(completionHandler: nil)
-        
-        Instabug.start(withToken: "12c913aa56061e961162c27164e3a51e", invocationEvents: .shake)
         
         Siren.shared.wail()
         
@@ -73,6 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
     func saveContext() {
         let context = persistentContainer.viewContext
+        
         if context.hasChanges {
             do {
                 try context.save()

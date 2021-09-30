@@ -7,7 +7,6 @@
 
 import UIKit
 import CoreData
-import Instabug
 
 class EditViewController: UIViewController {
     
@@ -60,8 +59,6 @@ class EditViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        BugReporting.enabled = true
         
         if userDefaults.integer(forKey: "accent") == 0 {
             saveButton.backgroundColor = UIColor(rgb: 0x26A69A)

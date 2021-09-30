@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Instabug
 
 extension UIColor {
     convenience init(red: Int, green: Int, blue: Int) {
@@ -64,12 +63,9 @@ class ThemeViewController: UITableViewController {
         tableView.selectRow(at: indexPathAccent, animated: false, scrollPosition: .none)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathAccent)
         
-        //segmentedControl.selectedSegmentIndex = storedThemeValue
+        let indexPathFont = IndexPath(row: UserDefaults.standard.integer(forKey: "fontName"), section: 2)
+        tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathFont)
         
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        BugReporting.enabled = true
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -79,19 +75,26 @@ class ThemeViewController: UITableViewController {
             
             if indexPath.row == 0 {
                 tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
-                view.window?.overrideUserInterfaceStyle = .light
+              
+                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                    self.view.window?.overrideUserInterfaceStyle = .light
+                }, completion: nil)
                 userDefaults.set(0, forKey: "theme")
                 tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
             }
             else if indexPath.row == 1 {
                 tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
-                view.window?.overrideUserInterfaceStyle = .dark
+                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                    self.view.window?.overrideUserInterfaceStyle = .dark
+                }, completion: nil)
                 userDefaults.set(1, forKey: "theme")
                 tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
             }
             else if indexPath.row == 2 {
                 tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .none
-                view.window?.overrideUserInterfaceStyle = .unspecified
+                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                    self.view.window?.overrideUserInterfaceStyle = .unspecified
+                }, completion: nil)
                 userDefaults.set(2, forKey: "theme")
                 tableView.cellForRow(at: [0, userDefaults.integer(forKey: "theme")])?.accessoryType = .checkmark
             }
@@ -100,7 +103,9 @@ class ThemeViewController: UITableViewController {
             if indexPath.row == 0 {
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0x26A69A)
-                view.window?.tintColor = accent
+                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                    self.view.window?.tintColor = accent
+                }, completion: nil)
                 UserDefaults.standard.set(0, forKey: "accent")
                 changeIcon(nil)
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
@@ -108,7 +113,9 @@ class ThemeViewController: UITableViewController {
             else if indexPath.row == 1 {
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0x7841c4)
-                view.window?.tintColor = accent
+                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                    self.view.window?.tintColor = accent
+                }, completion: nil)
                 UserDefaults.standard.set(1, forKey: "accent")
                 changeIcon("purple_logo")
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
@@ -116,7 +123,9 @@ class ThemeViewController: UITableViewController {
             else if indexPath.row == 2 {
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0x347deb)
-                view.window?.tintColor = accent
+                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                    self.view.window?.tintColor = accent
+                }, completion: nil)
                 UserDefaults.standard.set(2, forKey: "accent")
                 changeIcon("blue_logo")
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
@@ -124,7 +133,9 @@ class ThemeViewController: UITableViewController {
             else if indexPath.row == 3 {
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0xfc783a)
-                view.window?.tintColor = accent
+                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                    self.view.window?.tintColor = accent
+                }, completion: nil)
                 UserDefaults.standard.set(3, forKey: "accent")
                 changeIcon("orange_logo")
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
@@ -132,7 +143,9 @@ class ThemeViewController: UITableViewController {
             else if indexPath.row == 4 {
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
                 let accent = UIColor(rgb: 0xc41d1d)
-                view.window?.tintColor = accent
+                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                    self.view.window?.tintColor = accent
+                }, completion: nil)
                 UserDefaults.standard.set(4, forKey: "accent")
                 changeIcon("red_logo")
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark

@@ -118,11 +118,8 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         collectionView!.reloadData()
         collectionView!.collectionViewLayout.invalidateLayout()
         collectionView!.layoutSubviews()
-        print("hello world: \(gallery.count)")
         
         noImagesStoredBackground()
-        
-        print("hello world")
     
     }
     
@@ -132,23 +129,6 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             collectionView.isEditing = false
         }
     }
-    
-    
-    
-    /*private var finishedLoadingInitialTableCells = false
-     
-     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-     if gallery.count > 0 {
-     //DispatchQueue.main.async {
-     
-     cell.alpha = 0
-     
-     UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
-     cell.alpha = 1
-     }, completion: nil)
-     //}
-     }
-     }*/
    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
             let padding: CGFloat =  80
@@ -211,7 +191,6 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             else {
                 index = indexPath.row
                 performSegue(withIdentifier: "viewImage", sender: nil)
-                print("the index is \(indexPath.row)")
             }
         }
     }
@@ -239,7 +218,6 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             galleryCell.backgroundColor = .systemGray5
             galleryCell.checkMark.image = UIImage(systemName: "checkmark.seal")
         }
-        print("selected index is: \(arrayIndex)")
         
         
         if imageViewHidden == true {
@@ -249,46 +227,62 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             galleryCell.checkMark.isHidden = false
         }
         
-        DispatchQueue.main.async { [self] in
             if gallery[indexPath.row].thumbnail != nil && gallery[indexPath.row].fullSize != nil {
-                //let galleryCell = collectionView.dequeueReusableCell(withReuseIdentifier: "galleryCell", for: indexPath) as! GalleryCollectionViewCell
                 
                 galleryCell.layer.shadowColor = UIColor.black.cgColor
                 galleryCell.layer.shadowOffset = CGSize(width: 0, height: 2.0)
                 galleryCell.layer.shadowRadius = 4.0
                 galleryCell.layer.shadowOpacity = 0.75
-                //galleryCell.layer.masksToBounds = false
                 galleryCell.layer.shadowPath = UIBezierPath(roundedRect: galleryCell.bounds, cornerRadius: 10).cgPath
                 
                 galleryCell.galleryImage.image = UIImage(data: gallery[indexPath.row].thumbnail!)
+                galleryCell.galleryImage.contentMode = .scaleAspectFill
+                galleryCell.galleryImage.layer.borderWidth = 3
+                galleryCell.galleryImage.layer.borderColor = setBorderColor().cgColor
                 if gallery[indexPath.row].name == nil || gallery[indexPath.row].name == "" {
                     galleryCell.nameLabel.text = "Unknown"
                 }
                 else {
                     galleryCell.nameLabel.text = gallery[indexPath.row].name
                 }
-                //return galleryCell
             }
             else {
                 galleryCell.isHidden = true
                 galleryCell.layer.borderColor = UIColor.white.cgColor
             }
-        }
         return galleryCell
     }
+    
+    func setBorderColor() -> UIColor {
+        let userDefaults = UserDefaults.standard
+        if userDefaults.integer(forKey: "accent") == 0 {
+            return UIColor(rgb: 0x26A69A)
+        }
+        else if userDefaults.integer(forKey: "accent") == 1 {
+            return UIColor(rgb: 0x7841c4)
+        }
+        else if userDefaults.integer(forKey: "accent") == 2 {
+            return UIColor(rgb: 0x347deb)
+        }
+        else if userDefaults.integer(forKey: "accent") == 3 {
+            return UIColor(rgb: 0xfc783a)
+        }
+        else if userDefaults.integer(forKey: "accent") == 4 {
+            return UIColor(rgb: 0xc41d1d)
+        }
+        return UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+    }
+    
     @IBAction func shareButton(_ sender: UIBarButtonItem) {
         
         let alert = UIAlertController(title: "Share", message: "What would you like to share?", preferredStyle: .actionSheet)
-        var imagesAndNames: String!
         var images: String!
         var names: String!
         if collectionView.indexPathsForSelectedItems?.count == 1 {
-            imagesAndNames = "Image and Name"
             images = "Image"
             names = "Name"
         }
         else {
-            imagesAndNames = "Images and Names"
             images = "Images"
             names = "Names"
         }
@@ -302,30 +296,23 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
        
         for i in collectionView.indexPathsForSelectedItems! {
             images = UIImage(data: gallery[i.row].fullSize!)
-          
-            print("is is equal to: \(i)")
             
-            var name = gallery[i.row].name
+            let name = gallery[i.row].name
             if name == nil {
-                    //names = names + " Unknown"
+                  
                     names.append("Unknown")
             
             }
             else {
                
-                    //names = names + " \(gallery[i.row].name!)"
                     names = gallery[i.row].name!
             }
-            print("is is equal to: \(i)")
-            
             
         }
             
-            //let activities: [AnyObject] = [images, names as AnyObject]
-            let activityViewController = UIActivityViewController(activityItems: [images, names], applicationActivities: nil)
+            let activityViewController = UIActivityViewController(activityItems: [images!, names], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
      
-      //  print("count is: \(images.count)")
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
         
@@ -367,7 +354,6 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
             
-            print("count is: \(images.count)")
             // present the view controller
             self.present(activityViewController, animated: true, completion: nil)
             
@@ -402,10 +388,10 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             // set up activity view controller
             var x = 0
             for i in collectionView.indexPathsForSelectedItems! {
-                var name = gallery[i.row].name
+                let name = gallery[i.row].name
                 if name == nil {
                     if x >= 1 {
-                        names = names + " Unknown"
+                        names = names + ", Unknown"
                     }
                     else {
                         names = names + "Unknown"
@@ -413,17 +399,15 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
                 }
                 else {
                     if x >= 1 {
-                        names = names + " \(gallery[i.row].name!)"
+                        names = names + ", \(gallery[i.row].name!)"
                     }
                     else {
                         names = names + gallery[i.row].name!
                     }
                 }
-                print("is is equal to: \(i)")
                 x += 1
             }
     
-            let nameItem = "Hello world"
             let item : [Any] = [names as Any]
             
             let activityViewController = UIActivityViewController(activityItems: item, applicationActivities: nil)
@@ -456,7 +440,27 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
                 }
             }
         }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { [self] _ in
+            if #available(iOS 14.0, *) {
+                collectionView.isEditing = false
+            }
+            imageViewHidden = false
+            arrayIndex.removeAll()
+            shareButton.isEnabled = false
+            for i in (0...gallery.count - 1).reversed() {
+                self.collectionView.layoutIfNeeded()
+                if let cell = collectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? GalleryCollectionViewCell {
+                    UIButton.animate(withDuration: 0.05,
+                                     animations: {
+                                        cell.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                                        cell.backgroundColor = .systemGray5
+                                        cell.checkMark.image = UIImage(systemName: "checkmark.seal")
+                                        cell.checkMark.isHidden = true
+                                     },
+                                     completion: nil)
+                }
+        }
+        }))
         self.present(alert, animated: true, completion: nil)
     }
     

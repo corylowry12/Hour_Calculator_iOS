@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import CoreData
-import Instabug
 import GoogleMobileAds
 
 class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -17,7 +16,8 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var sortButton: UIButton!
     
     @IBOutlet var tableView: UITableView!
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     let userDefaults = UserDefaults.standard
     
     var undo : Int = 0
@@ -107,7 +107,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake {
             if undo == 1 {
-                BugReporting.dismiss()
                 print("Why are you shaking me?")
                 let alert = UIAlertController(title: "Undo", message: "Would you like to undo time card deletion?", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
@@ -131,10 +130,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
-            else {
-                BugReporting.enabled = true
-                Instabug.show()
-            }
         }
     }
     
@@ -154,7 +149,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
         noHoursStoredBackground()
-        BugReporting.enabled = false
+       
         self.becomeFirstResponder()
         
         if timeCards.count == 0 {

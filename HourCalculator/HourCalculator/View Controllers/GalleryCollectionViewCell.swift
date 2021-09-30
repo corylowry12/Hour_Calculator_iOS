@@ -19,9 +19,9 @@ class GalleryCollectionViewCell : UICollectionViewCell {
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
         galleryImage.frame.origin.x = 0
         holder_view.frame.origin.x = 0
         nameLabel.frame.origin.x = 0
-        super.prepareForReuse()
     }
 }

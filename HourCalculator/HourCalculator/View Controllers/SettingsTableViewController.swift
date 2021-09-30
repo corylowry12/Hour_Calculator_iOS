@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Instabug
 import CoreData
 import UserNotifications
 import Darwin
@@ -80,8 +79,6 @@ class SettingsTableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        BugReporting.enabled = true
         
         if userDefaults.integer(forKey: "accent") == 0 {
             hourSwitch?.onTintColor = UIColor(rgb: 0x26A69A)

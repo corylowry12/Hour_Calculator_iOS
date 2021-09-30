@@ -7,7 +7,7 @@
 
 import UIKit
 import CoreData
-import Instabug
+
 
 class HistorySettingsTableViewController: UITableViewController {
     
@@ -39,31 +39,25 @@ class HistorySettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let userDefaults = UserDefaults.standard
+        //let userDefaults = UserDefaults.standard
         
-        if userDefaults.value(forKey: "historyEnabled") == nil{
-            userDefaults.set(0, forKey: "historyEnabled")
-        }
+        //self.tableView.delegate = self
         
-        if userDefaults.value(forKey: "historySort") == nil {
-            userDefaults.set(0, forKey: "historySort")
-        }
+        //tableView.allowsSelection = true
         
-        self.tableView.delegate = self
-        
-        tableView.allowsSelection = true
-        
-        tableView.allowsMultipleSelection = true
+        //tableView.allowsMultipleSelection = true
         
         
         //let userDefaults = UserDefaults.standard
+        
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
         let indexPath = IndexPath(row: historyEnabled, section: 0)
-        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        
         let indexPathSort = IndexPath(row: historySort, section: 1)
-        
         let indexPathAutomaticDeletion = IndexPath(row: historyAutomaticDeletion, section: 2)
-        
         let indexPathEditDismiss = IndexPath(row: editDismiss, section: 3)
         
         tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
@@ -71,13 +65,7 @@ class HistorySettingsTableViewController: UITableViewController {
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathAutomaticDeletion)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathEditDismiss)
         
-        print(userDefaults.integer(forKey: "historyEnabled"))
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        BugReporting.enabled = true
-     
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -154,7 +142,7 @@ class HistorySettingsTableViewController: UITableViewController {
     }
     }
  
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+   /* override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if let selectedIndexPath = tableView.indexPathsForSelectedRows?.first(where: {
             $0.section == indexPath.section
         }) {
@@ -162,5 +150,5 @@ class HistorySettingsTableViewController: UITableViewController {
             tableView.cellForRow(at: selectedIndexPath)?.accessoryType = .none
         }
         return indexPath
-    }
+    }*/
 }
