@@ -467,7 +467,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight/2)
                     cell.alpha = 0
                     
-                    UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
+                    UIView.animate(withDuration: 0.25, delay: 0.0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
                         cell.transform = CGAffineTransform(translationX: 0, y: 0)
                         cell.alpha = 1
                     }, completion: nil)

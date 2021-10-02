@@ -16,6 +16,8 @@ class HistorySettingsTableViewController: UITableViewController {
     let historyAutomaticDeletion = UserDefaults.standard.integer(forKey: "automaticDeletion")
     let editDismiss = UserDefaults.standard.integer(forKey: "dismissEdit")
     
+    let storedThemeValue = UserDefaults.standard.integer(forKey: "theme")
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var hourItems: [Hours] {
@@ -39,33 +41,22 @@ class HistorySettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //let userDefaults = UserDefaults.standard
-        
-        //self.tableView.delegate = self
-        
-        //tableView.allowsSelection = true
-        
-        //tableView.allowsMultipleSelection = true
-        
-        
-        //let userDefaults = UserDefaults.standard
-        
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
         let indexPath = IndexPath(row: historyEnabled, section: 0)
         let indexPathSort = IndexPath(row: historySort, section: 1)
         let indexPathAutomaticDeletion = IndexPath(row: historyAutomaticDeletion, section: 2)
         let indexPathEditDismiss = IndexPath(row: editDismiss, section: 3)
         
+        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
+        
+        tableView.selectRow(at: indexPathSort, animated: false, scrollPosition: .none)
+        tableView.selectRow(at: indexPathAutomaticDeletion, animated: false, scrollPosition: .none)
+        tableView.selectRow(at: indexPathEditDismiss, animated: false, scrollPosition: .none)
+        
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathSort)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathAutomaticDeletion)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathEditDismiss)
         
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
