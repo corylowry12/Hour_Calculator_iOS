@@ -13,7 +13,6 @@ class HistorySettingsTableViewController: UITableViewController {
     
     let historyEnabled = UserDefaults.standard.integer(forKey: "historyEnabled")
     let historySort = UserDefaults.standard.integer(forKey: "historySort")
-    let historyAutomaticDeletion = UserDefaults.standard.integer(forKey: "automaticDeletion")
     let editDismiss = UserDefaults.standard.integer(forKey: "dismissEdit")
     
     let storedThemeValue = UserDefaults.standard.integer(forKey: "theme")
@@ -43,18 +42,16 @@ class HistorySettingsTableViewController: UITableViewController {
         
         let indexPath = IndexPath(row: historyEnabled, section: 0)
         let indexPathSort = IndexPath(row: historySort, section: 1)
-        let indexPathAutomaticDeletion = IndexPath(row: historyAutomaticDeletion, section: 2)
-        let indexPathEditDismiss = IndexPath(row: editDismiss, section: 3)
+        let indexPathEditDismiss = IndexPath(row: editDismiss, section: 2)
+        
+        print("edit index is \(indexPathEditDismiss)")
         
         tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
-        
         tableView.selectRow(at: indexPathSort, animated: false, scrollPosition: .none)
-        tableView.selectRow(at: indexPathAutomaticDeletion, animated: false, scrollPosition: .none)
         tableView.selectRow(at: indexPathEditDismiss, animated: false, scrollPosition: .none)
         
+        tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathSort)
-        tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathAutomaticDeletion)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathEditDismiss)
         
     }
@@ -91,46 +88,18 @@ class HistorySettingsTableViewController: UITableViewController {
         else if indexPath.section == 2 {
             
             let userDefaults = UserDefaults.standard
-            
-            tableView.cellForRow(at: [2, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .none
-            userDefaults.set(indexPath.row, forKey: "automaticDeletion")
-            tableView.cellForRow(at: [2, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .checkmark
-            
-            if userDefaults.integer(forKey: "automaticDeletion") < hourItems.count &&
-                userDefaults.integer(forKey: "automaticDeletion") != 0 {
-                let alert = UIAlertController(title: "Warning", message: "You have more hours stored then entries allowed. Would you like to delete them?", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
-                    for i in (0...hourItems.count).reversed() {
-                        if i > userDefaults.integer(forKey: "automaticDeletion") {
-                            let hourToDelete = hourItems.first
-                            context.delete(hourToDelete!)
-                        }
-                    }
-                    (UIApplication.shared.delegate as! AppDelegate).saveContext()
-                    tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
-                }))
-                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-                    tableView.cellForRow(at: [2, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .none
-                    userDefaults.set(0, forKey: "automaticDeletion")
-                    tableView.cellForRow(at: [2, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .checkmark
-                }))
-                self.present(alert, animated: true, completion: nil)
+            if indexPath.row == 0 {
+                tableView.cellForRow(at: [2, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .none
+                userDefaults.set(0, forKey: "dismissEdit")
+                tableView.cellForRow(at: [2, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .checkmark
+            }
+            else {
+                tableView.cellForRow(at: [2, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .none
+                userDefaults.set(1, forKey: "dismissEdit")
+                tableView.cellForRow(at: [2, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .checkmark
             }
             
         }
-        if indexPath.section == 3 {
-            let userDefaults = UserDefaults.standard
-            if indexPath.row == 0 {
-                tableView.cellForRow(at: [3, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .none
-                userDefaults.set(0, forKey: "dismissEdit")
-                tableView.cellForRow(at: [3, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .checkmark
-            }
-            else {
-                tableView.cellForRow(at: [3, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .none
-                userDefaults.set(1, forKey: "dismissEdit")
-                tableView.cellForRow(at: [3, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .checkmark
-            }
-    }
     }
  
    /* override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
