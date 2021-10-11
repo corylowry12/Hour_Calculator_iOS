@@ -9,7 +9,6 @@ import UIKit
 import GoogleMobileAds
 import CoreData
 import Siren
-import Instabug
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,21 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         
-        Instabug.start(withToken: "12c913aa56061e961162c27164e3a51e", invocationEvents: .shake)
-        
         Siren.shared.wail()
         
         Siren.shared.rulesManager = RulesManager(globalRules: .persistent, showAlertAfterCurrentVersionHasBeenReleasedForDays: 5)
-        
-        if userDefaults.integer(forKey: "theme") == 0 {
-            window?.overrideUserInterfaceStyle = .light
-        }
-        else if userDefaults.integer(forKey: "theme") == 1 {
-            window?.overrideUserInterfaceStyle = .dark
-        }
-        else if userDefaults.integer(forKey: "theme") == 2 {
-            window?.overrideUserInterfaceStyle = .unspecified
-        }
         
         return true
         
@@ -67,15 +54,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Core Data Stack
     
     lazy var persistentContainer: NSPersistentContainer = {
-        
+       
         let container = NSPersistentContainer(name: "StoredHours")
+        container.persistentStoreDescriptions.forEach { storeDesc in
+                    storeDesc.shouldMigrateStoreAutomatically = true
+                    storeDesc.shouldInferMappingModelAutomatically = true
+                }
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in if let error = error as NSError? {
+            
             fatalError("Unresolved error \(error), \(error.userInfo)")
-        }})
+        }
+        
+        })
         return container
     }()
     func saveContext() {
         let context = persistentContainer.viewContext
+        
         if context.hasChanges {
             do {
                 try context.save()

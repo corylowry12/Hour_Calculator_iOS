@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Instabug
 import CoreData
 import UserNotifications
 import Darwin
@@ -81,8 +80,6 @@ class SettingsTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        BugReporting.enabled = true
-        
         if userDefaults.integer(forKey: "accent") == 0 {
             hourSwitch?.onTintColor = UIColor(rgb: 0x26A69A)
         }
@@ -121,21 +118,21 @@ class SettingsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath == [5, 0] {
+        if indexPath == [6, 0] {
             if let url = URL(string: "https://apps.apple.com/us/app/hour-calculator-decimal/id1574062704") {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }
-        if indexPath == [6, 0] {
+        if indexPath == [7, 0] {
             let alert = UIAlertController(title: "Clear App Data?", message: "Would you like to clear app data? This will delete all stored data!", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                 alert.dismiss(animated: true, completion: nil)
                 let alertLoading = UIAlertController(title: "Clearing Data...", message: nil, preferredStyle: .alert)
                 let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10,y: 5,width: 50, height: 50)) as UIActivityIndicatorView
-                    loadingIndicator.hidesWhenStopped = true
+                loadingIndicator.hidesWhenStopped = true
                 loadingIndicator.style = .medium
-                    loadingIndicator.startAnimating();
-                    alertLoading.view.addSubview(loadingIndicator)
+                loadingIndicator.startAnimating();
+                alertLoading.view.addSubview(loadingIndicator)
                 self.present(alertLoading, animated: true, completion: nil)
                 let when = DispatchTime.now() + 1
                 DispatchQueue.main.asyncAfter(deadline: when) {
@@ -157,10 +154,10 @@ class SettingsTableViewController: UITableViewController {
         
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Hours.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-
+        
         // get reference to the persistent container
         let persistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-
+        
         // perform the delete
         do {
             try persistentContainer.viewContext.execute(deleteRequest)
@@ -170,10 +167,36 @@ class SettingsTableViewController: UITableViewController {
         
         let fetchRequest_timeCards: NSFetchRequest<NSFetchRequestResult> = TimeCards.fetchRequest()
         let deleteRequest_timeCards = NSBatchDeleteRequest(fetchRequest: fetchRequest_timeCards)
-
+        
         // perform the delete
         do {
             try persistentContainer.viewContext.execute(deleteRequest_timeCards)
+        } catch let error as NSError {
+            print(error)
+        }
+        
+        let fetchRequestTimeCardInfo: NSFetchRequest<NSFetchRequestResult> = TimeCardInfo.fetchRequest()
+        let deleteRequestTimeCardInfo = NSBatchDeleteRequest(fetchRequest: fetchRequestTimeCardInfo)
+        
+        // get reference to the persistent container
+        let persistentContainerTimeCardInfo = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+        
+        // perform the delete
+        do {
+            try persistentContainerTimeCardInfo.viewContext.execute(deleteRequestTimeCardInfo)
+        } catch let error as NSError {
+            print(error)
+        }
+        
+        let fetchRequestGallery: NSFetchRequest<NSFetchRequestResult> = Gallery.fetchRequest()
+        let deleteRequestGallery = NSBatchDeleteRequest(fetchRequest: fetchRequestGallery)
+        
+        // get reference to the persistent container
+        let persistentContainerGallery = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+        
+        // perform the delete
+        do {
+            try persistentContainerGallery.viewContext.execute(deleteRequestGallery)
         } catch let error as NSError {
             print(error)
         }

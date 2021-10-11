@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Instabug
 
 class PatchNotesViewController: UITableViewController {
     
@@ -22,9 +21,5 @@ class PatchNotesViewController: UITableViewController {
         let userDefaults = UserDefaults.standard
         userDefaults.set(appVersion, forKey: "appVersion")
         tabBarController?.tabBar.items?[3].badgeValue = nil
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        BugReporting.enabled = true
     }
 }

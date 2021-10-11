@@ -7,7 +7,6 @@
 
 import UIKit
 import CoreData
-import Instabug
 
 class EditViewController: UIViewController {
     
@@ -61,11 +60,6 @@ class EditViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        //DatePicker.sizeToFit()
-        //DatePicker.clipsToBounds = true
-        
-        BugReporting.enabled = true
-        
         if userDefaults.integer(forKey: "accent") == 0 {
             saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
         }
@@ -86,9 +80,6 @@ class EditViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //let id = Hours(context: context).objectID
-        //print(id)
-        
         let os = ProcessInfo().operatingSystemVersion
         
         switch (os.majorVersion, os.minorVersion, os.patchVersion) {
@@ -106,12 +97,9 @@ class EditViewController: UIViewController {
         
         data = Int(defaults.string(forKey: "ID")!)!
         
-        //print(data)
-        
         let hourItemStored = hourItems[data].inTime
         let hourItemStored2 = hourItems[data].outTime
         let dateTaken = hourItems[data].date
-        //print("date2 \(dateTaken)")
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm a"
         let dateFormatterForDateTaken = DateFormatter()
@@ -154,7 +142,7 @@ class EditViewController: UIViewController {
             didUpdateDate = true
         }
         else {
-        didUpdateDate = false
+            didUpdateDate = false
         }
     }
     @IBAction func inTimeValueChanged(_ sender: UIDatePicker) {
@@ -192,7 +180,7 @@ class EditViewController: UIViewController {
             didUpdateOutTime = true
         }
         else {
-        didUpdateOutTime = false
+            didUpdateOutTime = false
         }
         let outDate = datePickerOutTime.date
         let componentsOut = Calendar.current.dateComponents([.hour, .minute], from: outDate)
@@ -202,7 +190,7 @@ class EditViewController: UIViewController {
     @IBAction func saveButtonClicked(_ sender: Any) {
         
         if didUpdateInTime == false || didUpdateOutTime == false || didUpdateDate == false {
-       
+            
             let date = datePickerInTime.date
             let components = Calendar.current.dateComponents([.hour, .minute], from: date)
             
@@ -218,10 +206,10 @@ class EditViewController: UIViewController {
             let hoursDifference = outHour - inHour
             
             if hoursDifference < 0 && (12...24).contains(inHour) && (0...12).contains(outHour){
-                    self.PMtoAM()
+                self.PMtoAM()
             }
             else {
-                    self.save()
+                self.save()
             }
         }
         else {
@@ -241,7 +229,13 @@ class EditViewController: UIViewController {
                 NotificationCenter.default.post(name: notificationName, object: nil)
             } ))
             alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-                self.dismiss(animated: true, completion: nil)
+                let alert = UIAlertController(title: "Are you sure?", message: "Are you sure you would like to exit without saving?", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+                    self.dismiss(animated: true, completion: nil)
+                    self.dismiss(animated: true, completion: nil)
+                }))
+                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }))
             
             self.present(alert, animated: true, completion: nil)
@@ -262,7 +256,6 @@ class EditViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
             self.context.delete(hourToDelete)
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
-            //deleteButton.title = "\(hourToDelete)"
             let alert = UIAlertController(title: nil, message: "Entry Deleted   ✓", preferredStyle: .alert)
             alert.view.tintColor = UIColor.black
             self.present(alert, animated: true, completion: nil)
@@ -275,18 +268,7 @@ class EditViewController: UIViewController {
                 })
             }
         } ))
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-                                        let alert = UIAlertController(title: nil, message: "Entry Not Deleted", preferredStyle: .alert)
-                                        alert.view.tintColor = UIColor.black
-                                        self.present(alert, animated: true, completion: nil)
-                                        let notificationName = NSNotification.Name("Update")
-                                        NotificationCenter.default.post(name: notificationName, object: nil)
-                                        let when = DispatchTime.now() + 1
-                                        DispatchQueue.main.asyncAfter(deadline: when) {
-                                            alert.dismiss(animated: true, completion: {
-                                                self.dismiss(animated: true, completion: nil)
-                                            })
-                                        }                                          }))
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         
         self.present(alert, animated: true, completion: nil)
         
@@ -323,8 +305,6 @@ class EditViewController: UIViewController {
             }
             else {
                 dateLabel.text = "Total Hours: \(hours).\(minutes)"
-                
-                //let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
                 
                 let hoursToBeStored = hourItems[data]
                 
@@ -412,8 +392,6 @@ class EditViewController: UIViewController {
             else {
                 dateLabel.text = "Total Hours: \(hours).\(minutes)"
                 
-                //let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-                
                 let hoursToBeStored = hourItems[data]
                 
                 let dateFormatter = DateFormatter()
@@ -464,6 +442,9 @@ class EditViewController: UIViewController {
         didUpdateInTime = true
         didUpdateOutTime = true
         didUpdateDate = true
+        
+        if userDefaults.integer(forKey: "dismissEdit") == 0 {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
 }
-

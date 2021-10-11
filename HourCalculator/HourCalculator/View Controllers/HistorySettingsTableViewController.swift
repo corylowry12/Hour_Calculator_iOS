@@ -7,12 +7,15 @@
 
 import UIKit
 import CoreData
-import Instabug
+
 
 class HistorySettingsTableViewController: UITableViewController {
     
     let historyEnabled = UserDefaults.standard.integer(forKey: "historyEnabled")
     let historySort = UserDefaults.standard.integer(forKey: "historySort")
+    let editDismiss = UserDefaults.standard.integer(forKey: "dismissEdit")
+    
+    let storedThemeValue = UserDefaults.standard.integer(forKey: "theme")
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -37,47 +40,26 @@ class HistorySettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let userDefaults = UserDefaults.standard
-        
-        if userDefaults.value(forKey: "historyEnabled") == nil{
-            userDefaults.set(0, forKey: "historyEnabled")
-        }
-        
-        if userDefaults.value(forKey: "historySort") == nil {
-            userDefaults.set(0, forKey: "historySort")
-        }
-        
-        self.tableView.delegate = self
-        
-        tableView.allowsSelection = true
-        
-        tableView.allowsMultipleSelection = true
-        
         let indexPath = IndexPath(row: historyEnabled, section: 0)
-        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        
         let indexPathSort = IndexPath(row: historySort, section: 1)
+        let indexPathEditDismiss = IndexPath(row: editDismiss, section: 2)
+        
+        print("edit index is \(indexPathEditDismiss)")
+        
+        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        tableView.selectRow(at: indexPathSort, animated: false, scrollPosition: .none)
+        tableView.selectRow(at: indexPathEditDismiss, animated: false, scrollPosition: .none)
         
         tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathSort)
+        tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathEditDismiss)
         
-        print(userDefaults.integer(forKey: "historyEnabled"))
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        BugReporting.enabled = true
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            /*if historyEnabled != indexPath.row {
-             tableView.cellForRow(at: [0, historyEnabled])?.accessoryType = .none
-             }
-             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark*/
             
             let userDefaults = UserDefaults.standard
-            //userDefaults.setValue(indexPath.row, forKey: "historyEnabled")
             
             if indexPath.row == 0 {
                 tableView.cellForRow(at: [0, userDefaults.integer(forKey: "historyEnabled")])?.accessoryType = .none
@@ -93,51 +75,40 @@ class HistorySettingsTableViewController: UITableViewController {
                 tabBarController?.tabBar.items?[1].isEnabled = false
                 tabBarController?.tabBar.items?[1].badgeValue = nil
             }
-            
         }
         else if indexPath.section == 1 {
-            /* if historySort != indexPath.row {
-             tableView.cellForRow(at: [1, historySort])?.accessoryType = .none
-             }
-             tableView.cellForRow(at: [1, indexPath.row])?.accessoryType = .checkmark*/
             
             let userDefaults = UserDefaults.standard
             
+            tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
+            userDefaults.set(indexPath.row, forKey: "historySort")
+            tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
+            
+        }
+        else if indexPath.section == 2 {
+            
+            let userDefaults = UserDefaults.standard
             if indexPath.row == 0 {
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
-                userDefaults.set(0, forKey: "historySort")
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
+                tableView.cellForRow(at: [2, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .none
+                userDefaults.set(0, forKey: "dismissEdit")
+                tableView.cellForRow(at: [2, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .checkmark
+            }
+            else {
+                tableView.cellForRow(at: [2, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .none
+                userDefaults.set(1, forKey: "dismissEdit")
+                tableView.cellForRow(at: [2, userDefaults.integer(forKey: "dismissEdit")])?.accessoryType = .checkmark
             }
             
-            else if indexPath.row == 1 {
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
-                userDefaults.set(1, forKey: "historySort")
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
-            }
-            else if indexPath.row == 2 {
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
-                userDefaults.set(2, forKey: "historySort")
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
-            }
-            else if indexPath.row == 3 {
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .none
-                userDefaults.set(3, forKey: "historySort")
-                tableView.cellForRow(at: [1, userDefaults.integer(forKey: "historySort")])?.accessoryType = .checkmark
-            }
         }
     }
-    
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        // Find any selected row in this section
+ 
+   /* override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if let selectedIndexPath = tableView.indexPathsForSelectedRows?.first(where: {
             $0.section == indexPath.section
         }) {
-            // Deselect the row
             tableView.deselectRow(at: selectedIndexPath, animated: false)
-            // deselectRow doesn't fire the delegate method so need to
-            // unset the checkmark here
             tableView.cellForRow(at: selectedIndexPath)?.accessoryType = .none
         }
         return indexPath
-    }
+    }*/
 }

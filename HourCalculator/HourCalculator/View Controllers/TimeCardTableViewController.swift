@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import CoreData
-import Instabug
 import GoogleMobileAds
 
 class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -17,21 +16,39 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var sortButton: UIButton!
     
     @IBOutlet var tableView: UITableView!
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     let userDefaults = UserDefaults.standard
     
     var undo : Int = 0
     
     var predicateText: String!
     
+    var gallery: [Gallery] {
+        
+        do {
+            let fetchrequest = NSFetchRequest<Gallery>(entityName: "Gallery")
+            fetchrequest.predicate = NSPredicate(format: "id_number == %@", predicateText!)
+            let sort = NSSortDescriptor(key: #keyPath(Gallery.date), ascending: false)
+            fetchrequest.sortDescriptors = [sort]
+            
+            return try context.fetch(fetchrequest)
+            
+        } catch {
+            
+            print("Couldn't fetch data")
+            
+        }
+        
+        return [Gallery]()
+        
+    }
+    
     var timeCardInfo: [TimeCardInfo] {
         
         do {
             let fetchrequest = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
-            //let predicate = userDefaults.value(forKey: "id")
             fetchrequest.predicate = NSPredicate(format: "id_number == %@", predicateText!)
-            //let sort = NSSortDescriptor(key: #keyPath(TimeCardInfo.date), ascending: false)
-            //fetchrequest.sortDescriptors = [sort]
             
             return try context.fetch(fetchrequest)
             
@@ -63,12 +80,11 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.total), ascending: false)
             }
             else if userDefaults.integer(forKey: "timeCardsSort") == 4 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: true)
-            }
-            else if userDefaults.integer(forKey: "timeCardsSort") == 5 {
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: false)
             }
-            print("sort mode: \(userDefaults.integer(forKey: "timeCardsSort"))")
+            else if userDefaults.integer(forKey: "timeCardsSort") == 5 {
+                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: true)
+            }
             fetchrequest.sortDescriptors = [sort]
             return try context.fetch(fetchrequest)
             
@@ -89,11 +105,8 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        print(undo)
         if motion == .motionShake {
-            print(undo)
             if undo == 1 {
-                BugReporting.dismiss()
                 print("Why are you shaking me?")
                 let alert = UIAlertController(title: "Undo", message: "Would you like to undo time card deletion?", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
@@ -117,17 +130,13 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
-            else {
-                BugReporting.enabled = true
-                Instabug.show()
-            }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //addBannerViewToView(bannerView)
+        addBannerViewToView(bannerView)
         
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         bannerView.rootViewController = self
@@ -140,7 +149,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
         noHoursStoredBackground()
-        BugReporting.enabled = false
+       
         self.becomeFirstResponder()
         
         if timeCards.count == 0 {
@@ -225,63 +234,74 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     private var finishedLoadingInitialTableCells = false
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-        var lastInitialDisplayableCell = false
-        
-        //change flag as soon as last displayable cell is being loaded (which will mean table has initially loaded)
-        if timeCards.count > 0 && !finishedLoadingInitialTableCells {
-            if let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows,
-               let lastIndexPath = indexPathsForVisibleRows.last, lastIndexPath.row == indexPath.row {
-                lastInitialDisplayableCell = true
-            }
-        }
-        
-        if !finishedLoadingInitialTableCells {
+        DispatchQueue.main.async { [self] in
             
-            if lastInitialDisplayableCell {
-                finishedLoadingInitialTableCells = true
+            var lastInitialDisplayableCell = false
+            
+            if timeCards.count > 0 && !finishedLoadingInitialTableCells {
+                if let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows,
+                   let lastIndexPath = indexPathsForVisibleRows.last, lastIndexPath.row == indexPath.row {
+                    lastInitialDisplayableCell = true
+                }
             }
             
-            //animates the cell as it is being displayed for the first time
-            cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight/2)
-            cell.alpha = 0
-            
-            UIView.animate(withDuration: 0.5, delay: 0.05*Double(indexPath.row), options: [.curveEaseInOut], animations: {
-                cell.transform = CGAffineTransform(translationX: 0, y: 0)
-                cell.alpha = 1
-            }, completion: nil)
+            if !finishedLoadingInitialTableCells {
+                
+                if lastInitialDisplayableCell {
+                    finishedLoadingInitialTableCells = true
+                }
+                
+                cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight/2)
+                cell.alpha = 0
+                
+                UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve], animations: {
+                    cell.transform = CGAffineTransform(translationX: 0, y: 0)
+                    cell.alpha = 1
+                }, completion: nil)
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
-            predicateText = "\(timeCards[indexPath.row].id_number)"
-            
-            if timeCardInfo.count > 0 {
-            for i in (0...timeCardInfo.count - 1).reversed() {
-                let timeCardInfoToDelete = timeCardInfo[i]
+            let alert = UIAlertController(title: "Warning", message: "You are about to delete a time card entry. Would you like to continue?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
                 
-                self.context.delete(timeCardInfoToDelete)
-            }
-            }
-            
-            let hourToDelete = self.timeCards[indexPath.row]
-            self.context.delete(hourToDelete)
-            
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
-            noHoursStoredBackground()
-            undo = 1
-            if timeCards.count == 0 {
-                sortButton.alpha = 1
-                UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
-                    self.sortButton.alpha = 0
-                }, completion: {_ in
-                    self.sortButton.isHidden = true
-                })
-            }
-            tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
-            //(UIApplication.shared.delegate as! AppDelegate).saveContext()
+                predicateText = "\(timeCards[indexPath.row].id_number)"
+                
+                if timeCardInfo.count > 0 {
+                    for i in (0...timeCardInfo.count - 1).reversed() {
+                        let timeCardInfoToDelete = timeCardInfo[i]
+                        
+                        self.context.delete(timeCardInfoToDelete)
+                    }
+                }
+                
+                let hourToDelete = self.timeCards[indexPath.row]
+                self.context.delete(hourToDelete)
+                
+                if gallery.count > 0 {
+                let galleryToDelete = self.gallery[0]
+                self.context.delete(galleryToDelete)
+                }
+                
+                self.tableView.deleteRows(at: [indexPath], with: .left)
+                noHoursStoredBackground()
+                undo = 1
+                if timeCards.count == 0 {
+                    sortButton.alpha = 1
+                    UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
+                        self.sortButton.alpha = 0
+                    }, completion: {_ in
+                        self.sortButton.isHidden = true
+                    })
+                }
+                tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
+            }))
+            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {_ in
+                tableView.setEditing(false, animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -305,13 +325,12 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 }
                 else {
                     userText = textField!.text?.trimmingCharacters(in: .whitespaces)
-                    userText.censor()
                 }
                 nameToBeStored.name = userText
                 (UIApplication.shared.delegate as! AppDelegate).saveContext()
-              
-                self.tableView.reloadRows(at: [indexPath], with: .fade)
-                               
+                
+                self.tableView.reloadRows(at: [indexPath], with: .none)
+                
                 self.undo = 1
             })
             let removePrevious = UIAlertAction(title: "Remove Previous", style: .default, handler: {_ in
@@ -319,7 +338,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 nameToBeStored.name = nil
                 
                 self.tableView.reloadRows(at: [indexPath], with: .fade)
-                                 
+                
                 self.undo = 1
             })
             alert.addTextField { [self] (textField) in
@@ -340,7 +359,9 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             if timeCards[indexPath.row].name != nil && timeCards[indexPath.row].name != "Unknown" {
                 alert.addAction(removePrevious)
             }
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in
+                tableView.setEditing(false, animated: true)
+            }))
             alert.preferredAction = save
             self.present(alert, animated: true, completion: nil)
         }
@@ -364,7 +385,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 }
                 else {
                     userText = textField!.text?.trimmingCharacters(in: .whitespaces)
-                    userText.censor()
                 }
                 nameToBeStored.name = userText
                 (UIApplication.shared.delegate as! AppDelegate).saveContext()
@@ -405,18 +425,20 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             self.present(alert, animated: true, completion: nil)
         }
         else {
-            let id = timeCards[indexPath.row].id_number
-            let name = timeCards[indexPath.row].name
-            let total = timeCards[indexPath.row].total
-            let weekOf = timeCards[indexPath.row].week
-            userDefaults.setValue(id, forKey: "id")
-            userDefaults.setValue(name, forKey: "name")
+            //DispatchQueue.main.async { [self] in
+            //let id = timeCards[indexPath.row].id_number
+            //let name = timeCards[indexPath.row].name
+            //let total = timeCards[indexPath.row].total
+            //let weekOf = timeCards[indexPath.row].week
+            userDefaults.setValue(timeCards[indexPath.row].id_number, forKey: "id")
+            userDefaults.setValue(timeCards[indexPath.row].name, forKey: "name")
             userDefaults.setValue(indexPath.row, forKey: "index")
-            userDefaults.setValue(total, forKey: "total")
-            userDefaults.setValue(weekOf, forKey: "week")
-            //print("id is: \(id)")
+            userDefaults.setValue(timeCards[indexPath.row].total, forKey: "total")
+            userDefaults.setValue(timeCards[indexPath.row].week, forKey: "week")
+                
+                performSegue(withIdentifier: "timeCardInfo", sender: nil)
             
-            performSegue(withIdentifier: "timeCardInfo", sender: nil)
+            //}
         }
     }
     
