@@ -235,6 +235,34 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
             nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
         }
+        else if userDefaults.integer(forKey: "accent") == 5 {
+            if userDefaults.integer(forKey: "accentRandom") == 0 {
+                textField.backgroundColor = UIColor(rgb: 0x26A69A)
+                previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
+                nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 1 {
+                textField.backgroundColor = UIColor(rgb: 0x7841c4)
+                previousButton.backgroundColor = UIColor(rgb: 0x7841c4)
+                nextButton.backgroundColor = UIColor(rgb: 0x7841c4)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 2 {
+                textField.backgroundColor = UIColor(rgb: 0x347deb)
+                previousButton.backgroundColor = UIColor(rgb: 0x347deb)
+                nextButton.backgroundColor = UIColor(rgb: 0x347deb)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 3 {
+                textField.backgroundColor = UIColor(rgb: 0xfc783a)
+                previousButton.backgroundColor = UIColor(rgb: 0xfc783a)
+                nextButton.backgroundColor = UIColor(rgb: 0xfc783a)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 4 {
+                textField.backgroundColor = UIColor(rgb: 0xc41d1d)
+                previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+                nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+            }
+        }
+        
         textField.tintColor = UIColor.systemGray2
         view.backgroundColor = tableView.backgroundColor
         
@@ -785,6 +813,27 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                                                         
                                                         previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
                                                     }
+                                    else if userDefaults.integer(forKey: "accent") == 5 {
+                                        if userDefaults.integer(forKey: "accentRandom") == 0 {
+                                            previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
+                        
+                                        }
+                                        else if userDefaults.integer(forKey: "accentRandom") == 1 {
+                                            previousButton.backgroundColor = UIColor(rgb: 0x7841c4)
+                                        }
+                                        else if userDefaults.integer(forKey: "accentRandom") == 2 {
+                                            previousButton.backgroundColor = UIColor(rgb: 0x347deb)
+                                            
+                                        }
+                                        else if userDefaults.integer(forKey: "accentRandom") == 3 {
+                                            previousButton.backgroundColor = UIColor(rgb: 0xfc783a)
+                                           
+                                        }
+                                        else if userDefaults.integer(forKey: "accentRandom") == 4 {
+                                            previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+                                            
+                                        }
+                                    }
                                                  },
                                                  completion: nil)
                              })
@@ -901,6 +950,27 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                                                         
                                                         nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
                                                     }
+                                    else if userDefaults.integer(forKey: "accent") == 5 {
+                                        if userDefaults.integer(forKey: "accentRandom") == 0 {
+                                            nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
+                        
+                                        }
+                                        else if userDefaults.integer(forKey: "accentRandom") == 1 {
+                                            nextButton.backgroundColor = UIColor(rgb: 0x7841c4)
+                                        }
+                                        else if userDefaults.integer(forKey: "accentRandom") == 2 {
+                                            nextButton.backgroundColor = UIColor(rgb: 0x347deb)
+                                            
+                                        }
+                                        else if userDefaults.integer(forKey: "accentRandom") == 3 {
+                                            nextButton.backgroundColor = UIColor(rgb: 0xfc783a)
+                                           
+                                        }
+                                        else if userDefaults.integer(forKey: "accentRandom") == 4 {
+                                            nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+                                            
+                                        }
+                                    }
                                                  },
                                                  completion: nil)
                              })

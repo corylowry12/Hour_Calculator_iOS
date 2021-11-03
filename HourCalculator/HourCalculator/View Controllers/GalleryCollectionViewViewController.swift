@@ -270,6 +270,23 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         else if userDefaults.integer(forKey: "accent") == 4 {
             return UIColor(rgb: 0xc41d1d)
         }
+        else if userDefaults.integer(forKey: "accent") == 5 {
+            if userDefaults.integer(forKey: "accentRandom") == 0 {
+                return UIColor(rgb: 0x26A69A)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 1 {
+                return UIColor(rgb: 0x7841c4)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 2 {
+                return UIColor(rgb: 0x347deb)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 3 {
+                return UIColor(rgb: 0xfc783a)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 4 {
+                return UIColor(rgb: 0xc41d1d)
+            }
+        }
         return UIColor(red: 1, green: 1, blue: 1, alpha: 1)
     }
     

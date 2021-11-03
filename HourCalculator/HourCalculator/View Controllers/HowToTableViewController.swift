@@ -352,6 +352,23 @@ class HowToTableViewController: UITableViewController {
         else if userDefaults.integer(forKey: "accent") == 4 {
             color = UIColor(rgb: 0xc41d1d)
         }
+        else if userDefaults.integer(forKey: "accent") == 5 {
+            if userDefaults.integer(forKey: "accentRandom") == 0 {
+                color = UIColor(rgb: 0x26A69A)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 1 {
+                color = UIColor(rgb: 0x7841c4)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 2 {
+                color = UIColor(rgb: 0x347deb)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 3 {
+                color = UIColor(rgb: 0xfc783a)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 4 {
+                color = UIColor(rgb: 0xc41d1d)
+            }
+        }
         return color
     }
 }

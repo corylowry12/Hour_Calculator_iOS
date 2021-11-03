@@ -35,6 +35,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         else if userDefaults.integer(forKey: "accent") == 4 {
             window?.tintColor = UIColor(rgb: 0xc41d1d)
         }
+        else if userDefaults.integer(forKey: "accent") == 5 {
+           
+            let number = Int.random(in: 0...4)
+            var accent : UIColor!
+            if number == 0 {
+                accent = UIColor(rgb: 0x26A69A)
+            }
+            else if number == 1 {
+                accent = UIColor(rgb: 0x7841c4)
+            }
+            else if number == 2 {
+                accent = UIColor(rgb: 0x347deb)
+            }
+            else if number == 3 {
+                accent = UIColor(rgb: 0xfc783a)
+            }
+            else if number == 4 {
+                accent = UIColor(rgb: 0xc41d1d)
+            }
+            
+            window?.tintColor = accent
+            userDefaults.setValue(number, forKey: "accentRandom")
+        }
         guard let _ = (scene as? UIWindowScene) else { return }
         
     }
