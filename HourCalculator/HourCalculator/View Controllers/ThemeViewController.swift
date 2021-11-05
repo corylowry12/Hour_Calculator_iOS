@@ -155,7 +155,15 @@ class ThemeViewController: UITableViewController {
             
             else if indexPath.row == 5 {
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
-                let number = Int.random(in: 0...4)
+                
+                var number: Int32!
+                do {
+                    number = Int32.random(in: 0...4)
+                }
+                while number == UserDefaults.standard.integer(forKey: "accentRandom") {
+                    number = Int32.random(in: 0...4)
+                }
+                
                 var accent : UIColor!
                 if number == 0 {
                     accent = UIColor(rgb: 0x26A69A)
@@ -181,6 +189,7 @@ class ThemeViewController: UITableViewController {
                     self.view.window?.tintColor = accent
                 }, completion: nil)
                 UserDefaults.standard.set(5, forKey: "accent")
+                UserDefaults.standard.set(number, forKey: "accentRandom")
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
             }
         }
