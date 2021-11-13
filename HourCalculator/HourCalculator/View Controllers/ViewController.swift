@@ -132,6 +132,33 @@ class ViewController: UIViewController {
             dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
             changeIcon("red_logo")
         }
+        else if userDefaults.integer(forKey: "accent") == 5 {
+            if userDefaults.integer(forKey: "accentRandom") == 0 {
+                calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
+                dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
+                changeIcon(nil)
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 1 {
+                calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
+                dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
+                changeIcon("purple_logo")
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 2 {
+                calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
+                dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
+                changeIcon("blue_logo")
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 3 {
+                calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
+                dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
+                changeIcon("orange_logo")
+            }
+            else if userDefaults.integer(forKey: "accentRandom") == 4 {
+                calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+                dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
+                changeIcon("red_logo")
+            }
+        }
         
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{
             userDefaults.set(false, forKey: "StoredEmptyHours")

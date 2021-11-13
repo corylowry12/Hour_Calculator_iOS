@@ -33,6 +33,7 @@ class ThemeViewController: UITableViewController {
     @IBOutlet weak var turquoiseImageView: UIImageView!
     @IBOutlet weak var orangeImageView: UIImageView!
     @IBOutlet weak var redImageView: UIImageView!
+    @IBOutlet weak var randomImageView: UIImageView!
     
     let storedThemeValue = UserDefaults.standard.integer(forKey: "theme")
     let storedAccentValue = UserDefaults.standard.integer(forKey: "accent")
@@ -44,6 +45,7 @@ class ThemeViewController: UITableViewController {
         turquoiseImageView.layer.cornerRadius = turquoiseImageView.frame.size.width / 2
         orangeImageView.layer.cornerRadius = orangeImageView.frame.size.width / 2
         redImageView.layer.cornerRadius = redImageView.frame.size.width / 2
+        randomImageView.layer.cornerRadius = randomImageView.frame.size.width / 2
         
         tableView.allowsSelection = true
         
@@ -148,6 +150,46 @@ class ThemeViewController: UITableViewController {
                 }, completion: nil)
                 UserDefaults.standard.set(4, forKey: "accent")
                 changeIcon("red_logo")
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
+            }
+            
+            else if indexPath.row == 5 {
+                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
+                
+                var number: Int32!
+                do {
+                    number = Int32.random(in: 0...4)
+                }
+                while number == UserDefaults.standard.integer(forKey: "accentRandom") {
+                    number = Int32.random(in: 0...4)
+                }
+                
+                var accent : UIColor!
+                if number == 0 {
+                    accent = UIColor(rgb: 0x26A69A)
+                    changeIcon(nil)
+                }
+                else if number == 1 {
+                    accent = UIColor(rgb: 0x7841c4)
+                    changeIcon("purple_logo")
+                }
+                else if number == 2 {
+                    accent = UIColor(rgb: 0x347deb)
+                    changeIcon("blue_logo")
+                }
+                else if number == 3 {
+                    accent = UIColor(rgb: 0xfc783a)
+                    changeIcon("orange_logo")
+                }
+                else if number == 4 {
+                    accent = UIColor(rgb: 0xc41d1d)
+                    changeIcon("red_logo")
+                }
+                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                    self.view.window?.tintColor = accent
+                }, completion: nil)
+                UserDefaults.standard.set(5, forKey: "accent")
+                UserDefaults.standard.set(number, forKey: "accentRandom")
                 tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
             }
         }
