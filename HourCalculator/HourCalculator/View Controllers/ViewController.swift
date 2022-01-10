@@ -333,29 +333,34 @@ class ViewController: UIViewController {
             let minutesInverted = Double(minutesRounded)! * -1
             let minutes2 = 1.0 - Double(round(minutesInverted * 100) / 100.00)
             let minutes3 = round(minutes2 * 100) / 100.00
-            print(minutes3)
             let minutes = String(minutes3).dropFirst(2)
-            print(minutes)
             let hours = hoursDifference - 1
-            dateLabel.text = "Total Hours: \(hours).\(minutes)"
-            
-            let total = "\(hours).\(minutes)"
-            
-            if total == "0.0" {
-                if userDefaults.bool(forKey: "StoredEmptyHours") == true {
-                    
-                    if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "hh:mm a"
-                        let inTimeDate = dateFormatter.string(from: datePicker.date)
-                        let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
+            if hours < 0 {
+                dateLabel.text = "In time can not be greater than out time"
+            }
+            else {
+                dateLabel.text = "Total Hours: \(hours).\(minutes)"
+                
+                let total = "\(hours).\(minutes)"
+                
+                if total == "0.0" {
+                    if userDefaults.bool(forKey: "StoredEmptyHours") == true {
                         
-                        let today = dateDatePicker.date
-                        let formatter1 = DateFormatter()
-                        formatter1.dateFormat = "MM/dd/yyyy"
-                        let dateFormatted = formatter1.string(from: today)
-                        
-                        storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hours, minutes: String(minutes))
+                        if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
+                            
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "hh:mm a"
+                            let inTimeDate = dateFormatter.string(from: datePicker.date)
+                            let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
+                            
+                            let today = dateDatePicker.date
+                            let formatter1 = DateFormatter()
+                            formatter1.dateFormat = "MM/dd/yyyy"
+                            let dateFormatted = formatter1.string(from: today)
+                            
+                            storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hours, minutes: String(minutes))
+                            
+                        }
                     }
                 }
                 else {
@@ -389,6 +394,7 @@ class ViewController: UIViewController {
                 if userDefaults.bool(forKey: "StoredEmptyHours") == true {
                     
                     if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
+                        
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "hh:mm a"
                         let inTimeDate = dateFormatter.string(from: datePicker.date)
@@ -406,6 +412,7 @@ class ViewController: UIViewController {
             else {
                 
                 if userDefaults.integer(forKey: "historyEnabled") == 0 {
+                    
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "hh:mm a"
                     let inTimeDate = dateFormatter.string(from: datePicker.date)
