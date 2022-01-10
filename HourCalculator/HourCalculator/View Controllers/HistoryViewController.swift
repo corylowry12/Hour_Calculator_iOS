@@ -712,13 +712,23 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             let titleFont = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20)]
             let titleAttrString = NSMutableAttributedString(string: self.totalHoursText, attributes: titleFont)
             
-            let actionSheet = UIAlertController(title: nil, message: nil,  preferredStyle: .actionSheet)
+            var alert = UIAlertController()
             
-            actionSheet.setValue(titleAttrString, forKey:"attributedTitle")
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                alert = UIAlertController(title: nil, message: nil,  preferredStyle: .actionSheet)
+                let popover = alert.popoverPresentationController
+                popover!.sourceView = self.view
+                popover?.barButtonItem = self.infoButton as UIBarButtonItem
+            }
+            else {
+            alert = UIAlertController(title: nil, message: nil,  preferredStyle: .actionSheet)
             
-            actionSheet.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            }
+            alert.setValue(titleAttrString, forKey:"attributedTitle")
             
-            self.present(actionSheet, animated: true)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            self.present(alert, animated: true)
         }
     }
     

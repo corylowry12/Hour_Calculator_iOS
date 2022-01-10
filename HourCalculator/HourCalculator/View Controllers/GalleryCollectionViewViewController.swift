@@ -130,12 +130,22 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         }
     }
    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    /*func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let padding: CGFloat =  160
+            let collectionViewSize = collectionView.frame.size.width - padding
+            
+            return CGSize(width: collectionViewSize/3, height: 350)
+        }
+        else {
             let padding: CGFloat =  80
             let collectionViewSize = collectionView.frame.size.width - padding
             
             return CGSize(width: collectionViewSize/2, height: 170)
         }
+        return CGSize(width: (collectionView.frame.size.width - 80)/2, height: 170)
+        }*/
 
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -181,18 +191,22 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
                 let cell = collectionView.cellForItem(at: indexPath) as! GalleryCollectionViewCell
                 UIButton.animate(withDuration: 0.05,
                                  animations: {
-                                    cell.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
-                                    cell.backgroundColor = .systemGray2
-                                    cell.checkMark.image = UIImage(systemName: "checkmark.seal.fill")
-                                    cell.isSelected = true
-                                 },
+                    cell.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
+                    cell.backgroundColor = .systemGray2
+                    cell.checkMark.image = UIImage(systemName: "checkmark.seal.fill")
+                    cell.isSelected = true
+                },
                                  completion: nil)
             }
             else {
                 index = indexPath.row
                 performSegue(withIdentifier: "viewImage", sender: nil)
             }
+        } else {
+            index = indexPath.row
+            performSegue(withIdentifier: "viewImage", sender: nil)
         }
+    
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -292,7 +306,16 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
     
     @IBAction func shareButton(_ sender: UIBarButtonItem) {
         
-        let alert = UIAlertController(title: "Share", message: "What would you like to share?", preferredStyle: .actionSheet)
+        var alert = UIAlertController()
+        if UIDevice.current.userInterfaceIdiom == .pad {
+        alert = UIAlertController(title: "Share", message: "What would you like to share?", preferredStyle: .actionSheet)
+            let popover = alert.popoverPresentationController
+            popover!.sourceView = self.view
+            popover?.barButtonItem = sender as UIBarButtonItem
+        }
+        else {
+            alert = UIAlertController(title: "Share", message: "What would you like to share?", preferredStyle: .actionSheet)
+        }
         var images: String!
         var names: String!
         if collectionView.indexPathsForSelectedItems?.count == 1 {
@@ -370,6 +393,7 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             
             let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+            activityViewController.popoverPresentationController?.sourceRect = self.view.bounds
             
             // present the view controller
             self.present(activityViewController, animated: true, completion: nil)
