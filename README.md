@@ -2,6 +2,8 @@
  
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/K3K64AQVM)
 
+[<img src="resources/img/appstore-badge.png" height="50">](https://apps.apple.com/us/app/hour-calculator-decimal/id1574062704)
+
 Use this app to take in time and out time to display total hours worked in decimal format rounded to the second decimal place
 
 This app will store the hours in a Core Data database, as well as let you see how many hours are stored and the total of the hours stored
