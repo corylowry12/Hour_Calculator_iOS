@@ -110,52 +110,72 @@ class ViewController: UIViewController {
         if userDefaults.integer(forKey: "accent") == 0 {
             calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
             dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
+            datePicker.tintColor = UIColor(rgb: 0x26A69A)
+            datePickerOutTime.tintColor = UIColor(rgb: 0x26A69A)
             changeIcon(nil)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
             calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
             dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
+            datePicker.tintColor = UIColor(rgb: 0x7841c4)
+            datePickerOutTime.tintColor = UIColor(rgb: 0x7841c4)
             changeIcon("purple_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 2 {
             calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
             dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
+            datePicker.tintColor = UIColor(rgb: 0x347deb)
+            datePickerOutTime.tintColor = UIColor(rgb: 0x347deb)
             changeIcon("blue_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 3 {
             calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
             dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
+            datePicker.tintColor = UIColor(rgb: 0xfc783a)
+            datePickerOutTime.tintColor = UIColor(rgb: 0xfc783a)
             changeIcon("orange_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 4 {
             calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
             dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
+            datePicker.tintColor = UIColor(rgb: 0xc41d1d)
+            datePickerOutTime.tintColor = UIColor(rgb: 0xc41d1d)
             changeIcon("red_logo")
         }
         else if userDefaults.integer(forKey: "accent") == 5 {
             if userDefaults.integer(forKey: "accentRandom") == 0 {
                 calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
                 dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
+                datePicker.tintColor = UIColor(rgb: 0x26A69A)
+                datePickerOutTime.tintColor = UIColor(rgb: 0x26A69A)
                 changeIcon(nil)
             }
             else if userDefaults.integer(forKey: "accentRandom") == 1 {
                 calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
                 dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
+                datePicker.tintColor = UIColor(rgb: 0x7841c4)
+                datePickerOutTime.tintColor = UIColor(rgb: 0x7841c4)
                 changeIcon("purple_logo")
             }
             else if userDefaults.integer(forKey: "accentRandom") == 2 {
                 calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
                 dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
+                datePicker.tintColor = UIColor(rgb: 0x347deb)
+                datePickerOutTime.tintColor = UIColor(rgb: 0x347deb)
                 changeIcon("blue_logo")
             }
             else if userDefaults.integer(forKey: "accentRandom") == 3 {
                 calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
                 dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
+                datePicker.tintColor = UIColor(rgb: 0xfc783a)
+                datePickerOutTime.tintColor = UIColor(rgb: 0xfc783a)
                 changeIcon("orange_logo")
             }
             else if userDefaults.integer(forKey: "accentRandom") == 4 {
                 calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
                 dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
+                datePicker.tintColor = UIColor(rgb: 0xc41d1d)
+                datePickerOutTime.tintColor = UIColor(rgb: 0xc41d1d)
                 changeIcon("red_logo")
             }
         }
@@ -231,7 +251,7 @@ class ViewController: UIViewController {
         
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
-        if userDefaults.value(forKey: "appVersion") == nil || userDefaults.value(forKey: "appVersion") as? String != appVersion {
+        if userDefaults.value(forKey: "appVersion") == nil || userDefaults.string(forKey: "appVersion") != appVersion {
             tabBarController?.tabBar.items?[3].badgeValue = "1"
         }
         
@@ -486,7 +506,7 @@ class ViewController: UIViewController {
                 }
                 else {
                     
-                    if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
+                    if userDefaults.integer(forKey: "historyEnabled") == 0 {
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "hh:mm a"
                         let inTimeDate = dateFormatter.string(from: datePicker.date)
@@ -514,7 +534,7 @@ class ViewController: UIViewController {
             if total == "0.0" {
                 if userDefaults.bool(forKey: "StoredEmptyHours") == true {
                     
-                    if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
+                    if userDefaults.integer(forKey: "historyEnabled") == 0 {
                         
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "hh:mm a"
@@ -549,7 +569,7 @@ class ViewController: UIViewController {
             }
         }
         
-        if userDefaults.value(forKey: "automaticDeletion") as! Int != 0 && hourItems.count > userDefaults.value(forKey: "automaticDeletion") as! Int {
+        if userDefaults.integer(forKey: "automaticDeletion") != 0 && hourItems.count > userDefaults.integer(forKey: "automaticDeletion") {
             
             let hourToDelete = hourItems.first
             context.delete(hourToDelete!)
