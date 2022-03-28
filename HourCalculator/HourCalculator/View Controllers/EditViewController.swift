@@ -60,7 +60,7 @@ class EditViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        if userDefaults.integer(forKey: "accent") == 0 {
+        /*if userDefaults.integer(forKey: "accent") == 0 {
             saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
@@ -91,7 +91,9 @@ class EditViewController: UIViewController {
             else if userDefaults.integer(forKey: "accentRandom") == 4 {
                 saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
             }
-        }
+        }*/
+        
+        saveButton.backgroundColor = ThemeColor().themeColor()
     }
     
     override func viewDidLoad() {

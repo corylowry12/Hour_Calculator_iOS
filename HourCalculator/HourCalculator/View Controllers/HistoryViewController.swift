@@ -16,10 +16,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var deleteSelected1: UIButton!
     
     @IBOutlet var exportMenuButton: UIBarButtonItem!
     @IBOutlet weak var deleteAllMenuButton: UIBarButtonItem!
-    @IBOutlet weak var deleteSelectedButton: UIButton!
+    //@IBOutlet weak var deleteSelected1: UIButton!
     @IBOutlet weak var editMenuButton: UIBarButtonItem!
     
     @IBOutlet weak var infoButton: UIBarButtonItem!
@@ -109,7 +110,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.setEditing(true, animated: true)
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             editButton.title = "Cancel"
-            deleteSelectedButton.isHidden = false
+            deleteSelected1.isHidden = false
         }
     }
     
@@ -244,21 +245,23 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.tableView.reloadData()
         }, completion: nil)
         
-        if userDefaults.integer(forKey: "accent") == 0 {
-            deleteSelectedButton.backgroundColor = UIColor(rgb: 0x26A69A)
+        /*if userDefaults.integer(forKey: "accent") == 0 {
+            deleteSelected1.backgroundColor = UIColor(rgb: 0x26A69A)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
-            deleteSelectedButton.backgroundColor = UIColor(rgb: 0x7841c4)
+            deleteSelected1.backgroundColor = UIColor(rgb: 0x7841c4)
         }
         else if userDefaults.integer(forKey: "accent") == 2 {
-            deleteSelectedButton.backgroundColor = UIColor(rgb: 0x347deb)
+            deleteSelected1.backgroundColor = UIColor(rgb: 0x347deb)
         }
         else if userDefaults.integer(forKey: "accent") == 3 {
-            deleteSelectedButton.backgroundColor = UIColor(rgb: 0xfc783a)
+            deleteSelected1.backgroundColor = UIColor(rgb: 0xfc783a)
         }
         else if userDefaults.integer(forKey: "accent") == 4 {
-            deleteSelectedButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-        }
+            deleteSelected1.backgroundColor = UIColor(rgb: 0xc41d1d)
+        }*/
+        
+        deleteSelected1.backgroundColor = ThemeColor().themeColor()
         
         noHoursStoredBackground()
     
@@ -313,7 +316,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         undo = 0
         tableView.setEditing(false, animated: false)
         editButton.title = "Edit"
-        deleteSelectedButton.isHidden = true
+        deleteSelected1.isHidden = true
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -420,8 +423,8 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.count > 0 {
-            deleteSelectedButton.isEnabled = true
-            deleteSelectedButton.alpha = 1.0
+            deleteSelected1.isEnabled = true
+            deleteSelected1.alpha = 1.0
             
         }
         
@@ -438,8 +441,8 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if tableView.indexPathsForSelectedRows == nil {
-            deleteSelectedButton.isEnabled = false
-            deleteSelectedButton.alpha = 0.80
+            deleteSelected1.isEnabled = false
+            deleteSelected1.alpha = 0.80
         }
     }
     
@@ -510,14 +513,14 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if self.tableView.isEditing == true {
             self.tableView.setEditing(false, animated: true)
-            self.deleteSelectedButton.isHidden = true
+            self.deleteSelected1.isHidden = true
             self.editButton.title = "Edit"
         }
         
         let alert = UIAlertController(title: "Delete All?", message: "Are you sure you would like to delete all stored hours?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
             undo = 1
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [self] in
                 for i in (0...hourItems.count - 1).reversed() {
                     let index = [0, i] as IndexPath
                     let hourToDelete = self.hourItems[i]
@@ -579,32 +582,32 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             if tableView.isEditing == true && tableView.indexPathsForSelectedRows?.count == 0 {
                 
                 tableView.setEditing(false, animated: true)
-                deleteSelectedButton.isHidden = true
+                deleteSelected1.isHidden = true
                 editButton.title = "Edit"
             }
             else if tableView.isEditing == true && tableView.indexPathsForSelectedRows?.count != 0 {
                 tableView.setEditing(false, animated: true)
-                deleteSelectedButton.isHidden = true
+                deleteSelected1.isHidden = true
                 editButton.title = "Edit"
             }
             else if tableView.isEditing == false {
-                deleteSelectedButton.isEnabled = false
-                deleteSelectedButton.alpha = 0.80
+                deleteSelected1.isEnabled = false
+                deleteSelected1.alpha = 0.80
                 tableView.setEditing(true, animated: true)
-                deleteSelectedButton.isHidden = false
+                deleteSelected1.isHidden = false
                 editButton.title = "Cancel"
             }
             else {
-                deleteSelectedButton.isEnabled = false
-                deleteSelectedButton.alpha = 0.80
+                deleteSelected1.isEnabled = false
+                deleteSelected1.alpha = 0.80
                 tableView.setEditing(true, animated: true)
-                deleteSelectedButton.isHidden = false
+                deleteSelected1.isHidden = false
                 editButton.title = "Cancel"
             }
         }
     }
     
-    @IBAction func deleteSelectedButtonTapped(_ sender: UIButton) {
+    func deleteSelected() {
         
         if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
             let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .alert)
@@ -618,15 +621,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
         if let indexPaths = tableView.indexPathsForSelectedRows {
             let sortedPaths = indexPaths.sorted {$0.row > $1.row}
-            //var y = 0
-            //for i in (0...sortedPaths.count - 1).reversed() {
-            /*for i in sortedPaths {
-             let x = i.row
-             let hourToDelete = self.hourItems[x]
-             self.context.delete(hourToDelete)
-             
-             tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
-             }*/
             
             var items = [Hours]()
             for indexPath in sortedPaths {
@@ -650,7 +644,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
             tableView.setEditing(false, animated: true)
             editButton.title = "Edit"
-            deleteSelectedButton.isHidden = true
+            deleteSelected1.isHidden = true
             
         }))
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -658,7 +652,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if (hourItems.count == 0) {
             editButton.isEnabled = false
-            deleteSelectedButton.isHidden = false
+            deleteSelected1.isHidden = false
             infoButton.isEnabled = false
             exportMenuButton.isEnabled = false
         }
@@ -673,14 +667,25 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.editMenuButton.isEnabled = false
             exportMenuButton.isEnabled = false
         }
+    }
+    
+    //@IBAction func deleteSelected1Tapped(_ sender: UIButton) {
         
+        
+        
+   // }
+    
+    
+    @IBAction func deleteSelected1ButtonTapped(_ sender: Any) {
+        
+        deleteSelected()
     }
     
     @IBAction func infoButtonTapped(_ sender: UIBarButtonItem) {
         if tableView.isEditing == true {
             tableView.setEditing(false, animated: true)
             editButton.title = "Edit"
-            deleteSelectedButton.isHidden = true
+            deleteSelected1.isHidden = true
         }
         
         self.calculate()
@@ -842,7 +847,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.present(alert, animated: true, completion: nil)
             
             //tableView.setEditing(false, animated: true)
-            deleteSelectedButton.isHidden = true
+            deleteSelected1.isHidden = true
             editButton.title = "Edit"
         }
         else {

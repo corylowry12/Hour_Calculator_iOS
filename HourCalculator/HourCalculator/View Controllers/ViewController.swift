@@ -107,8 +107,8 @@ class ViewController: UIViewController {
         }
         dateDatePicker.maximumDate = Date()
         
-        if userDefaults.integer(forKey: "accent") == 0 {
-            calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
+        /*if userDefaults.integer(forKey: "accent") == 0 {
+            calculateButton.backgroundColor = ThemeColor().themeColor()
             dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
             datePicker.tintColor = UIColor(rgb: 0x26A69A)
             datePickerOutTime.tintColor = UIColor(rgb: 0x26A69A)
@@ -178,7 +178,12 @@ class ViewController: UIViewController {
                 datePickerOutTime.tintColor = UIColor(rgb: 0xc41d1d)
                 changeIcon("red_logo")
             }
-        }
+        }*/
+        
+        calculateButton.backgroundColor = ThemeColor().themeColor()
+        dateDatePicker.tintColor = ThemeColor().themeColor()
+        datePicker.tintColor = ThemeColor().themeColor()
+        datePickerOutTime.tintColor = ThemeColor().themeColor()
         
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{
             userDefaults.set(false, forKey: "StoredEmptyHours")

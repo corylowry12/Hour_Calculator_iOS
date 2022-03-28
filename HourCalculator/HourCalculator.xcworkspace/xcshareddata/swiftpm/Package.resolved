@@ -1,16 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Siren",
-        "repositoryURL": "https://github.com/ArtSabintsev/Siren.git",
-        "state": {
-          "branch": null,
-          "revision": "9173fc529731705a737658b2801ccbc19dd385c8",
-          "version": "5.8.1"
-        }
+  "pins" : [
+    {
+      "identity" : "siren",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ArtSabintsev/Siren.git",
+      "state" : {
+        "revision" : "9173fc529731705a737658b2801ccbc19dd385c8",
+        "version" : "5.8.1"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }

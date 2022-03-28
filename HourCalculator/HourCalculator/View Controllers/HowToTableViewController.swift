@@ -336,8 +336,8 @@ class HowToTableViewController: UITableViewController {
     }
     
     func setTableViewCellColor() -> UIColor {
-        var color = UIColor(rgb: 0x26A69A)
-        if userDefaults.integer(forKey: "accent") == 0 {
+        //var color = UIColor(rgb: 0x26A69A)
+        /*if userDefaults.integer(forKey: "accent") == 0 {
             color = UIColor(rgb: 0x26A69A)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
@@ -368,7 +368,7 @@ class HowToTableViewController: UITableViewController {
             else if userDefaults.integer(forKey: "accentRandom") == 4 {
                 color = UIColor(rgb: 0xc41d1d)
             }
-        }
-        return color
+        }*/
+        return ThemeColor().themeColor()
     }
 }

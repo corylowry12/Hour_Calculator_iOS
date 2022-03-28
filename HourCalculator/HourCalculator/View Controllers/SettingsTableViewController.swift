@@ -80,7 +80,7 @@ class SettingsTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        if userDefaults.integer(forKey: "accent") == 0 {
+        /*if userDefaults.integer(forKey: "accent") == 0 {
             hourSwitch?.onTintColor = UIColor(rgb: 0x26A69A)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
@@ -111,7 +111,9 @@ class SettingsTableViewController: UITableViewController {
             else if userDefaults.integer(forKey: "accentRandom") == 4 {
                 hourSwitch.onTintColor = UIColor(rgb: 0xc41d1d)
             }
-        }
+        }*/
+        
+        hourSwitch?.onTintColor = ThemeColor().themeColor()
         
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
@@ -234,6 +236,8 @@ class SettingsTableViewController: UITableViewController {
         tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
         view.window?.overrideUserInterfaceStyle = .unspecified
         hourSwitch.isOn = false
-        view.window?.tintColor = UIColor(rgb: 0x26A69A)
+        //view.window?.tintColor = UIColor(rgb: 0x26A69A)
+        
+        view.window?.tintColor = ThemeColor().themeColor()
     }
 }

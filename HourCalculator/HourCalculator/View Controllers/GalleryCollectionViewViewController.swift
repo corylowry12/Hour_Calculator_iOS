@@ -268,7 +268,7 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
     }
     
     func setBorderColor() -> UIColor {
-        let userDefaults = UserDefaults.standard
+        /*let userDefaults = UserDefaults.standard
         if userDefaults.integer(forKey: "accent") == 0 {
             return UIColor(rgb: 0x26A69A)
         }
@@ -300,8 +300,8 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
             else if userDefaults.integer(forKey: "accentRandom") == 4 {
                 return UIColor(rgb: 0xc41d1d)
             }
-        }
-        return UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+        }*/
+        return ThemeColor().themeColor()
     }
     
     @IBAction func shareButton(_ sender: UIBarButtonItem) {

@@ -14,7 +14,7 @@ class TabBarController: SwipeableTabBarController {
         super.viewDidLoad()
         delegate = self
         
-        swipeAnimatedTransitioning?.animationType = SwipeAnimationType.sideBySide
+        swipeAnimatedTransitioning?.animationType = SwipeAnimationType.overlap
         minimumNumberOfTouches = 2
     }
 }

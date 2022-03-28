@@ -19,7 +19,7 @@ extension UIImage {
         label.textAlignment = .center
         label.numberOfLines = 0
         
-        if userDefaults.integer(forKey: "accent") == 0 {
+       /* if userDefaults.integer(forKey: "accent") == 0 {
             label.textColor = UIColor(rgb: 0x26A69A)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
@@ -34,7 +34,9 @@ extension UIImage {
         }
         else if userDefaults.integer(forKey: "accent") == 4 {
             label.textColor = UIColor(rgb: 0xc41d1d)
-        }
+        }*/
+        
+        label.textColor = ThemeColor().themeColor()
         
         label.layer.render(in: UIGraphicsGetCurrentContext()!)
         let img = UIGraphicsGetImageFromCurrentImageContext()
@@ -210,7 +212,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         textField.autocapitalizationType = .words
         textField.autocorrectionType = .no
         
-        if userDefaults.integer(forKey: "accent") == 0 {
+        /*if userDefaults.integer(forKey: "accent") == 0 {
             textField.backgroundColor = UIColor(rgb: 0x26A69A)
             previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
             nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
@@ -261,7 +263,11 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
                 nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
             }
-        }
+        }*/
+        
+        textField.backgroundColor = ThemeColor().themeColor()
+        previousButton.backgroundColor = ThemeColor().themeColor()
+        nextButton.backgroundColor = ThemeColor().themeColor()
         
         textField.tintColor = UIColor.systemGray2
         view.backgroundColor = tableView.backgroundColor
@@ -849,7 +855,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                              completion: { finish in
                 UIButton.animate(withDuration: 0.30,
                                  animations: { [self] in
-                    if userDefaults.integer(forKey: "accent") == 0 {
+                    /*if userDefaults.integer(forKey: "accent") == 0 {
                         previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
                     }
                     else if userDefaults.integer(forKey: "accent") == 1 {
@@ -887,7 +893,9 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                             previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
                             
                         }
-                    }
+                    }*/
+                    
+                    previousButton.backgroundColor = ThemeColor().themeColor()
                 },
                                  completion: nil)
             })
@@ -986,7 +994,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                              completion: { finish in
                 UIButton.animate(withDuration: 0.30,
                                  animations: { [self] in
-                    if userDefaults.integer(forKey: "accent") == 0 {
+                    /*if userDefaults.integer(forKey: "accent") == 0 {
                         nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
                     }
                     else if userDefaults.integer(forKey: "accent") == 1 {
@@ -1024,7 +1032,9 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                             nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
                             
                         }
-                    }
+                    }*/
+                    
+                    nextButton.backgroundColor = ThemeColor().themeColor()
                 },
                                  completion: nil)
             })

@@ -65,6 +65,11 @@
 	<string>ca-app-pub-4546055219731501~4456783748</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>needs access to this to take a picture</string>
 	<key>NSMicrophoneUsageDescription</key>
