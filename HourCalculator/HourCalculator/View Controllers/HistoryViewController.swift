@@ -114,7 +114,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
+    //lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
     
     override var canBecomeFirstResponder: Bool {
         get {
@@ -181,11 +181,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.exportMenuButton.isEnabled = false
         }
         
-        addBannerViewToView(bannerView)
+        //addBannerViewToView(bannerView)
         
-        bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
-        bannerView.rootViewController = self
-        bannerView.load(GADRequest())
+        //bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
+        //bannerView.rootViewController = self
+        //bannerView.load(GADRequest())
         
         self.tableView.delegate = self
         
@@ -607,16 +607,32 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    func deleteSelected() {
-        
+    override func viewDidLayoutSubviews() {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 70, right: 0)
+        }
+        else {
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 45, right: 0)
+        }
+    }
+    
+    func deleteSelectedDialog() {
         if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
             let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {_ in
                 UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
+                self.deleteSelected()
             }
             ))
             self.present(alert, animated: true, completion: nil)
         }
+        else {
+            deleteSelected()
+        }
+    }
+    
+    func deleteSelected() {
+        
         let alert = UIAlertController(title: "Warning", message: "You are fixing to delete selected hours. Would you like to continue?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
         if let indexPaths = tableView.indexPathsForSelectedRows {
@@ -678,7 +694,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @IBAction func deleteSelected1ButtonTapped(_ sender: Any) {
         
-        deleteSelected()
+        deleteSelectedDialog()
     }
     
     @IBAction func infoButtonTapped(_ sender: UIBarButtonItem) {

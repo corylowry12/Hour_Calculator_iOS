@@ -7,6 +7,7 @@
 
 import UIKit
 import SwipeableTabBarController
+import GoogleMobileAds
 
 class TabBarController: SwipeableTabBarController {
     
@@ -16,5 +17,6 @@ class TabBarController: SwipeableTabBarController {
         
         swipeAnimatedTransitioning?.animationType = SwipeAnimationType.overlap
         minimumNumberOfTouches = 2
+        
     }
 }

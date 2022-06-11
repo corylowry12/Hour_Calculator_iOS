@@ -20,6 +20,8 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
     var testflightUpdateDateArray = [String]()
     var testflightUpdateTitleArray = [String]()
     
+    var expandedArray = [IndexPath]()
+    
     var knownIssuesTitleArray = [String]()
     
     var roadMapTitleArray = [String]()
@@ -77,8 +79,37 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        fetchData()
-        tableView.reloadData()
+        
+        
+        let alert = UIAlertController(title: "Updating data", message: "Please wait...", preferredStyle: .alert)
+            alert.view.tintColor = UIColor.black
+            let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10,y: 5,width: 50, height: 50)) as UIActivityIndicatorView
+            loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.medium
+            loadingIndicator.startAnimating();
+
+            alert.view.addSubview(loadingIndicator)
+
+        present(alert, animated: true, completion: { [self] in
+            updateBodyArray.removeAll()
+            updateDateArray.removeAll()
+            updateTitleArray.removeAll()
+            
+            testflightUpdateBodyArray.removeAll()
+            testflightUpdateDateArray.removeAll()
+            testflightUpdateTitleArray.removeAll()
+            
+            knownIssuesTitleArray.removeAll()
+            
+            roadMapTitleArray.removeAll()
+            fetchData()
+            self.dismiss(animated: true)
+            tableView.reloadData()
+        })
+        
+       // fetchData()
+        //tableView.reloadData()
+    
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -118,33 +149,34 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let contentCell = tableView.dequeueReusableCell(withIdentifier: "appNewsCell", for: indexPath) as! AppNewsTableViewCell
+        let contentCell = tableView.dequeueReusableCell(withIdentifier: "appNewsCell") as! AppNewsTableViewCell
+        let contentCell2 = tableView.dequeueReusableCell(withIdentifier: "appNewsCell2") as! AppNewsTableViewCell2
+        let cellHeader = tableView.dequeueReusableCell(withIdentifier: "appAddCell") as! AppNewsTableViewHeaderCell
+        
         if indexPath.section == 0 && !appUpdateBool{
-            let cellHeader = tableView.dequeueReusableCell(withIdentifier: "appAddCell", for: indexPath) as! AppNewsTableViewHeaderCell
+            
         cellHeader.headerLabel.text = "Updates"
             return cellHeader
         }
         else if indexPath.section == 0 && appUpdateBool {
             if indexPath.row == 0 {
-                let cellHeader = tableView.dequeueReusableCell(withIdentifier: "appAddCell", for: indexPath) as! AppNewsTableViewHeaderCell
             cellHeader.headerLabel.text = "Updates"
                 return cellHeader
             }
             else if indexPath.row > 0 {
                 contentCell.titleLabel.text = updateTitleArray[indexPath.row - 1]
                 contentCell.contentLabel.text = updateBodyArray[indexPath.row - 1]
+                
                 contentCell.dateLabel.text = updateDateArray[indexPath.row - 1]
                     return contentCell
             }
         }
         else if indexPath.section == 1 && !testflightUpdateBool {
-            let cell2 = tableView.dequeueReusableCell(withIdentifier: "appAddCell", for: indexPath) as! AppNewsTableViewHeaderCell
-            cell2.headerLabel.text = "TestFlight"
-            return cell2
+            cellHeader.headerLabel.text = "TestFlight"
+            return cellHeader
         }
         else if indexPath.section == 1 && testflightUpdateBool {
             if indexPath.row == 0 {
-                let cellHeader = tableView.dequeueReusableCell(withIdentifier: "appAddCell", for: indexPath) as! AppNewsTableViewHeaderCell
             cellHeader.headerLabel.text = "TestFlight"
                 return cellHeader
             }
@@ -157,36 +189,31 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         else if indexPath.section == 2 && !knownIssuesBool {
-            let cell2 = tableView.dequeueReusableCell(withIdentifier: "appAddCell", for: indexPath) as! AppNewsTableViewHeaderCell
-            cell2.headerLabel.text = "Known Issues"
-            return cell2
+            cellHeader.headerLabel.text = "Known Issues"
+            return cellHeader
         }
         else if indexPath.section == 2 && knownIssuesBool {
             if indexPath.row == 0 {
-                let cellHeader = tableView.dequeueReusableCell(withIdentifier: "appAddCell", for: indexPath) as! AppNewsTableViewHeaderCell
             cellHeader.headerLabel.text = "Known Issues"
                 return cellHeader
             }
             else if indexPath.row > 0 {
-                let contentCell2 = tableView.dequeueReusableCell(withIdentifier: "appNewsCell2", for: indexPath) as! AppNewsTableViewCell2
+                
                 contentCell2.bodyLabel.text = knownIssuesTitleArray[indexPath.row - 1]
                     return contentCell2
             }
         }
         
         else if indexPath.section == 3 && !roadMapBool {
-            let cell2 = tableView.dequeueReusableCell(withIdentifier: "appAddCell", for: indexPath) as! AppNewsTableViewHeaderCell
-            cell2.headerLabel.text = "Upcoming Features"
-            return cell2
+            cellHeader.headerLabel.text = "Upcoming Features"
+            return cellHeader
         }
         else if indexPath.section == 3 && roadMapBool {
             if indexPath.row == 0 {
-                let cellHeader = tableView.dequeueReusableCell(withIdentifier: "appAddCell", for: indexPath) as! AppNewsTableViewHeaderCell
             cellHeader.headerLabel.text = "Upcoming Features"
                 return cellHeader
             }
             else if indexPath.row > 0 {
-                let contentCell2 = tableView.dequeueReusableCell(withIdentifier: "appNewsCell2", for: indexPath) as! AppNewsTableViewCell2
                 contentCell2.bodyLabel.text = roadMapTitleArray[indexPath.row - 1]
                     return contentCell2
             }
@@ -204,19 +231,23 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if indexPathRow == [0, 0] {
             appUpdateBool = !appUpdateBool
-            //tableView.reloadData()
+           
             tableView.beginUpdates()
             let tableViewHeaderCell = tableView.cellForRow(at: [0,0]) as! AppNewsTableViewHeaderCell
             if appUpdateBool {
                 
+                if updateTitleArray.count > 0 {
                 tableViewHeaderCell.chevronImage.image = UIImage(systemName: "chevron.up")
+              
             for i in 1...updateTitleArray.count {
                 
                 let indexPathInsert = IndexPath(row: i, section: 0)
                 tableView.insertRows(at: [indexPathInsert], with: .fade)
             }
+                }
             }
             else {
+                if updateTitleArray.count > 0 {
                 tableViewHeaderCell.chevronImage.image = UIImage(systemName: "chevron.down")
                 for i in (1...updateTitleArray.count).reversed() {
                     
@@ -224,15 +255,17 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
                     tableView.deleteRows(at: [indexPathInsert], with: .fade)
                 }
             }
+            }
             tableView.endUpdates()
         }
         else if indexPathRow == [1, 0] {
             testflightUpdateBool = !testflightUpdateBool
-            //tableView.reloadData()
+         
             tableView.beginUpdates()
             let tableViewHeaderCell = tableView.cellForRow(at: [1,0]) as! AppNewsTableViewHeaderCell
             if testflightUpdateBool {
                 
+                if testflightUpdateTitleArray.count > 0 {
                 tableViewHeaderCell.chevronImage.image = UIImage(systemName: "chevron.up")
             for i in 1...testflightUpdateTitleArray.count {
                 
@@ -240,7 +273,9 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
                 tableView.insertRows(at: [indexPathInsert], with: .fade)
             }
             }
+            }
             else {
+                if testflightUpdateTitleArray.count > 0 {
                 tableViewHeaderCell.chevronImage.image = UIImage(systemName: "chevron.down")
                 for i in (1...testflightUpdateTitleArray.count).reversed() {
                     
@@ -248,16 +283,17 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
                     tableView.deleteRows(at: [indexPathInsert], with: .fade)
                 }
             }
+            }
             tableView.endUpdates()
         }
         
         else if indexPathRow == [2, 0] {
             knownIssuesBool = !knownIssuesBool
-            //tableView.reloadData()
+            
             tableView.beginUpdates()
             let tableViewHeaderCell = tableView.cellForRow(at: [2,0]) as! AppNewsTableViewHeaderCell
             if knownIssuesBool {
-                
+                if knownIssuesTitleArray.count > 0 {
                 tableViewHeaderCell.chevronImage.image = UIImage(systemName: "chevron.up")
             for i in 1...knownIssuesTitleArray.count {
                 
@@ -265,7 +301,9 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
                 tableView.insertRows(at: [indexPathInsert], with: .fade)
             }
             }
+            }
             else {
+                if knownIssuesTitleArray.count > 0 {
                 tableViewHeaderCell.chevronImage.image = UIImage(systemName: "chevron.down")
                 for i in (1...knownIssuesTitleArray.count) {
                     
@@ -273,16 +311,16 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
                     tableView.deleteRows(at: [indexPathInsert], with: .fade)
                 }
             }
+            }
             tableView.endUpdates()
         }
         
         else if indexPathRow == [3, 0] {
             roadMapBool = !roadMapBool
-            //tableView.reloadData()
             tableView.beginUpdates()
             let tableViewHeaderCell = tableView.cellForRow(at: [3,0]) as! AppNewsTableViewHeaderCell
             if roadMapBool {
-                
+                if roadMapTitleArray.count > 0 {
                 tableViewHeaderCell.chevronImage.image = UIImage(systemName: "chevron.up")
             for i in 1...roadMapTitleArray.count {
                 
@@ -290,7 +328,9 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
                 tableView.insertRows(at: [indexPathInsert], with: .fade)
             }
             }
+            }
             else {
+                if roadMapTitleArray.count > 0 {
                 tableViewHeaderCell.chevronImage.image = UIImage(systemName: "chevron.down")
                 for i in (1...roadMapTitleArray.count) {
                     
@@ -298,17 +338,22 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
                     tableView.deleteRows(at: [indexPathInsert], with: .fade)
                 }
             }
+            }
             tableView.endUpdates()
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+      
         changeRows(indexPathRow: indexPath)
+       
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     
+        return UITableView.automaticDimension
+    }
     
     func fetchData() {
     
@@ -316,7 +361,22 @@ class AppNewsViewController: UIViewController, UITableViewDataSource, UITableVie
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
         guard let dataResponse = data,
                   error == nil else {
+            DispatchQueue.main.async { [self] in
                   print(error?.localizedDescription ?? "Response Error")
+                
+                    refreshControl.endRefreshing()
+                
+            let alert = UIAlertController(title: "Error", message: "There was an error fetching the latest app news, check your connection", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: {_ in
+                self.refreshControl.endRefreshing()
+                self.fetchData()
+                    alert.dismiss(animated: true)
+            }))
+            alert.addAction(UIAlertAction(title: "Go Back", style: .cancel, handler: {_ in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true)
+            }
                   return }
             do {
                 

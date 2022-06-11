@@ -12,6 +12,7 @@
 		32088B1726D4984500B62C2A /* GalleryCollectionViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32088B1626D4984500B62C2A /* GalleryCollectionViewViewController.swift */; };
 		32088B1926D5FCAC00B62C2A /* TimeCardSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32088B1826D5FCAC00B62C2A /* TimeCardSettingsViewController.swift */; };
 		321DA8A02713DED900C025D3 /* HistoryAutomaticDeletionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321DA89F2713DED900C025D3 /* HistoryAutomaticDeletionSettings.swift */; };
+		322863F627F2C32D00CF56EC /* PatchNotesTableViewHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322863F527F2C32D00CF56EC /* PatchNotesTableViewHeaderCell.swift */; };
 		322C564026BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322C563F26BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift */; };
 		322C564226BDC32900A4E8DD /* TimeCardInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322C564126BDC32900A4E8DD /* TimeCardInfoTableViewController.swift */; };
 		322FD5D027EF874B00B15D21 /* ThemeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322FD5CF27EF874B00B15D21 /* ThemeColor.swift */; };
@@ -41,6 +42,7 @@
 		328498482687D3F30092D22F /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498472687D3F30092D22F /* ThemeViewController.swift */; };
 		3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3284984B2687FE380092D22F /* PatchNotesViewController.swift */; };
 		32870F7027F0F43B005CF623 /* AppNewsTableViewHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32870F6F27F0F43B005CF623 /* AppNewsTableViewHeaderCell.swift */; };
+		3299D3E428396E5F0098EFA3 /* AdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299D3E328396E5F0098EFA3 /* AdViewController.swift */; };
 		329B5212269141790012E307 /* GoogleAppMeasurement.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5211269141790012E307 /* GoogleAppMeasurement.xcframework */; };
 		329B5216269141840012E307 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5215269141840012E307 /* GoogleMobileAds.xcframework */; };
 		329B5219269141910012E307 /* GoogleUtilities.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5218269141910012E307 /* GoogleUtilities.xcframework */; };
@@ -55,6 +57,7 @@
 		32AB610C26ED2DCD00F41D6C /* StoredHours.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 32AB610926ED2DCD00F41D6C /* StoredHours.xcdatamodeld */; };
 		32EB446F26ED190700380895 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32EB446E26ED190700380895 /* CloudKit.framework */; };
 		32F52A85268AD02E00BD9E2F /* Siren in Frameworks */ = {isa = PBXBuildFile; productRef = 32F52A84268AD02E00BD9E2F /* Siren */; };
+		32F74AA127F2C40000A3DF42 /* PatchNotesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F74AA027F2C40000A3DF42 /* PatchNotesTableViewCell.swift */; };
 		4783DF6734144F1726A132EC /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C34CBA995020ACB3DB33A69 /* Pods_HourCalculator_HourCalculatorUITests.framework */; };
 		B387D5EF033D6F430219E519 /* Pods_HourCalculator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86962D89DC19621DAEAEA928 /* Pods_HourCalculator.framework */; };
 /* End PBXBuildFile section */
@@ -94,6 +97,7 @@
 		32088B1626D4984500B62C2A /* GalleryCollectionViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewViewController.swift; sourceTree = "<group>"; };
 		32088B1826D5FCAC00B62C2A /* TimeCardSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardSettingsViewController.swift; sourceTree = "<group>"; };
 		321DA89F2713DED900C025D3 /* HistoryAutomaticDeletionSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryAutomaticDeletionSettings.swift; sourceTree = "<group>"; };
+		322863F527F2C32D00CF56EC /* PatchNotesTableViewHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchNotesTableViewHeaderCell.swift; sourceTree = "<group>"; };
 		322C563F26BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardInfoTableViewCell.swift; sourceTree = "<group>"; };
 		322C564126BDC32900A4E8DD /* TimeCardInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardInfoTableViewController.swift; sourceTree = "<group>"; };
 		322FD5CF27EF874B00B15D21 /* ThemeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColor.swift; sourceTree = "<group>"; };
@@ -130,6 +134,7 @@
 		328498472687D3F30092D22F /* ThemeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
 		3284984B2687FE380092D22F /* PatchNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchNotesViewController.swift; sourceTree = "<group>"; };
 		32870F6F27F0F43B005CF623 /* AppNewsTableViewHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNewsTableViewHeaderCell.swift; sourceTree = "<group>"; };
+		3299D3E328396E5F0098EFA3 /* AdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdViewController.swift; sourceTree = "<group>"; };
 		329B5211269141790012E307 /* GoogleAppMeasurement.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleAppMeasurement.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/GoogleAppMeasurement.xcframework"; sourceTree = "<group>"; };
 		329B5215269141840012E307 /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
 		329B5218269141910012E307 /* GoogleUtilities.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleUtilities.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/GoogleUtilities.xcframework"; sourceTree = "<group>"; };
@@ -145,6 +150,7 @@
 		32AB610B26ED2DCD00F41D6C /* StoredHours.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StoredHours.xcdatamodel; sourceTree = "<group>"; };
 		32EB446D26ED190300380895 /* HourCalculatorDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HourCalculatorDebug.entitlements; sourceTree = "<group>"; };
 		32EB446E26ED190700380895 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		32F74AA027F2C40000A3DF42 /* PatchNotesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchNotesTableViewCell.swift; sourceTree = "<group>"; };
 		3B7CF894345F641543487426 /* Pods-HourCalculatorTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculatorTests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculatorTests/Pods-HourCalculatorTests.debug.xcconfig"; sourceTree = "<group>"; };
 		442AF45CB91E36B98D369433 /* Pods_HourCalculatorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculatorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4551DB0F6EEC6CDFFF05027B /* Pods-HourCalculator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculator/Pods-HourCalculator.debug.xcconfig"; sourceTree = "<group>"; };
@@ -282,6 +288,9 @@
 				322FD5D327EFB14000B15D21 /* AppNewsTableViewCell.swift */,
 				32870F6F27F0F43B005CF623 /* AppNewsTableViewHeaderCell.swift */,
 				3241C6AA27F110B500A584CF /* AppNewsTableViewCell2.swift */,
+				322863F527F2C32D00CF56EC /* PatchNotesTableViewHeaderCell.swift */,
+				32F74AA027F2C40000A3DF42 /* PatchNotesTableViewCell.swift */,
+				3299D3E328396E5F0098EFA3 /* AdViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -595,7 +604,10 @@
 				325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */,
 				322FD5D427EFB14000B15D21 /* AppNewsTableViewCell.swift in Sources */,
 				32088B1926D5FCAC00B62C2A /* TimeCardSettingsViewController.swift in Sources */,
+				32F74AA127F2C40000A3DF42 /* PatchNotesTableViewCell.swift in Sources */,
+				3299D3E428396E5F0098EFA3 /* AdViewController.swift in Sources */,
 				3241C6AB27F110B500A584CF /* AppNewsTableViewCell2.swift in Sources */,
+				322863F627F2C32D00CF56EC /* PatchNotesTableViewHeaderCell.swift in Sources */,
 				3272C60A269799D400091268 /* TimeCardTableViewCell.swift in Sources */,
 				323DD8F22685984D00332BA3 /* TableViewCell.swift in Sources */,
 				322FD5D027EF874B00B15D21 /* ThemeColor.swift in Sources */,
@@ -787,7 +799,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculatorDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 56;
+				CURRENT_PROJECT_VERSION = 61;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -795,7 +807,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.5;
+				MARKETING_VERSION = 1.6.0;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
@@ -816,7 +828,7 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 56;
+				CURRENT_PROJECT_VERSION = 61;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
@@ -824,7 +836,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.5;
+				MARKETING_VERSION = 1.6.0;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;

@@ -12,7 +12,7 @@ import GoogleMobileAds
 
 class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
+    //lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
     @IBOutlet weak var sortButton: UIButton!
     
     @IBOutlet var tableView: UITableView!
@@ -136,11 +136,11 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addBannerViewToView(bannerView)
+        //addBannerViewToView(bannerView)
         
-        bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
-        bannerView.rootViewController = self
-        bannerView.load(GADRequest())
+        //bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
+        //bannerView.rootViewController = self
+        //bannerView.load(GADRequest())
         
         tableView.delegate = self
         tableView.dataSource = self

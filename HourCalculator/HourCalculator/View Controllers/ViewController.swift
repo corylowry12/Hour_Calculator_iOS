@@ -9,7 +9,7 @@ import GoogleMobileAds
 
 class ViewController: UIViewController {
     
-    lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
+    //lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
     
     @IBOutlet weak var dateDatePicker: UIDatePicker!
     var window : UIWindow?
@@ -87,6 +87,7 @@ class ViewController: UIViewController {
         else if userDefaults.integer(forKey: "theme") == 2 {
             view.window?.overrideUserInterfaceStyle = .unspecified
         }
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -228,11 +229,14 @@ class ViewController: UIViewController {
             userDefaults.set(0, forKey: "timeCardsSort")
         }
         
-        addBannerViewToView(bannerView)
+        //addBannerViewToView(bannerView)
         
-        bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
-        bannerView.rootViewController = self
-        bannerView.load(GADRequest())
+       // bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
+        //bannerView.rootViewController = self
+        //bannerView.load(GADRequest())
+        
+        //let win = (UIApplication.shared.delegate as! AppDelegate).window
+        //win?.addSubview(bannerView)
         
         
         if userDefaults.value(forKey: "historyEnabled") == nil{

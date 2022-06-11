@@ -13,6 +13,8 @@ import Siren
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
+    
     var window: UIWindow?
     let userDefaults = UserDefaults.standard
     
@@ -24,6 +26,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Siren.shared.wail()
         
         Siren.shared.rulesManager = RulesManager(globalRules: .persistent, showAlertAfterCurrentVersionHasBeenReleasedForDays: 5)
+        
+        bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
+        bannerView.load(GADRequest())
+        
+        self.window?.addSubview(bannerView)
         
         return true
         
