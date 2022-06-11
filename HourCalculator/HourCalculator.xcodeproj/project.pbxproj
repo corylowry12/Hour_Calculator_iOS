@@ -33,6 +33,12 @@
 		32629E0326825FD9006632F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32629E0126825FD9006632F2 /* LaunchScreen.storyboard */; };
 		32629E0E26825FD9006632F2 /* HourCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E0D26825FD9006632F2 /* HourCalculatorTests.swift */; };
 		32629E1926825FD9006632F2 /* HourCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */; };
+		3271B2FE28553CEE002A0527 /* PromisesObjC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3271B2F828553CEE002A0527 /* PromisesObjC.xcframework */; };
+		3271B30028553CEE002A0527 /* UserMessagingPlatform.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3271B2F928553CEE002A0527 /* UserMessagingPlatform.xcframework */; };
+		3271B30228553CEE002A0527 /* GoogleAppMeasurement.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3271B2FA28553CEE002A0527 /* GoogleAppMeasurement.xcframework */; };
+		3271B30428553CEE002A0527 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3271B2FB28553CEE002A0527 /* GoogleMobileAds.xcframework */; };
+		3271B30628553CEE002A0527 /* GoogleUtilities.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3271B2FC28553CEE002A0527 /* GoogleUtilities.xcframework */; };
+		3271B30828553CEE002A0527 /* nanopb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3271B2FD28553CEE002A0527 /* nanopb.xcframework */; };
 		327241C326CF806E0022E5EA /* teal_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 327241C226CF806E0022E5EA /* teal_logo.png */; };
 		327254302686A421000C6236 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272542F2686A421000C6236 /* EditViewController.swift */; };
 		3272B71326D6D33200B2867C /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3272B71226D6D33100B2867C /* ImageViewController.swift */; };
@@ -43,12 +49,6 @@
 		3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3284984B2687FE380092D22F /* PatchNotesViewController.swift */; };
 		32870F7027F0F43B005CF623 /* AppNewsTableViewHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32870F6F27F0F43B005CF623 /* AppNewsTableViewHeaderCell.swift */; };
 		3299D3E428396E5F0098EFA3 /* AdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299D3E328396E5F0098EFA3 /* AdViewController.swift */; };
-		329B5212269141790012E307 /* GoogleAppMeasurement.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5211269141790012E307 /* GoogleAppMeasurement.xcframework */; };
-		329B5216269141840012E307 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5215269141840012E307 /* GoogleMobileAds.xcframework */; };
-		329B5219269141910012E307 /* GoogleUtilities.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5218269141910012E307 /* GoogleUtilities.xcframework */; };
-		329B521C2691419E0012E307 /* nanopb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B521B2691419E0012E307 /* nanopb.xcframework */; };
-		329B521F269141A90012E307 /* PromisesObjC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B521E269141A90012E307 /* PromisesObjC.xcframework */; };
-		329B5222269141B20012E307 /* UserMessagingPlatform.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5221269141B20012E307 /* UserMessagingPlatform.xcframework */; };
 		32A2C045269234F200EABD3C /* HowToTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A2C044269234F200EABD3C /* HowToTableViewController.swift */; };
 		32A2C0F92696C12600EABD3C /* orange_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F52696C12600EABD3C /* orange_logo.png */; };
 		32A2C0FA2696C12700EABD3C /* blue_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F62696C12600EABD3C /* blue_logo.png */; };
@@ -125,6 +125,12 @@
 		32629E1426825FD9006632F2 /* HourCalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HourCalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		32629E1826825FD9006632F2 /* HourCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCalculatorUITests.swift; sourceTree = "<group>"; };
 		32629E1A26825FD9006632F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3271B2F828553CEE002A0527 /* PromisesObjC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PromisesObjC.xcframework; path = "../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/PromisesObjC.xcframework"; sourceTree = "<group>"; };
+		3271B2F928553CEE002A0527 /* UserMessagingPlatform.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = UserMessagingPlatform.xcframework; path = "../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/UserMessagingPlatform.xcframework"; sourceTree = "<group>"; };
+		3271B2FA28553CEE002A0527 /* GoogleAppMeasurement.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleAppMeasurement.xcframework; path = "../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/GoogleAppMeasurement.xcframework"; sourceTree = "<group>"; };
+		3271B2FB28553CEE002A0527 /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
+		3271B2FC28553CEE002A0527 /* GoogleUtilities.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleUtilities.xcframework; path = "../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/GoogleUtilities.xcframework"; sourceTree = "<group>"; };
+		3271B2FD28553CEE002A0527 /* nanopb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = nanopb.xcframework; path = "../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/nanopb.xcframework"; sourceTree = "<group>"; };
 		327241C226CF806E0022E5EA /* teal_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = teal_logo.png; sourceTree = "<group>"; };
 		3272542F2686A421000C6236 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		3272B71226D6D33100B2867C /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
@@ -167,15 +173,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				329B5219269141910012E307 /* GoogleUtilities.xcframework in Frameworks */,
 				32F52A85268AD02E00BD9E2F /* Siren in Frameworks */,
-				329B5212269141790012E307 /* GoogleAppMeasurement.xcframework in Frameworks */,
 				32EB446F26ED190700380895 /* CloudKit.framework in Frameworks */,
-				329B521F269141A90012E307 /* PromisesObjC.xcframework in Frameworks */,
-				329B521C2691419E0012E307 /* nanopb.xcframework in Frameworks */,
-				329B5222269141B20012E307 /* UserMessagingPlatform.xcframework in Frameworks */,
-				329B5216269141840012E307 /* GoogleMobileAds.xcframework in Frameworks */,
+				3271B30028553CEE002A0527 /* UserMessagingPlatform.xcframework in Frameworks */,
+				3271B30628553CEE002A0527 /* GoogleUtilities.xcframework in Frameworks */,
+				3271B30428553CEE002A0527 /* GoogleMobileAds.xcframework in Frameworks */,
 				B387D5EF033D6F430219E519 /* Pods_HourCalculator.framework in Frameworks */,
+				3271B30828553CEE002A0527 /* nanopb.xcframework in Frameworks */,
+				3271B30228553CEE002A0527 /* GoogleAppMeasurement.xcframework in Frameworks */,
+				3271B2FE28553CEE002A0527 /* PromisesObjC.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +313,12 @@
 		62D1BDB0B95E786AD2D0ADC3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3271B2FA28553CEE002A0527 /* GoogleAppMeasurement.xcframework */,
+				3271B2FB28553CEE002A0527 /* GoogleMobileAds.xcframework */,
+				3271B2FC28553CEE002A0527 /* GoogleUtilities.xcframework */,
+				3271B2FD28553CEE002A0527 /* nanopb.xcframework */,
+				3271B2F828553CEE002A0527 /* PromisesObjC.xcframework */,
+				3271B2F928553CEE002A0527 /* UserMessagingPlatform.xcframework */,
 				32EB446E26ED190700380895 /* CloudKit.framework */,
 				329B5221269141B20012E307 /* UserMessagingPlatform.xcframework */,
 				329B521E269141A90012E307 /* PromisesObjC.xcframework */,
@@ -793,7 +805,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4551DB0F6EEC6CDFFF05027B /* Pods-HourCalculator.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculatorDebug.entitlements;
@@ -822,7 +833,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8A62DCDC4260F1FC9A1BBF56 /* Pods-HourCalculator.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
