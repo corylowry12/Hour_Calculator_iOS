@@ -305,11 +305,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             cell.outTimeLabel.text = "Out Time: \(outTime)"
             cell.totalHoursLabel.text = "Total Hours: \(totalHours)"
             
-            if breakTime == nil {
-                cell.breakTimeLabel.text = "Break Time: 0"
+            if breakTime == nil || breakTime == "" {
+                cell.breakTimeLabel.text = "Break Time: 0 Minutes"
             }
             else {
-                cell.breakTimeLabel.text = "Break Time: \(breakTime ?? "0")"
+                cell.breakTimeLabel.text = "Break Time: \(breakTime ?? "0") Minutes"
             }
             
             cell.dateLabel.text = "Date: \(date)"
