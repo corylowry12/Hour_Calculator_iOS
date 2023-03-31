@@ -154,43 +154,45 @@ class ThemeViewController: UITableViewController {
             }
             
             else if indexPath.row == 5 {
-                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
-                
-                var number: Int32!
-                do {
-                    number = Int32.random(in: 0...4)
+                if tableView.cellForRow(at: indexPath)?.accessoryType != .checkmark {
+                    tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .none
+                    
+                    var number: Int32!
+                    do {
+                        number = Int32.random(in: 0...4)
+                    }
+                    while number == UserDefaults.standard.integer(forKey: "accentRandom") {
+                        number = Int32.random(in: 0...4)
+                    }
+                    
+                    var accent : UIColor!
+                    if number == 0 {
+                        accent = UIColor(rgb: 0x26A69A)
+                        changeIcon(nil)
+                    }
+                    else if number == 1 {
+                        accent = UIColor(rgb: 0x7841c4)
+                        changeIcon("purple_logo")
+                    }
+                    else if number == 2 {
+                        accent = UIColor(rgb: 0x347deb)
+                        changeIcon("blue_logo")
+                    }
+                    else if number == 3 {
+                        accent = UIColor(rgb: 0xfc783a)
+                        changeIcon("orange_logo")
+                    }
+                    else if number == 4 {
+                        accent = UIColor(rgb: 0xc41d1d)
+                        changeIcon("red_logo")
+                    }
+                    UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
+                        self.view.window?.tintColor = accent
+                    }, completion: nil)
+                    UserDefaults.standard.set(5, forKey: "accent")
+                    UserDefaults.standard.set(number, forKey: "accentRandom")
+                    tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
                 }
-                while number == UserDefaults.standard.integer(forKey: "accentRandom") {
-                    number = Int32.random(in: 0...4)
-                }
-                
-                var accent : UIColor!
-                if number == 0 {
-                    accent = UIColor(rgb: 0x26A69A)
-                    changeIcon(nil)
-                }
-                else if number == 1 {
-                    accent = UIColor(rgb: 0x7841c4)
-                    changeIcon("purple_logo")
-                }
-                else if number == 2 {
-                    accent = UIColor(rgb: 0x347deb)
-                    changeIcon("blue_logo")
-                }
-                else if number == 3 {
-                    accent = UIColor(rgb: 0xfc783a)
-                    changeIcon("orange_logo")
-                }
-                else if number == 4 {
-                    accent = UIColor(rgb: 0xc41d1d)
-                    changeIcon("red_logo")
-                }
-                UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
-                    self.view.window?.tintColor = accent
-                }, completion: nil)
-                UserDefaults.standard.set(5, forKey: "accent")
-                UserDefaults.standard.set(number, forKey: "accentRandom")
-                tableView.cellForRow(at: [1, UserDefaults.standard.integer(forKey: "accent")])?.accessoryType = .checkmark
             }
         }
     }
