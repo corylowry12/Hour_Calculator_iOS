@@ -13,8 +13,6 @@ import GoogleMobileAds
 extension UIImage {
     class func imageWithLabel(label: UILabel) -> UIImage {
         
-        let userDefaults = UserDefaults.standard
-        
         UIGraphicsBeginImageContextWithOptions(label.bounds.size, false, 0.0)
         label.textAlignment = .center
         label.numberOfLines = 0

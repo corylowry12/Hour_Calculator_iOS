@@ -298,11 +298,20 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             let outTime = String(hourItems.outTime!)
             let totalHours = String(hourItems.totalHours!)
             let date = hourItems.date!
+            let breakTime = hourItems.breakTime
             
             
             cell.inTimeLabel.text = "In Time: \(inTime)"
             cell.outTimeLabel.text = "Out Time: \(outTime)"
             cell.totalHoursLabel.text = "Total Hours: \(totalHours)"
+            
+            if breakTime == nil {
+                cell.breakTimeLabel.text = "Break Time: 0"
+            }
+            else {
+                cell.breakTimeLabel.text = "Break Time: \(breakTime ?? "0")"
+            }
+            
             cell.dateLabel.text = "Date: \(date)"
         }
         return cell

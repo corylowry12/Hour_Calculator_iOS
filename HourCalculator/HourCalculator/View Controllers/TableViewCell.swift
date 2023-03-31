@@ -14,6 +14,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var totalHoursLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     
+    @IBOutlet weak var breakTimeLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

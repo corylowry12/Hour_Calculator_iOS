@@ -65,13 +65,13 @@
 		35D690F78FCF5B394A93A87B941FABA7 /* Pods-HourCalculatorTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-HourCalculatorTests-dummy.m"; sourceTree = "<group>"; };
 		3A709E73D2045BD0593A6307C62AC2F5 /* SwipeAnimationType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SwipeAnimationType.swift; path = SwipeableTabBarController/SwipeAnimationType.swift; sourceTree = "<group>"; };
 		3F9F5D15F6656C087DF07B68F1D0D2C6 /* Pods-HourCalculator-HourCalculatorUITests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-HourCalculator-HourCalculatorUITests-frameworks.sh"; sourceTree = "<group>"; };
-		4DE9C0E2A4EC9327536AFB006BC6D680 /* Pods_HourCalculator_HourCalculatorUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_HourCalculator_HourCalculatorUITests.framework; path = "Pods-HourCalculator-HourCalculatorUITests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4DE9C0E2A4EC9327536AFB006BC6D680 /* Pods_HourCalculator_HourCalculatorUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator_HourCalculatorUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		517FD624792E471C4E85DB920C93B625 /* Pods-HourCalculator-HourCalculatorUITests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-HourCalculator-HourCalculatorUITests-umbrella.h"; sourceTree = "<group>"; };
 		5F2D43E334AB1F6B132A901A90D3008A /* Pods-HourCalculatorTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HourCalculatorTests.release.xcconfig"; sourceTree = "<group>"; };
 		5F5794CEA6534C4B35377BA509E44708 /* Pods-HourCalculator-HourCalculatorUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-HourCalculator-HourCalculatorUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		6294E33331292710EE818B4F56C30080 /* Pods-HourCalculator-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-HourCalculator-acknowledgements.markdown"; sourceTree = "<group>"; };
 		64AE30B451FE0816927C7AACC3412A34 /* Pods-HourCalculatorTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HourCalculatorTests-acknowledgements.plist"; sourceTree = "<group>"; };
-		65E2B747A79A173B2609D8BA3802AE66 /* SwipeableTabBarController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwipeableTabBarController.framework; path = SwipeableTabBarController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		65E2B747A79A173B2609D8BA3802AE66 /* SwipeableTabBarController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwipeableTabBarController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6847207B06A3A6561206A1022517CAB7 /* Pods-HourCalculator-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-HourCalculator-frameworks.sh"; sourceTree = "<group>"; };
 		69833DF36D86787D927008BCB94C7DFC /* Pods-HourCalculator-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HourCalculator-Info.plist"; sourceTree = "<group>"; };
 		70A7CC24EB4991D619000662638586C1 /* SwipeableTabBarController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SwipeableTabBarController.swift; path = SwipeableTabBarController/SwipeableTabBarController.swift; sourceTree = "<group>"; };
@@ -83,12 +83,12 @@
 		8FFE9C392F755542324A077BA4592CBE /* Pods-HourCalculator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HourCalculator.release.xcconfig"; sourceTree = "<group>"; };
 		908A8A53D29495F8AAED6A86615C3DC7 /* SwipeableTabBarController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwipeableTabBarController-dummy.m"; sourceTree = "<group>"; };
 		92031E9BB148A283243DC54725C63F93 /* SwipeTransitionAnimator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SwipeTransitionAnimator.swift; path = SwipeableTabBarController/SwipeTransitionAnimator.swift; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		A734AFBA9E3D5CD619FC73FF81F15295 /* Pods_HourCalculatorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_HourCalculatorTests.framework; path = "Pods-HourCalculatorTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A734AFBA9E3D5CD619FC73FF81F15295 /* Pods_HourCalculatorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculatorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A79C32E0AE9A896454CB5DA5B85F9506 /* Pods-HourCalculator.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-HourCalculator.modulemap"; sourceTree = "<group>"; };
 		B17D7635DDE7DA06FF8FC6815DE56455 /* SwipeableTabBarController-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwipeableTabBarController-prefix.pch"; sourceTree = "<group>"; };
 		B84D15806E8859C669F92302245E7163 /* UIKit+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIKit+Extensions.swift"; path = "SwipeableTabBarController/UIKit+Extensions.swift"; sourceTree = "<group>"; };
-		BCC165ACF63FA90F68BFAA7E772310C3 /* Pods_HourCalculator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_HourCalculator.framework; path = "Pods-HourCalculator.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BCC165ACF63FA90F68BFAA7E772310C3 /* Pods_HourCalculator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0A956D0A71571BD38C84B18EBEEC9D2 /* SwipeTransitioningProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SwipeTransitioningProtocol.swift; path = SwipeableTabBarController/SwipeTransitioningProtocol.swift; sourceTree = "<group>"; };
 		DA94D2C689BD9E3FA2D500C3A2BE0A56 /* SwipeableTabBarController.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwipeableTabBarController.xcconfig; sourceTree = "<group>"; };
 		DC7120446525611185F4C659A8582D2C /* Pods-HourCalculatorTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HourCalculatorTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -148,7 +148,6 @@
 				B84D15806E8859C669F92302245E7163 /* UIKit+Extensions.swift */,
 				94EAC2E88E76543D069E606061EC5E7E /* Support Files */,
 			);
-			name = SwipeableTabBarController;
 			path = SwipeableTabBarController;
 			sourceTree = "<group>";
 		};
@@ -393,7 +392,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1400;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 11.0";
@@ -526,7 +525,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/SwipeableTabBarController/SwipeableTabBarController-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/SwipeableTabBarController/SwipeableTabBarController-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -728,6 +727,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -847,7 +847,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/SwipeableTabBarController/SwipeableTabBarController-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/SwipeableTabBarController/SwipeableTabBarController-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -901,6 +901,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;

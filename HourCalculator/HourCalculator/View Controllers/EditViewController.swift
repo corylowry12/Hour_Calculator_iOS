@@ -207,7 +207,7 @@ class EditViewController: UIViewController {
         outMinute = componentsOut.minute!
     }
     @IBAction func saveButtonClicked(_ sender: Any) {
-        
+        view.endEditing(true)
         if didUpdateInTime == false || didUpdateOutTime == false || didUpdateDate == false {
             
             let date = datePickerInTime.date

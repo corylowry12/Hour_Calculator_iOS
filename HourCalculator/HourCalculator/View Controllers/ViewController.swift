@@ -7,7 +7,9 @@
 import UIKit
 import GoogleMobileAds
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
+    
+    @IBOutlet weak var breakTextField: UITextField!
     
     //lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
     
@@ -109,77 +111,77 @@ class ViewController: UIViewController {
         dateDatePicker.maximumDate = Date()
         
         /*if userDefaults.integer(forKey: "accent") == 0 {
-            calculateButton.backgroundColor = ThemeColor().themeColor()
-            dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
-            datePicker.tintColor = UIColor(rgb: 0x26A69A)
-            datePickerOutTime.tintColor = UIColor(rgb: 0x26A69A)
-            changeIcon(nil)
-        }
-        else if userDefaults.integer(forKey: "accent") == 1 {
-            calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
-            dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
-            datePicker.tintColor = UIColor(rgb: 0x7841c4)
-            datePickerOutTime.tintColor = UIColor(rgb: 0x7841c4)
-            changeIcon("purple_logo")
-        }
-        else if userDefaults.integer(forKey: "accent") == 2 {
-            calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
-            dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
-            datePicker.tintColor = UIColor(rgb: 0x347deb)
-            datePickerOutTime.tintColor = UIColor(rgb: 0x347deb)
-            changeIcon("blue_logo")
-        }
-        else if userDefaults.integer(forKey: "accent") == 3 {
-            calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
-            dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
-            datePicker.tintColor = UIColor(rgb: 0xfc783a)
-            datePickerOutTime.tintColor = UIColor(rgb: 0xfc783a)
-            changeIcon("orange_logo")
-        }
-        else if userDefaults.integer(forKey: "accent") == 4 {
-            calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-            dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
-            datePicker.tintColor = UIColor(rgb: 0xc41d1d)
-            datePickerOutTime.tintColor = UIColor(rgb: 0xc41d1d)
-            changeIcon("red_logo")
-        }
-        else if userDefaults.integer(forKey: "accent") == 5 {
-            if userDefaults.integer(forKey: "accentRandom") == 0 {
-                calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
-                dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
-                datePicker.tintColor = UIColor(rgb: 0x26A69A)
-                datePickerOutTime.tintColor = UIColor(rgb: 0x26A69A)
-                changeIcon(nil)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 1 {
-                calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
-                dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
-                datePicker.tintColor = UIColor(rgb: 0x7841c4)
-                datePickerOutTime.tintColor = UIColor(rgb: 0x7841c4)
-                changeIcon("purple_logo")
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 2 {
-                calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
-                dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
-                datePicker.tintColor = UIColor(rgb: 0x347deb)
-                datePickerOutTime.tintColor = UIColor(rgb: 0x347deb)
-                changeIcon("blue_logo")
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 3 {
-                calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
-                dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
-                datePicker.tintColor = UIColor(rgb: 0xfc783a)
-                datePickerOutTime.tintColor = UIColor(rgb: 0xfc783a)
-                changeIcon("orange_logo")
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 4 {
-                calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-                dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
-                datePicker.tintColor = UIColor(rgb: 0xc41d1d)
-                datePickerOutTime.tintColor = UIColor(rgb: 0xc41d1d)
-                changeIcon("red_logo")
-            }
-        }*/
+         calculateButton.backgroundColor = ThemeColor().themeColor()
+         dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
+         datePicker.tintColor = UIColor(rgb: 0x26A69A)
+         datePickerOutTime.tintColor = UIColor(rgb: 0x26A69A)
+         changeIcon(nil)
+         }
+         else if userDefaults.integer(forKey: "accent") == 1 {
+         calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
+         dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
+         datePicker.tintColor = UIColor(rgb: 0x7841c4)
+         datePickerOutTime.tintColor = UIColor(rgb: 0x7841c4)
+         changeIcon("purple_logo")
+         }
+         else if userDefaults.integer(forKey: "accent") == 2 {
+         calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
+         dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
+         datePicker.tintColor = UIColor(rgb: 0x347deb)
+         datePickerOutTime.tintColor = UIColor(rgb: 0x347deb)
+         changeIcon("blue_logo")
+         }
+         else if userDefaults.integer(forKey: "accent") == 3 {
+         calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
+         dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
+         datePicker.tintColor = UIColor(rgb: 0xfc783a)
+         datePickerOutTime.tintColor = UIColor(rgb: 0xfc783a)
+         changeIcon("orange_logo")
+         }
+         else if userDefaults.integer(forKey: "accent") == 4 {
+         calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+         dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
+         datePicker.tintColor = UIColor(rgb: 0xc41d1d)
+         datePickerOutTime.tintColor = UIColor(rgb: 0xc41d1d)
+         changeIcon("red_logo")
+         }
+         else if userDefaults.integer(forKey: "accent") == 5 {
+         if userDefaults.integer(forKey: "accentRandom") == 0 {
+         calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
+         dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
+         datePicker.tintColor = UIColor(rgb: 0x26A69A)
+         datePickerOutTime.tintColor = UIColor(rgb: 0x26A69A)
+         changeIcon(nil)
+         }
+         else if userDefaults.integer(forKey: "accentRandom") == 1 {
+         calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
+         dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
+         datePicker.tintColor = UIColor(rgb: 0x7841c4)
+         datePickerOutTime.tintColor = UIColor(rgb: 0x7841c4)
+         changeIcon("purple_logo")
+         }
+         else if userDefaults.integer(forKey: "accentRandom") == 2 {
+         calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
+         dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
+         datePicker.tintColor = UIColor(rgb: 0x347deb)
+         datePickerOutTime.tintColor = UIColor(rgb: 0x347deb)
+         changeIcon("blue_logo")
+         }
+         else if userDefaults.integer(forKey: "accentRandom") == 3 {
+         calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
+         dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
+         datePicker.tintColor = UIColor(rgb: 0xfc783a)
+         datePickerOutTime.tintColor = UIColor(rgb: 0xfc783a)
+         changeIcon("orange_logo")
+         }
+         else if userDefaults.integer(forKey: "accentRandom") == 4 {
+         calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+         dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
+         datePicker.tintColor = UIColor(rgb: 0xc41d1d)
+         datePickerOutTime.tintColor = UIColor(rgb: 0xc41d1d)
+         changeIcon("red_logo")
+         }
+         }*/
         
         calculateButton.backgroundColor = ThemeColor().themeColor()
         dateDatePicker.tintColor = ThemeColor().themeColor()
@@ -222,6 +224,14 @@ class ViewController: UIViewController {
         }
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let maxLength = 2
+        let currentString = (textField.text ?? "") as NSString
+        let newString = currentString.replacingCharacters(in: range, with: string)
+        
+        return newString.count <= maxLength
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -229,9 +239,11 @@ class ViewController: UIViewController {
             userDefaults.set(0, forKey: "timeCardsSort")
         }
         
+        breakTextField.delegate = self
+        
         //addBannerViewToView(bannerView)
         
-       // bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
+        // bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         //bannerView.rootViewController = self
         //bannerView.load(GADRequest())
         
@@ -313,15 +325,16 @@ class ViewController: UIViewController {
     }
     
     @IBAction func calculateButtonDidTouch(_ sender: UIButton) {
+        view.endEditing(true)
         UIButton.animate(withDuration: 0.05,
                          animations: {
-                            sender.transform = CGAffineTransform(scaleX: 0.975, y: 0.96)
-                         },
+            sender.transform = CGAffineTransform(scaleX: 0.975, y: 0.96)
+        },
                          completion: { finish in
-                            UIButton.animate(withDuration: 0.05, animations: {
-                                sender.transform = CGAffineTransform.identity
-                            })
-                         })
+            UIButton.animate(withDuration: 0.05, animations: {
+                sender.transform = CGAffineTransform.identity
+            })
+        })
         
         let date = datePicker.date
         let components = Calendar.current.dateComponents([.hour, .minute], from: date)
@@ -336,21 +349,22 @@ class ViewController: UIViewController {
         outMinute = componentsOut.minute!
         
         let minutesDifference = outMinute - inMinute
-        let hoursDifference = outHour - inHour
+        var hoursDifference = outHour - inHour
         
         if hoursDifference < 0 && (12...24).contains(inHour) && (0...12).contains(outHour){
-            print("less than zero")
-            DispatchQueue.main.async {
-                self.PMtoAM(date: date, inHour: self.inHour, inMinute: self.inMinute, outHour: self.outHour, outMinute: self.outMinute, minutesDifference: minutesDifference, hoursDifference: hoursDifference)
-            }
-        }
-        else {
-            DispatchQueue.main.async {
-                self.AMtoPM(date: date, inHour: self.inHour, inMinute: self.inMinute, outHour: self.outHour, outMinute: self.outMinute, minutesDifference: minutesDifference, hoursDifference: hoursDifference)
-            }
-        }
+         print("less than zero")
+         DispatchQueue.main.async {
+         self.PMtoAM(date: date, inHour: self.inHour, inMinute: self.inMinute, outHour: self.outHour, outMinute: self.outMinute, minutesDifference: minutesDifference, hoursDifference: hoursDifference)
+         }
+         }
+         else {
+         DispatchQueue.main.async {
+         self.AMtoPM(date: date, inHour: self.inHour, inMinute: self.inMinute, outHour: self.outHour, outMinute: self.outMinute, minutesDifference: minutesDifference, hoursDifference: hoursDifference)
+         }
+         }
         
     }
+
     
     func PMtoAM(date : Date, inHour : Int, inMinute : Int, outHour : Int, outMinute : Int, minutesDifference : Int, hoursDifference : Int) {
         
@@ -363,34 +377,30 @@ class ViewController: UIViewController {
             let minutes2 = 1.0 - Double(round(minutesInverted * 100) / 100.00)
             let minutes3 = round(minutes2 * 100) / 100.00
             let minutes = String(minutes3).dropFirst(2)
-            let hours = hoursDifference - 1
-            if hours < 0 {
+            let hours = Double(hoursDifference) - 1.0
+            let breakTime = Double(breakTextField.text ?? "0.0") ?? 0.0
+            let total = "\(Int(hours)).\(minutes)"
+            var total2 = Double(total)! - Double(breakTime / 60)
+            total2 = round(total2 * 100) / 100.00
+            if (total2 <= 0 && breakTime != 0.0)  {
+                dateLabel.text = "Break time is too big"
+            }
+            else if hours < 0 {
                 dateLabel.text = "In time can not be greater than out time"
             }
             else {
-                dateLabel.text = "Total Hours: \(hours).\(minutes)"
+                if (breakTime == 0.0) {
+                    dateLabel.text = "Total Hours: \(Int(hours)).\(minutes)"
+                }
+                else {
+                    
+                    dateLabel.text = "Total Hours Without Break: \(Int(hours)).\(minutes)\nTotal Hours With Break: \(total2)"
+                }
                 
-                let total = "\(hours).\(minutes)"
+                let total = "\(Int(hours)).\(minutes)"
                 
                 if total == "0.0" {
-                    if userDefaults.bool(forKey: "StoredEmptyHours") == true {
-                        
-                        if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
-                            
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "hh:mm a"
-                            let inTimeDate = dateFormatter.string(from: datePicker.date)
-                            let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-                            
-                            let today = dateDatePicker.date
-                            let formatter1 = DateFormatter()
-                            formatter1.dateFormat = "MM/dd/yyyy"
-                            let dateFormatted = formatter1.string(from: today)
-                            
-                            storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hours, minutes: String(minutes))
-                            
-                        }
-                    }
+                    dateLabel.text = "In Time and Out Time can't be the same"
                 }
                 else {
                     
@@ -405,7 +415,7 @@ class ViewController: UIViewController {
                         formatter1.dateFormat = "MM/dd/yyyy"
                         let dateFormatted = formatter1.string(from: today)
                         
-                        storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hours, minutes: String(minutes))
+                        storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: String(total2), date: dateFormatted, hours: Int(hours), minutes: String(minutes), breakTime: breakTextField.text ?? "0")
                     }
                 }
             }
@@ -419,8 +429,7 @@ class ViewController: UIViewController {
             
             let total = "\(hoursDifference).\(minutesFormatted)"
             
-            if total == "0.0" {
-                if userDefaults.bool(forKey: "StoredEmptyHours") == true {
+            if total != "0.0" {
                     
                     if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
                         
@@ -434,26 +443,8 @@ class ViewController: UIViewController {
                         formatter1.dateFormat = "MM/dd/yyyy"
                         let dateFormatted = formatter1.string(from: today)
                         
-                        storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hoursDifference, minutes: String(minutesFormatted))
+                        storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hoursDifference, minutes: String(minutesFormatted), breakTime: breakTextField.text ?? "0")
                     }
-                }
-            }
-            else {
-                
-                if userDefaults.integer(forKey: "historyEnabled") == 0 {
-                    
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "hh:mm a"
-                    let inTimeDate = dateFormatter.string(from: datePicker.date)
-                    let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-                    
-                    let today = dateDatePicker.date
-                    let formatter1 = DateFormatter()
-                    formatter1.dateFormat = "MM/dd/yyyy"
-                    let dateFormatted = formatter1.string(from: today)
-                    
-                    storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hoursDifference, minutes: String(minutesFormatted))
-                }
             }
         }
         
@@ -485,33 +476,26 @@ class ViewController: UIViewController {
             let minutes3 = round(minutes2 * 100) / 100.00
             let minutes = String(minutes3).dropFirst(2)
             let hours = hoursDifference - 1
-            if hours < 0 {
-                dateLabel.text = "In time can not be greater than out time"
+            let breakTime = Double(breakTextField.text ?? "0.0") ?? 0.0
+            let total = "\(Int(hours)).\(minutes)"
+            var total2 = Double(total)! - Double(breakTime / 60)
+            total2 = round(total2 * 100) / 100.00
+            if (total2 <= 0 && breakTime != 0.0)  {
+                dateLabel.text = "Break time is too big"
             }
             else {
-                dateLabel.text = "Total Hours: \(hours).\(minutes)"
+                if (breakTime == 0.0) {
+                    dateLabel.text = "Total Hours: \(Int(hours)).\(minutes)"
+                }
+                else {
+                    
+                    dateLabel.text = "Total Hours Without Break: \(Int(hours)).\(minutes)\nTotal Hours With Break: \(total2)"
+                }
                 
                 let total = "\(hours).\(minutes)"
                 
                 if total == "0.0" {
-                    if userDefaults.bool(forKey: "StoredEmptyHours") == true {
-                        
-                        if userDefaults.value(forKey: "historyEnabled") as! Int == 0 {
-                            
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "hh:mm a"
-                            let inTimeDate = dateFormatter.string(from: datePicker.date)
-                            let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-                            
-                            let today = dateDatePicker.date
-                            let formatter1 = DateFormatter()
-                            formatter1.dateFormat = "MM/dd/yyyy"
-                            let dateFormatted = formatter1.string(from: today)
-                            
-                            storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hours, minutes: String(minutes))
-                            
-                        }
-                    }
+                    dateLabel.text = "In Time and Out Time can't be the same"
                 }
                 else {
                     
@@ -526,7 +510,7 @@ class ViewController: UIViewController {
                         formatter1.dateFormat = "MM/dd/yyyy"
                         let dateFormatted = formatter1.string(from: today)
                         
-                        storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hours, minutes: String(minutes))
+                        storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: String(total2), date: dateFormatted, hours: hours, minutes: String(minutes), breakTime: breakTextField.text ?? "0")
                     }
                 }
             }
@@ -541,23 +525,7 @@ class ViewController: UIViewController {
             let total = "\(hoursDifference).\(minutesFormatted)"
             
             if total == "0.0" {
-                if userDefaults.bool(forKey: "StoredEmptyHours") == true {
-                    
-                    if userDefaults.integer(forKey: "historyEnabled") == 0 {
-                        
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "hh:mm a"
-                        let inTimeDate = dateFormatter.string(from: datePicker.date)
-                        let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-                        
-                        let today = dateDatePicker.date
-                        let formatter1 = DateFormatter()
-                        formatter1.dateFormat = "MM/dd/yyyy"
-                        let dateFormatted = formatter1.string(from: today)
-                        
-                        storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hoursDifference, minutes: String(minutesFormatted))
-                    }
-                }
+               
             }
             else {
                 
@@ -573,7 +541,7 @@ class ViewController: UIViewController {
                     formatter1.dateFormat = "MM/dd/yyyy"
                     let dateFormatted = formatter1.string(from: today)
                     
-                    storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: total, date: dateFormatted, hours: hoursDifference, minutes: String(minutesFormatted))
+                    storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: String(total), date: dateFormatted, hours: hoursDifference, minutes: String(minutesFormatted), breakTime: breakTextField.text ?? "0")
                 }
             }
         }
@@ -593,13 +561,14 @@ class ViewController: UIViewController {
         }
     }
     
-    func storeHours(inTime : String, outTime : String, totalHours : String, date: String, hours : Int, minutes : String) {
+    func storeHours(inTime : String, outTime : String, totalHours : String, date: String, hours : Int, minutes : String, breakTime: String) {
         let hoursToBeStored = Hours(context: context)
         
         hoursToBeStored.inTime = inTime
         hoursToBeStored.outTime = outTime
-        hoursToBeStored.totalHours = "\(hours).\(minutes)"
+        hoursToBeStored.totalHours = totalHours
         hoursToBeStored.date = date
+        hoursToBeStored.breakTime = breakTime
     }
     
     
