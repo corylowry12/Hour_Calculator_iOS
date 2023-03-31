@@ -34,7 +34,7 @@ class SettingsTableViewController: UITableViewController {
         }
         
         return [Hours]()
-        
+
     }
     
     var timeCards: [TimeCards] {
@@ -137,12 +137,12 @@ class SettingsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath == [6, 0] {
+        if indexPath == [5, 0] {
             if let url = URL(string: "https://apps.apple.com/us/app/hour-calculator-decimal/id1574062704") {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }
-        if indexPath == [7, 0] {
+        if indexPath == [6, 0] {
             let alert = UIAlertController(title: "Clear App Data?", message: "Would you like to clear app data? This will delete all stored data!", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                 alert.dismiss(animated: true, completion: nil)
