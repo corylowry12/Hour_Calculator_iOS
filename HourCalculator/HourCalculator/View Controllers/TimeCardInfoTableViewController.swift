@@ -160,6 +160,129 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         
     }
     
+    @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
+        let p = longPressGesture.location(in: imageView)
+        if longPressGesture.state == UIGestureRecognizer.State.began {
+            // if timeCard.indices.contains(timeCard.count - 1) {
+            if timeCard[timeCard.count - 1].image != nil {
+                var alert = UIAlertController()
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
+                    let popover = alert.popoverPresentationController
+                    popover!.sourceView = imageView
+                }
+                else {
+                    alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
+                }
+                alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
+                    
+                    image = UIImage(data: timeCard[timeCard.count - 1].image!)
+                    performSegue(withIdentifier: "viewImage", sender: nil)
+                }))
+                alert.addAction(UIAlertAction(title: "Go To Gallery", style: .default, handler: { _ in
+                    self.performSegue(withIdentifier: "gallery", sender: self)
+                }))
+                alert.addAction(UIAlertAction(title: "Choose a new image", style: .default, handler: { _ in
+                    var alert = UIAlertController()
+                    if UIDevice.current.userInterfaceIdiom == .pad {
+                        alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
+                        let popover = alert.popoverPresentationController
+                        popover!.sourceView = self.imageView
+                    }
+                    else {
+                        alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
+                    }
+                    if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                        alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
+                            
+                            let imagePickerController = UIImagePickerController()
+                            imagePickerController.delegate = self;
+                            imagePickerController.sourceType = .camera
+                            self.present(imagePickerController, animated: true, completion: nil)
+                            self.cameraIsBeingUsed = true
+                        }))
+                    }
+                    alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
+                        
+                        let imagePickerController = UIImagePickerController()
+                        imagePickerController.delegate = self;
+                        imagePickerController.sourceType = .photoLibrary
+                        self.present(imagePickerController, animated: true, completion: nil)
+                        
+                    }))
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }))
+                alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
+                    
+                    UIView.transition(with: self.imageView,
+                                      duration: 1.0,
+                                      options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                      animations: { [self] in
+                        setImageView()
+                    },
+                                      completion: nil)
+                    timeCard[timeCard.count - 1].image = nil
+                    if gallery.count > 0 {
+                        if gallery[0].thumbnail != nil {
+                            gallery[0].thumbnail = nil
+                        }
+                        if gallery[0].date != nil {
+                            gallery[0].date = nil
+                        }
+                        if gallery[0].fullSize != nil {
+                            gallery[0].fullSize = nil
+                        }
+                    }
+                    (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                }))
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            //}
+            else {
+                var alert = UIAlertController()
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
+                    let popover = alert.popoverPresentationController
+                    popover!.sourceView = imageView
+                }
+                else {
+                    alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
+                }
+                
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
+                        
+                        let imagePickerController = UIImagePickerController()
+                        imagePickerController.delegate = self;
+                        imagePickerController.sourceType = .camera
+                        self.present(imagePickerController, animated: true, completion: nil)
+                        self.cameraIsBeingUsed = true
+                    }))
+                }
+                alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
+                    
+                    let imagePickerController = UIImagePickerController()
+                    imagePickerController.delegate = self;
+                    imagePickerController.sourceType = .photoLibrary
+                    
+                    self.present(imagePickerController, animated: true, completion: nil)
+                    
+                }))
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        get {
+            return true
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -185,6 +308,12 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         nextButton.layer.shadowOpacity = 1.0
         nextButton.layer.shadowRadius = 5.0
         nextButton.layer.masksToBounds = false
+        
+        self.becomeFirstResponder()
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.5
+        imageView.addGestureRecognizer(longPressGesture)
         
     }
     
@@ -331,118 +460,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     @objc func imageTapped() {
-        
-        // if timeCard.indices.contains(timeCard.count - 1) {
-        if timeCard[timeCard.count - 1].image != nil {
-            var alert = UIAlertController()
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
-                let popover = alert.popoverPresentationController
-                popover!.sourceView = imageView
-            }
-            else {
-                alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
-            }
-            alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
-                
-                image = UIImage(data: timeCard[timeCard.count - 1].image!)
-                performSegue(withIdentifier: "viewImage", sender: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "Go To Gallery", style: .default, handler: { _ in
-                self.performSegue(withIdentifier: "gallery", sender: self)
-            }))
-            alert.addAction(UIAlertAction(title: "Choose a new image", style: .default, handler: { _ in
-                var alert = UIAlertController()
-                if UIDevice.current.userInterfaceIdiom == .pad {
-                    alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
-                    let popover = alert.popoverPresentationController
-                    popover!.sourceView = self.imageView
-                }
-                else {
-                    alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
-                }
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
-                        
-                        let imagePickerController = UIImagePickerController()
-                        imagePickerController.delegate = self;
-                        imagePickerController.sourceType = .camera
-                        self.present(imagePickerController, animated: true, completion: nil)
-                        self.cameraIsBeingUsed = true
-                    }))
-                }
-                alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
-                    
-                    let imagePickerController = UIImagePickerController()
-                    imagePickerController.delegate = self;
-                    imagePickerController.sourceType = .photoLibrary
-                    self.present(imagePickerController, animated: true, completion: nil)
-                    
-                }))
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
-                
-                UIView.transition(with: self.imageView,
-                                  duration: 1.0,
-                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                  animations: { [self] in
-                    setImageView()
-                },
-                                  completion: nil)
-                timeCard[timeCard.count - 1].image = nil
-                if gallery.count > 0 {
-                    if gallery[0].thumbnail != nil {
-                        gallery[0].thumbnail = nil
-                    }
-                    if gallery[0].date != nil {
-                        gallery[0].date = nil
-                    }
-                    if gallery[0].fullSize != nil {
-                        gallery[0].fullSize = nil
-                    }
-                }
-                (UIApplication.shared.delegate as! AppDelegate).saveContext()
-            }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        //}
-        else {
-            var alert = UIAlertController()
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
-                let popover = alert.popoverPresentationController
-                popover!.sourceView = imageView
-            }
-            else {
-                alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
-            }
-            
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
-                    
-                    let imagePickerController = UIImagePickerController()
-                    imagePickerController.delegate = self;
-                    imagePickerController.sourceType = .camera
-                    self.present(imagePickerController, animated: true, completion: nil)
-                    self.cameraIsBeingUsed = true
-                }))
-            }
-            alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
-                
-                let imagePickerController = UIImagePickerController()
-                imagePickerController.delegate = self;
-                imagePickerController.sourceType = .photoLibrary
-                
-                self.present(imagePickerController, animated: true, completion: nil)
-                
-            }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
+        image = UIImage(data: timeCard[timeCard.count - 1].image!)
+        performSegue(withIdentifier: "viewImage", sender: nil)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
