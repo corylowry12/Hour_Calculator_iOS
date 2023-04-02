@@ -168,40 +168,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         
         view.backgroundColor = tableView.backgroundColor
         
-        /*if userDefaults.integer(forKey: "accent") == 0 {
-            sortButton.backgroundColor = UIColor(rgb: 0x26A69A)
-        }
-        else if userDefaults.integer(forKey: "accent") == 1 {
-            sortButton.backgroundColor = UIColor(rgb: 0x7841c4)
-        }
-        else if userDefaults.integer(forKey: "accent") == 2 {
-            sortButton.backgroundColor = UIColor(rgb: 0x347deb)
-        }
-        else if userDefaults.integer(forKey: "accent") == 3 {
-            sortButton.backgroundColor = UIColor(rgb: 0xfc783a)
-        }
-        else if userDefaults.integer(forKey: "accent") == 4 {
-            sortButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-        }
-        else if userDefaults.integer(forKey: "accent") == 5 {
-            if userDefaults.integer(forKey: "accentRandom") == 0 {
-                sortButton.backgroundColor = UIColor(rgb: 0x26A69A)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 1 {
-                sortButton.backgroundColor = UIColor(rgb: 0x7841c4)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 2 {
-                sortButton.backgroundColor = UIColor(rgb: 0x347deb)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 3 {
-                sortButton.backgroundColor = UIColor(rgb: 0xfc783a)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 4 {
-                sortButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-            }
-        }*/
-        
-        sortButton.backgroundColor = ThemeColor().themeColor()
+        sortButton.backgroundColor = UserDefaults().colorForKey(key: "accentColor")
         
         if userDefaults.integer(forKey: "timeCardsSort") == 0 {
             sortButton.setTitle("Sort: Date Descending", for: .normal)
