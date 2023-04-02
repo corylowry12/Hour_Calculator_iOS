@@ -8,7 +8,6 @@
 import UIKit
 import GoogleMobileAds
 import CoreData
-import SwipeableTabBarController
 
 class HistoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -245,23 +244,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.tableView.reloadData()
         }, completion: nil)
         
-        /*if userDefaults.integer(forKey: "accent") == 0 {
-            deleteSelected1.backgroundColor = UIColor(rgb: 0x26A69A)
-        }
-        else if userDefaults.integer(forKey: "accent") == 1 {
-            deleteSelected1.backgroundColor = UIColor(rgb: 0x7841c4)
-        }
-        else if userDefaults.integer(forKey: "accent") == 2 {
-            deleteSelected1.backgroundColor = UIColor(rgb: 0x347deb)
-        }
-        else if userDefaults.integer(forKey: "accent") == 3 {
-            deleteSelected1.backgroundColor = UIColor(rgb: 0xfc783a)
-        }
-        else if userDefaults.integer(forKey: "accent") == 4 {
-            deleteSelected1.backgroundColor = UIColor(rgb: 0xc41d1d)
-        }*/
-        
-        deleteSelected1.backgroundColor = ThemeColor().themeColor()
+        deleteSelected1.backgroundColor = UserDefaults().colorForKey(key: "accentColor")
         
         noHoursStoredBackground()
     
