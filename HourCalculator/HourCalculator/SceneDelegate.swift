@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         Siren.shared.wail()
         
-        if userDefaults.integer(forKey: "accent") == 0 {
+        /*if userDefaults.integer(forKey: "accent") == 0 {
             window?.tintColor = UIColor(rgb: 0x26A69A)
         }
         else if userDefaults.integer(forKey: "accent") == 1 {
@@ -63,7 +63,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             window?.tintColor = accent
             userDefaults.setValue(number, forKey: "accentRandom")
-        }
+        }*/
+        
+        window?.tintColor = UserDefaults().colorForKey(key: "accentColor")
         guard let _ = (scene as? UIWindowScene) else { return }
         
     }
