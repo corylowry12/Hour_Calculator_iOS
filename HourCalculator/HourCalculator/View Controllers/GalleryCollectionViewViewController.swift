@@ -243,11 +243,11 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         
             if gallery[indexPath.row].thumbnail != nil && gallery[indexPath.row].fullSize != nil {
                 
-                galleryCell.layer.shadowColor = UIColor.black.cgColor
-                galleryCell.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-                galleryCell.layer.shadowRadius = 4.0
-                galleryCell.layer.shadowOpacity = 0.75
-                galleryCell.layer.shadowPath = UIBezierPath(roundedRect: galleryCell.bounds, cornerRadius: 10).cgPath
+                //galleryCell.layer.shadowColor = UIColor.black.cgColor
+                //galleryCell.layer.shadowOffset = CGSize(width: 0, height: 2.0)
+                //galleryCell.layer.shadowRadius = 4.0
+                //galleryCell.layer.shadowOpacity = 0.75
+                //galleryCell.layer.shadowPath = UIBezierPath(roundedRect: galleryCell.bounds, cornerRadius: 10).cgPath
                 
                 galleryCell.galleryImage.image = UIImage(data: gallery[indexPath.row].thumbnail!)
                 galleryCell.galleryImage.contentMode = .scaleAspectFill
@@ -268,40 +268,7 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
     }
     
     func setBorderColor() -> UIColor {
-        /*let userDefaults = UserDefaults.standard
-        if userDefaults.integer(forKey: "accent") == 0 {
-            return UIColor(rgb: 0x26A69A)
-        }
-        else if userDefaults.integer(forKey: "accent") == 1 {
-            return UIColor(rgb: 0x7841c4)
-        }
-        else if userDefaults.integer(forKey: "accent") == 2 {
-            return UIColor(rgb: 0x347deb)
-        }
-        else if userDefaults.integer(forKey: "accent") == 3 {
-            return UIColor(rgb: 0xfc783a)
-        }
-        else if userDefaults.integer(forKey: "accent") == 4 {
-            return UIColor(rgb: 0xc41d1d)
-        }
-        else if userDefaults.integer(forKey: "accent") == 5 {
-            if userDefaults.integer(forKey: "accentRandom") == 0 {
-                return UIColor(rgb: 0x26A69A)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 1 {
-                return UIColor(rgb: 0x7841c4)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 2 {
-                return UIColor(rgb: 0x347deb)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 3 {
-                return UIColor(rgb: 0xfc783a)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 4 {
-                return UIColor(rgb: 0xc41d1d)
-            }
-        }*/
-        return ThemeColor().themeColor()
+        return UserDefaults().colorForKey(key: "accentColor")!
     }
     
     @IBAction func shareButton(_ sender: UIBarButtonItem) {
