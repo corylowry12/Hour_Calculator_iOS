@@ -44,7 +44,7 @@ class HowToTableViewController: UITableViewController {
                 
                 if indexPath.row == 1 {
                     tableView.cellForRow(at: [0, 1])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
             }
             else {
@@ -59,19 +59,19 @@ class HowToTableViewController: UITableViewController {
                 
                 if indexPath.row == 1 {
                     tableView.cellForRow(at: [1, 1])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
                 if indexPath.row == 2 {
                     tableView.cellForRow(at: [1, 2])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
                 if indexPath.row == 3 {
                     tableView.cellForRow(at: [1, 3])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
                 if indexPath.row == 4 {
                     tableView.cellForRow(at: [1, 4])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
             }
             else {
@@ -98,11 +98,11 @@ class HowToTableViewController: UITableViewController {
                 
                 if indexPath.row == 1 {
                     tableView.cellForRow(at: [2, 1])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
                 if indexPath.row == 2 {
                     tableView.cellForRow(at: [2, 2])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
             }
             else {
@@ -121,7 +121,7 @@ class HowToTableViewController: UITableViewController {
                 
                 if indexPath.row == 1 {
                     tableView.cellForRow(at: [3, 1])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
             }
             else {
@@ -136,7 +136,7 @@ class HowToTableViewController: UITableViewController {
                 
                 if indexPath.row == 1 {
                     tableView.cellForRow(at: [4, 1])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
             }
             else {
@@ -154,11 +154,11 @@ class HowToTableViewController: UITableViewController {
                 }
                 if indexPath.row == 1 {
                     tableView.cellForRow(at: [5, 1])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
                 if indexPath.row == 2 {
                     tableView.cellForRow(at: [5, 2])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
             }
             else {
@@ -183,7 +183,7 @@ class HowToTableViewController: UITableViewController {
                 }
                 if indexPath.row == 1 {
                     tableView.cellForRow(at: [6, 1])?.backgroundColor = UIColor.clear
-                    return 1
+                    return 0
                 }
             }
             else {
@@ -336,39 +336,6 @@ class HowToTableViewController: UITableViewController {
     }
     
     func setTableViewCellColor() -> UIColor {
-        //var color = UIColor(rgb: 0x26A69A)
-        /*if userDefaults.integer(forKey: "accent") == 0 {
-            color = UIColor(rgb: 0x26A69A)
-        }
-        else if userDefaults.integer(forKey: "accent") == 1 {
-            color = UIColor(rgb: 0x7841c4)
-        }
-        else if userDefaults.integer(forKey: "accent") == 2 {
-            color = UIColor(rgb: 0x347deb)
-        }
-        else if userDefaults.integer(forKey: "accent") == 3 {
-            color = UIColor(rgb: 0xfc783a)
-        }
-        else if userDefaults.integer(forKey: "accent") == 4 {
-            color = UIColor(rgb: 0xc41d1d)
-        }
-        else if userDefaults.integer(forKey: "accent") == 5 {
-            if userDefaults.integer(forKey: "accentRandom") == 0 {
-                color = UIColor(rgb: 0x26A69A)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 1 {
-                color = UIColor(rgb: 0x7841c4)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 2 {
-                color = UIColor(rgb: 0x347deb)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 3 {
-                color = UIColor(rgb: 0xfc783a)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 4 {
-                color = UIColor(rgb: 0xc41d1d)
-            }
-        }*/
-        return ThemeColor().themeColor()
+        return UserDefaults().colorForKey(key: "accentColor")!
     }
 }
