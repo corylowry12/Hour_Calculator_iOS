@@ -6,7 +6,6 @@ target 'HourCalculator' do
   use_frameworks!
 
   # Pods for HourCalculator
-pod 'SwipeableTabBarController'
 
   target 'HourCalculatorTests' do
     inherit! :search_paths
