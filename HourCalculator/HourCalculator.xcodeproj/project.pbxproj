@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,7 +22,6 @@
 		3241C6AB27F110B500A584CF /* AppNewsTableViewCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3241C6AA27F110B500A584CF /* AppNewsTableViewCell2.swift */; };
 		324248B826E0800C00C7BC62 /* MappingModel.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 324248B726E0800C00C7BC62 /* MappingModel.xcmappingmodel */; };
 		3254AFA1268E71FB005B13E5 /* HistorySettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3254AFA0268E71FB005B13E5 /* HistorySettingsTableViewController.swift */; };
-		325568512689C13F00CC7ACD /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325568502689C13F00CC7ACD /* TabBarController.swift */; };
 		325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A41C72685634100B098C9 /* HistoryViewController.swift */; };
 		325F378826978B88000D6FFB /* TimeCardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325F378726978B88000D6FFB /* TimeCardTableViewController.swift */; };
 		32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32629DF626825FD7006632F2 /* AppDelegate.swift */; };
@@ -56,6 +55,7 @@
 		32A2C0FC2696C12700EABD3C /* red_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F82696C12600EABD3C /* red_logo.png */; };
 		32A5219628910DCC006C1150 /* MappingModel2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 32A5219528910DCC006C1150 /* MappingModel2.xcmappingmodel */; };
 		32AB610C26ED2DCD00F41D6C /* StoredHours.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 32AB610926ED2DCD00F41D6C /* StoredHours.xcdatamodeld */; };
+		32BF047C29D9EF180005A3D7 /* AccentColorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BF047B29D9EF180005A3D7 /* AccentColorData.swift */; };
 		32EB446F26ED190700380895 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32EB446E26ED190700380895 /* CloudKit.framework */; };
 		32F52A85268AD02E00BD9E2F /* Siren in Frameworks */ = {isa = PBXBuildFile; productRef = 32F52A84268AD02E00BD9E2F /* Siren */; };
 		32F74AA127F2C40000A3DF42 /* PatchNotesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F74AA027F2C40000A3DF42 /* PatchNotesTableViewCell.swift */; };
@@ -109,7 +109,6 @@
 		324248B726E0800C00C7BC62 /* MappingModel.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = MappingModel.xcmappingmodel; sourceTree = "<group>"; };
 		3254AFA0268E71FB005B13E5 /* HistorySettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySettingsTableViewController.swift; sourceTree = "<group>"; };
 		3255684F26897A1700CC7ACD /* HourCalculator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HourCalculator.entitlements; sourceTree = "<group>"; };
-		325568502689C13F00CC7ACD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		325A41C72685634100B098C9 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		325F378726978B88000D6FFB /* TimeCardTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardTableViewController.swift; sourceTree = "<group>"; };
 		32629DF326825FD7006632F2 /* HourCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HourCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,6 +156,7 @@
 		32A5219528910DCC006C1150 /* MappingModel2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = MappingModel2.xcmappingmodel; sourceTree = "<group>"; };
 		32AB610A26ED2DCD00F41D6C /* StoredHours 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "StoredHours 2.xcdatamodel"; sourceTree = "<group>"; };
 		32AB610B26ED2DCD00F41D6C /* StoredHours.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StoredHours.xcdatamodel; sourceTree = "<group>"; };
+		32BF047B29D9EF180005A3D7 /* AccentColorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccentColorData.swift; sourceTree = "<group>"; };
 		32EB446D26ED190300380895 /* HourCalculatorDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HourCalculatorDebug.entitlements; sourceTree = "<group>"; };
 		32EB446E26ED190700380895 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		32F74AA027F2C40000A3DF42 /* PatchNotesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchNotesTableViewCell.swift; sourceTree = "<group>"; };
@@ -232,6 +232,7 @@
 		32629DF526825FD7006632F2 /* HourCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				32BF047A29D9EF030005A3D7 /* Classes */,
 				32A5219528910DCC006C1150 /* MappingModel2.xcmappingmodel */,
 				32EB446D26ED190300380895 /* HourCalculatorDebug.entitlements */,
 				32A2C0F62696C12600EABD3C /* blue_logo.png */,
@@ -292,7 +293,6 @@
 				3284984B2687FE380092D22F /* PatchNotesViewController.swift */,
 				328498452687BE280092D22F /* SettingsTableViewCell.swift */,
 				32830186268B2D1F0042AAE7 /* SettingsTableViewController.swift */,
-				325568502689C13F00CC7ACD /* TabBarController.swift */,
 				323DD8F12685984D00332BA3 /* TableViewCell.swift */,
 				328498472687D3F30092D22F /* ThemeViewController.swift */,
 				322C563F26BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift */,
@@ -312,6 +312,14 @@
 				32629E0126825FD9006632F2 /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		32BF047A29D9EF030005A3D7 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				32BF047B29D9EF180005A3D7 /* AccentColorData.swift */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		62D1BDB0B95E786AD2D0ADC3 /* Frameworks */ = {
@@ -362,7 +370,6 @@
 				32629DF026825FD7006632F2 /* Frameworks */,
 				32629DF126825FD7006632F2 /* Resources */,
 				32A2C0622692911800EABD3C /* Embed App Clips */,
-				9B13D6C8E755AB1A9A71FD5D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -403,7 +410,6 @@
 				32629E1026825FD9006632F2 /* Sources */,
 				32629E1126825FD9006632F2 /* Frameworks */,
 				32629E1226825FD9006632F2 /* Resources */,
-				34BF89F2B5016F04688ECAE2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -421,8 +427,9 @@
 		32629DEB26825FD7006632F2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					32629DF226825FD7006632F2 = {
 						CreatedOnToolsVersion = 12.5;
@@ -515,23 +522,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		34BF89F2B5016F04688ECAE2 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		8F8E41CFB71232CC2E36CE25 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -552,23 +542,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9B13D6C8E755AB1A9A71FD5D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E5E9FB0314632BEED3DC7CE6 /* [CP] Check Pods Manifest.lock */ = {
@@ -608,11 +581,11 @@
 				322C564026BDC28900A4E8DD /* TimeCardInfoTableViewCell.swift in Sources */,
 				32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */,
 				3272B71326D6D33200B2867C /* ImageViewController.swift in Sources */,
-				325568512689C13F00CC7ACD /* TabBarController.swift in Sources */,
 				32AB610C26ED2DCD00F41D6C /* StoredHours.xcdatamodeld in Sources */,
 				322FD5D227EFB02D00B15D21 /* AppNewViewController.swift in Sources */,
 				325F378826978B88000D6FFB /* TimeCardTableViewController.swift in Sources */,
 				32629DFB26825FD7006632F2 /* ViewController.swift in Sources */,
+				32BF047C29D9EF180005A3D7 /* AccentColorData.swift in Sources */,
 				32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */,
 				32A2C045269234F200EABD3C /* HowToTableViewController.swift in Sources */,
 				322C564226BDC32900A4E8DD /* TimeCardInfoTableViewController.swift in Sources */,
@@ -739,7 +712,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -795,7 +768,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
@@ -815,10 +788,12 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculatorDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 140;
+				CURRENT_PROJECT_VERSION = 141;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hour Calculator";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -843,10 +818,12 @@
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 140;
+				CURRENT_PROJECT_VERSION = 141;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hour Calculator";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
