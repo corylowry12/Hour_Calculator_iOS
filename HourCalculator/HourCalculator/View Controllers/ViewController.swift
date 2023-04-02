@@ -110,83 +110,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
         dateDatePicker.maximumDate = Date()
         
-        /*if userDefaults.integer(forKey: "accent") == 0 {
-         calculateButton.backgroundColor = ThemeColor().themeColor()
-         dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
-         datePicker.tintColor = UIColor(rgb: 0x26A69A)
-         datePickerOutTime.tintColor = UIColor(rgb: 0x26A69A)
-         changeIcon(nil)
-         }
-         else if userDefaults.integer(forKey: "accent") == 1 {
-         calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
-         dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
-         datePicker.tintColor = UIColor(rgb: 0x7841c4)
-         datePickerOutTime.tintColor = UIColor(rgb: 0x7841c4)
-         changeIcon("purple_logo")
-         }
-         else if userDefaults.integer(forKey: "accent") == 2 {
-         calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
-         dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
-         datePicker.tintColor = UIColor(rgb: 0x347deb)
-         datePickerOutTime.tintColor = UIColor(rgb: 0x347deb)
-         changeIcon("blue_logo")
-         }
-         else if userDefaults.integer(forKey: "accent") == 3 {
-         calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
-         dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
-         datePicker.tintColor = UIColor(rgb: 0xfc783a)
-         datePickerOutTime.tintColor = UIColor(rgb: 0xfc783a)
-         changeIcon("orange_logo")
-         }
-         else if userDefaults.integer(forKey: "accent") == 4 {
-         calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-         dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
-         datePicker.tintColor = UIColor(rgb: 0xc41d1d)
-         datePickerOutTime.tintColor = UIColor(rgb: 0xc41d1d)
-         changeIcon("red_logo")
-         }
-         else if userDefaults.integer(forKey: "accent") == 5 {
-         if userDefaults.integer(forKey: "accentRandom") == 0 {
-         calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
-         dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
-         datePicker.tintColor = UIColor(rgb: 0x26A69A)
-         datePickerOutTime.tintColor = UIColor(rgb: 0x26A69A)
-         changeIcon(nil)
-         }
-         else if userDefaults.integer(forKey: "accentRandom") == 1 {
-         calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
-         dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
-         datePicker.tintColor = UIColor(rgb: 0x7841c4)
-         datePickerOutTime.tintColor = UIColor(rgb: 0x7841c4)
-         changeIcon("purple_logo")
-         }
-         else if userDefaults.integer(forKey: "accentRandom") == 2 {
-         calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
-         dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
-         datePicker.tintColor = UIColor(rgb: 0x347deb)
-         datePickerOutTime.tintColor = UIColor(rgb: 0x347deb)
-         changeIcon("blue_logo")
-         }
-         else if userDefaults.integer(forKey: "accentRandom") == 3 {
-         calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
-         dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
-         datePicker.tintColor = UIColor(rgb: 0xfc783a)
-         datePickerOutTime.tintColor = UIColor(rgb: 0xfc783a)
-         changeIcon("orange_logo")
-         }
-         else if userDefaults.integer(forKey: "accentRandom") == 4 {
-         calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-         dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
-         datePicker.tintColor = UIColor(rgb: 0xc41d1d)
-         datePickerOutTime.tintColor = UIColor(rgb: 0xc41d1d)
-         changeIcon("red_logo")
-         }
-         }*/
+        calculateButton.backgroundColor = UserDefaults().colorForKey(key: "accentColor")
+        dateDatePicker.tintColor = UserDefaults().colorForKey(key: "accentColor")
+        datePicker.tintColor = UserDefaults().colorForKey(key: "accentColor")
+        datePickerOutTime.tintColor = UserDefaults().colorForKey(key: "accentColor")
+        breakTextField.tintColor = UserDefaults().colorForKey(key: "accentColor")
         
-        calculateButton.backgroundColor = ThemeColor().themeColor()
-        dateDatePicker.tintColor = ThemeColor().themeColor()
-        datePicker.tintColor = ThemeColor().themeColor()
-        datePickerOutTime.tintColor = ThemeColor().themeColor()
         
         if userDefaults.value(forKey: "StoredEmptyHours") == nil{
             userDefaults.set(false, forKey: "StoredEmptyHours")
@@ -349,7 +278,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         outMinute = componentsOut.minute!
         
         let minutesDifference = outMinute - inMinute
-        var hoursDifference = outHour - inHour
+        let hoursDifference = outHour - inHour
         
         if hoursDifference < 0 && (12...24).contains(inHour) && (0...12).contains(outHour){
          print("less than zero")
