@@ -17,24 +17,7 @@ extension UIImage {
         label.textAlignment = .center
         label.numberOfLines = 0
         
-       /* if userDefaults.integer(forKey: "accent") == 0 {
-            label.textColor = UIColor(rgb: 0x26A69A)
-        }
-        else if userDefaults.integer(forKey: "accent") == 1 {
-            label.textColor = UIColor(rgb: 0x7841c4)
-            
-        }
-        else if userDefaults.integer(forKey: "accent") == 2 {
-            label.textColor = UIColor(rgb: 0x347deb)
-        }
-        else if userDefaults.integer(forKey: "accent") == 3 {
-            label.textColor = UIColor(rgb: 0xfc783a)
-        }
-        else if userDefaults.integer(forKey: "accent") == 4 {
-            label.textColor = UIColor(rgb: 0xc41d1d)
-        }*/
-        
-        label.textColor = ThemeColor().themeColor()
+        label.textColor = UserDefaults().colorForKey(key: "accentColor")
         
         label.layer.render(in: UIGraphicsGetCurrentContext()!)
         let img = UIGraphicsGetImageFromCurrentImageContext()
@@ -160,97 +143,36 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         
     }
     
-    @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
-        let p = longPressGesture.location(in: imageView)
-        if longPressGesture.state == UIGestureRecognizer.State.began {
-            // if timeCard.indices.contains(timeCard.count - 1) {
-            if timeCard[timeCard.count - 1].image != nil {
-                var alert = UIAlertController()
-                if UIDevice.current.userInterfaceIdiom == .pad {
-                    alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
-                    let popover = alert.popoverPresentationController
-                    popover!.sourceView = imageView
-                }
-                else {
-                    alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
-                }
-                alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
-                    
-                    image = UIImage(data: timeCard[timeCard.count - 1].image!)
-                    performSegue(withIdentifier: "viewImage", sender: nil)
-                }))
-                alert.addAction(UIAlertAction(title: "Go To Gallery", style: .default, handler: { _ in
-                    self.performSegue(withIdentifier: "gallery", sender: self)
-                }))
-                alert.addAction(UIAlertAction(title: "Choose a new image", style: .default, handler: { _ in
-                    var alert = UIAlertController()
-                    if UIDevice.current.userInterfaceIdiom == .pad {
-                        alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
-                        let popover = alert.popoverPresentationController
-                        popover!.sourceView = self.imageView
-                    }
-                    else {
-                        alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
-                    }
-                    if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                        alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
-                            
-                            let imagePickerController = UIImagePickerController()
-                            imagePickerController.delegate = self;
-                            imagePickerController.sourceType = .camera
-                            self.present(imagePickerController, animated: true, completion: nil)
-                            self.cameraIsBeingUsed = true
-                        }))
-                    }
-                    alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
-                        
-                        let imagePickerController = UIImagePickerController()
-                        imagePickerController.delegate = self;
-                        imagePickerController.sourceType = .photoLibrary
-                        self.present(imagePickerController, animated: true, completion: nil)
-                        
-                    }))
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }))
-                alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
-                    
-                    UIView.transition(with: self.imageView,
-                                      duration: 1.0,
-                                      options: [.allowAnimatedContent, .transitionCrossDissolve],
-                                      animations: { [self] in
-                        setImageView()
-                    },
-                                      completion: nil)
-                    timeCard[timeCard.count - 1].image = nil
-                    if gallery.count > 0 {
-                        if gallery[0].thumbnail != nil {
-                            gallery[0].thumbnail = nil
-                        }
-                        if gallery[0].date != nil {
-                            gallery[0].date = nil
-                        }
-                        if gallery[0].fullSize != nil {
-                            gallery[0].fullSize = nil
-                        }
-                    }
-                    (UIApplication.shared.delegate as! AppDelegate).saveContext()
-                }))
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+    func imageInteraction() {
+        // if timeCard.indices.contains(timeCard.count - 1) {
+        if timeCard[timeCard.count - 1].image != nil {
+            var alert = UIAlertController()
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
+                let popover = alert.popoverPresentationController
+                popover!.sourceView = imageView
             }
-            //}
             else {
+                alert = UIAlertController(title: "Choose", message: "What would you like to do?", preferredStyle: .actionSheet)
+            }
+            alert.addAction(UIAlertAction(title: "View Image", style: .default, handler: { [self] _ in
+                
+                image = UIImage(data: timeCard[timeCard.count - 1].image!)
+                performSegue(withIdentifier: "viewImage", sender: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Go To Gallery", style: .default, handler: { _ in
+                self.performSegue(withIdentifier: "gallery", sender: self)
+            }))
+            alert.addAction(UIAlertAction(title: "Choose a new image", style: .default, handler: { _ in
                 var alert = UIAlertController()
                 if UIDevice.current.userInterfaceIdiom == .pad {
                     alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
                     let popover = alert.popoverPresentationController
-                    popover!.sourceView = imageView
+                    popover!.sourceView = self.imageView
                 }
                 else {
                     alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
                 }
-                
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
                     alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
                         
@@ -266,14 +188,79 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                     let imagePickerController = UIImagePickerController()
                     imagePickerController.delegate = self;
                     imagePickerController.sourceType = .photoLibrary
-                    
                     self.present(imagePickerController, animated: true, completion: nil)
                     
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                
                 self.present(alert, animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Remove Image", style: .destructive, handler: { [self] _ in
+                
+                UIView.transition(with: self.imageView,
+                                  duration: 1.0,
+                                  options: [.allowAnimatedContent, .transitionCrossDissolve],
+                                  animations: { [self] in
+                    setImageView()
+                },
+                                  completion: nil)
+                timeCard[timeCard.count - 1].image = nil
+                if gallery.count > 0 {
+                    if gallery[0].thumbnail != nil {
+                        gallery[0].thumbnail = nil
+                    }
+                    if gallery[0].date != nil {
+                        gallery[0].date = nil
+                    }
+                    if gallery[0].fullSize != nil {
+                        gallery[0].fullSize = nil
+                    }
+                }
+                (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        //}
+        else {
+            var alert = UIAlertController()
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
+                let popover = alert.popoverPresentationController
+                popover!.sourceView = imageView
             }
+            else {
+                alert = UIAlertController(title: "Choose a new image", message: "What would you like to do?", preferredStyle: .actionSheet)
+            }
+            
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                alert.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: { _ in
+                    
+                    let imagePickerController = UIImagePickerController()
+                    imagePickerController.delegate = self;
+                    imagePickerController.sourceType = .camera
+                    self.present(imagePickerController, animated: true, completion: nil)
+                    self.cameraIsBeingUsed = true
+                }))
+            }
+            alert.addAction(UIAlertAction(title: "Choose a photo", style: .default, handler: { _ in
+                
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.delegate = self;
+                imagePickerController.sourceType = .photoLibrary
+                
+                self.present(imagePickerController, animated: true, completion: nil)
+                
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
+    
+        if longPressGesture.state == UIGestureRecognizer.State.began {
+            imageInteraction()
         }
     }
     
@@ -290,12 +277,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         tableView.dataSource = self
         
         textField.delegate = self
-        
-        //addBannerViewToView(bannerView)
-        
-        //bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
-        //bannerView.rootViewController = self
-        //bannerView.load(GADRequest())
         
         previousButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75).cgColor
         previousButton.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
@@ -338,63 +319,10 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         textField.clearButtonMode = .always
         textField.autocapitalizationType = .words
         textField.autocorrectionType = .no
-        
-        /*if userDefaults.integer(forKey: "accent") == 0 {
-            textField.backgroundColor = UIColor(rgb: 0x26A69A)
-            previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
-            nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
-        }
-        else if userDefaults.integer(forKey: "accent") == 1 {
-            textField.backgroundColor = UIColor(rgb: 0x7841c4)
-            previousButton.backgroundColor = UIColor(rgb: 0x7841c4)
-            nextButton.backgroundColor = UIColor(rgb: 0x7841c4)
-        }
-        else if userDefaults.integer(forKey: "accent") == 2 {
-            textField.backgroundColor = UIColor(rgb: 0x347deb)
-            previousButton.backgroundColor = UIColor(rgb: 0x347deb)
-            nextButton.backgroundColor = UIColor(rgb: 0x347deb)
-        }
-        else if userDefaults.integer(forKey: "accent") == 3 {
-            textField.backgroundColor = UIColor(rgb: 0xfc783a)
-            previousButton.backgroundColor = UIColor(rgb: 0xfc783a)
-            nextButton.backgroundColor = UIColor(rgb: 0xfc783a)
-        }
-        else if userDefaults.integer(forKey: "accent") == 4 {
-            textField.backgroundColor = UIColor(rgb: 0xc41d1d)
-            previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-            nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-        }
-        else if userDefaults.integer(forKey: "accent") == 5 {
-            if userDefaults.integer(forKey: "accentRandom") == 0 {
-                textField.backgroundColor = UIColor(rgb: 0x26A69A)
-                previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
-                nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 1 {
-                textField.backgroundColor = UIColor(rgb: 0x7841c4)
-                previousButton.backgroundColor = UIColor(rgb: 0x7841c4)
-                nextButton.backgroundColor = UIColor(rgb: 0x7841c4)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 2 {
-                textField.backgroundColor = UIColor(rgb: 0x347deb)
-                previousButton.backgroundColor = UIColor(rgb: 0x347deb)
-                nextButton.backgroundColor = UIColor(rgb: 0x347deb)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 3 {
-                textField.backgroundColor = UIColor(rgb: 0xfc783a)
-                previousButton.backgroundColor = UIColor(rgb: 0xfc783a)
-                nextButton.backgroundColor = UIColor(rgb: 0xfc783a)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 4 {
-                textField.backgroundColor = UIColor(rgb: 0xc41d1d)
-                previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-                nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-            }
-        }*/
-        
-        textField.backgroundColor = ThemeColor().themeColor()
-        previousButton.backgroundColor = ThemeColor().themeColor()
-        nextButton.backgroundColor = ThemeColor().themeColor()
+      
+        textField.backgroundColor = UserDefaults().colorForKey(key: "accentColor")
+        previousButton.backgroundColor = UserDefaults().colorForKey(key: "accentColor")
+        nextButton.backgroundColor = UserDefaults().colorForKey(key: "accentColor")
         
         textField.tintColor = UIColor.systemGray2
         view.backgroundColor = tableView.backgroundColor
@@ -460,8 +388,13 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     @objc func imageTapped() {
-        image = UIImage(data: timeCard[timeCard.count - 1].image!)
-        performSegue(withIdentifier: "viewImage", sender: nil)
+        if timeCard[timeCard.count - 1].image == nil {
+            imageInteraction()
+        }
+        else {
+            image = UIImage(data: timeCard[timeCard.count - 1].image!)
+            performSegue(withIdentifier: "viewImage", sender: nil)
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -872,47 +805,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                              completion: { finish in
                 UIButton.animate(withDuration: 0.30,
                                  animations: { [self] in
-                    /*if userDefaults.integer(forKey: "accent") == 0 {
-                        previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 1 {
-                        previousButton.backgroundColor = UIColor(rgb: 0x7841c4)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 2 {
-                        
-                        previousButton.backgroundColor = UIColor(rgb: 0x347deb)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 3 {
-                        
-                        previousButton.backgroundColor = UIColor(rgb: 0xfc783a)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 4 {
-                        
-                        previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 5 {
-                        if userDefaults.integer(forKey: "accentRandom") == 0 {
-                            previousButton.backgroundColor = UIColor(rgb: 0x26A69A)
-                            
-                        }
-                        else if userDefaults.integer(forKey: "accentRandom") == 1 {
-                            previousButton.backgroundColor = UIColor(rgb: 0x7841c4)
-                        }
-                        else if userDefaults.integer(forKey: "accentRandom") == 2 {
-                            previousButton.backgroundColor = UIColor(rgb: 0x347deb)
-                            
-                        }
-                        else if userDefaults.integer(forKey: "accentRandom") == 3 {
-                            previousButton.backgroundColor = UIColor(rgb: 0xfc783a)
-                            
-                        }
-                        else if userDefaults.integer(forKey: "accentRandom") == 4 {
-                            previousButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-                            
-                        }
-                    }*/
                     
-                    previousButton.backgroundColor = ThemeColor().themeColor()
+                    previousButton.backgroundColor = UserDefaults().colorForKey(key: "accentColor")
                 },
                                  completion: nil)
             })
@@ -1011,47 +905,9 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                              completion: { finish in
                 UIButton.animate(withDuration: 0.30,
                                  animations: { [self] in
-                    /*if userDefaults.integer(forKey: "accent") == 0 {
-                        nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 1 {
-                        nextButton.backgroundColor = UIColor(rgb: 0x7841c4)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 2 {
-                        
-                        nextButton.backgroundColor = UIColor(rgb: 0x347deb)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 3 {
-                        
-                        nextButton.backgroundColor = UIColor(rgb: 0xfc783a)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 4 {
-                        
-                        nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-                    }
-                    else if userDefaults.integer(forKey: "accent") == 5 {
-                        if userDefaults.integer(forKey: "accentRandom") == 0 {
-                            nextButton.backgroundColor = UIColor(rgb: 0x26A69A)
                             
-                        }
-                        else if userDefaults.integer(forKey: "accentRandom") == 1 {
-                            nextButton.backgroundColor = UIColor(rgb: 0x7841c4)
-                        }
-                        else if userDefaults.integer(forKey: "accentRandom") == 2 {
-                            nextButton.backgroundColor = UIColor(rgb: 0x347deb)
-                            
-                        }
-                        else if userDefaults.integer(forKey: "accentRandom") == 3 {
-                            nextButton.backgroundColor = UIColor(rgb: 0xfc783a)
-                            
-                        }
-                        else if userDefaults.integer(forKey: "accentRandom") == 4 {
-                            nextButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-                            
-                        }
-                    }*/
                     
-                    nextButton.backgroundColor = ThemeColor().themeColor()
+                    nextButton.backgroundColor = UserDefaults().colorForKey(key: "accentColor")
                 },
                                  completion: nil)
             })
