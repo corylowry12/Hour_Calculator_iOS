@@ -60,40 +60,7 @@ class EditViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        /*if userDefaults.integer(forKey: "accent") == 0 {
-            saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
-        }
-        else if userDefaults.integer(forKey: "accent") == 1 {
-            saveButton.backgroundColor = UIColor(rgb: 0x7841c4)
-        }
-        else if userDefaults.integer(forKey: "accent") == 2 {
-            saveButton.backgroundColor = UIColor(rgb: 0x347deb)
-        }
-        else if userDefaults.integer(forKey: "accent") == 3 {
-            saveButton.backgroundColor = UIColor(rgb: 0xfc783a)
-        }
-        else if userDefaults.integer(forKey: "accent") == 4 {
-            saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-        }
-        else if userDefaults.integer(forKey: "accent") == 5 {
-            if userDefaults.integer(forKey: "accentRandom") == 0 {
-                saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 1 {
-                saveButton.backgroundColor = UIColor(rgb: 0x7841c4)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 2 {
-                saveButton.backgroundColor = UIColor(rgb: 0x347deb)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 3 {
-                saveButton.backgroundColor = UIColor(rgb: 0xfc783a)
-            }
-            else if userDefaults.integer(forKey: "accentRandom") == 4 {
-                saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-            }
-        }*/
-        
-        saveButton.backgroundColor = ThemeColor().themeColor()
+        saveButton.backgroundColor = UserDefaults().colorForKey(key: "accentColor")
     }
     
     override func viewDidLoad() {
