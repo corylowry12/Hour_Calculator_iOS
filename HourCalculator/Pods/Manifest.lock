@@ -1,16 +1,3 @@
-PODS:
-  - SwipeableTabBarController (3.4.2)
+PODFILE CHECKSUM: 31d2dfeb0a44543a2a69f20fcf4ef57d65a0b2f8
 
-DEPENDENCIES:
-  - SwipeableTabBarController
-
-SPEC REPOS:
-  trunk:
-    - SwipeableTabBarController
-
-SPEC CHECKSUMS:
-  SwipeableTabBarController: 9a218bdee9426d1bfe36d7962f852024bb08d61b
-
-PODFILE CHECKSUM: cab2355c1dde0d4e468acec26ed5f2438ffe35a8
-
-COCOAPODS: 1.8.4
+COCOAPODS: 1.11.3
