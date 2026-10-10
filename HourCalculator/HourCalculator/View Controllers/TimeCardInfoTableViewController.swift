@@ -45,7 +45,7 @@ extension UIImage {
 
 class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
-    lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
+    lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var totalHoursLabel: UILabel!
@@ -172,7 +172,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         bannerView.rootViewController = self
-        bannerView.load(GADRequest())
+        bannerView.load(Request())
         
         previousButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75).cgColor
         previousButton.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
@@ -729,7 +729,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         }
         
     }
-    func addBannerViewToView(_ bannerView: GADBannerView) {
+    func addBannerViewToView(_ bannerView: BannerView) {
         
         bannerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bannerView)
@@ -751,7 +751,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             ])
     }
     
-    func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
+    func bannerViewDidReceiveAd(_ bannerView: BannerView) {
         addBannerViewToView(bannerView)
         bannerView.alpha = 0
         UIView.animate(withDuration: 1, animations: {
