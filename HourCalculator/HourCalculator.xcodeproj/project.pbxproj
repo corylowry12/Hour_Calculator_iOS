@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -36,12 +36,6 @@
 		328498462687BE280092D22F /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498452687BE280092D22F /* SettingsTableViewCell.swift */; };
 		328498482687D3F30092D22F /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498472687D3F30092D22F /* ThemeViewController.swift */; };
 		3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3284984B2687FE380092D22F /* PatchNotesViewController.swift */; };
-		329B5212269141790012E307 /* GoogleAppMeasurement.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5211269141790012E307 /* GoogleAppMeasurement.xcframework */; };
-		329B5216269141840012E307 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5215269141840012E307 /* GoogleMobileAds.xcframework */; };
-		329B5219269141910012E307 /* GoogleUtilities.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5218269141910012E307 /* GoogleUtilities.xcframework */; };
-		329B521C2691419E0012E307 /* nanopb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B521B2691419E0012E307 /* nanopb.xcframework */; };
-		329B521F269141A90012E307 /* PromisesObjC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B521E269141A90012E307 /* PromisesObjC.xcframework */; };
-		329B5222269141B20012E307 /* UserMessagingPlatform.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 329B5221269141B20012E307 /* UserMessagingPlatform.xcframework */; };
 		32A2C045269234F200EABD3C /* HowToTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A2C044269234F200EABD3C /* HowToTableViewController.swift */; };
 		32A2C0F92696C12600EABD3C /* orange_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F52696C12600EABD3C /* orange_logo.png */; };
 		32A2C0FA2696C12700EABD3C /* blue_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F62696C12600EABD3C /* blue_logo.png */; };
@@ -50,6 +44,7 @@
 		32AB610C26ED2DCD00F41D6C /* StoredHours.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 32AB610926ED2DCD00F41D6C /* StoredHours.xcdatamodeld */; };
 		32EB446F26ED190700380895 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32EB446E26ED190700380895 /* CloudKit.framework */; };
 		32F52A85268AD02E00BD9E2F /* Siren in Frameworks */ = {isa = PBXBuildFile; productRef = 32F52A84268AD02E00BD9E2F /* Siren */; };
+		3B796BA53079DCD20012E8D0 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 3B796BA43079DCD20012E8D0 /* GoogleMobileAds */; };
 		4783DF6734144F1726A132EC /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C34CBA995020ACB3DB33A69 /* Pods_HourCalculator_HourCalculatorUITests.framework */; };
 		B387D5EF033D6F430219E519 /* Pods_HourCalculator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86962D89DC19621DAEAEA928 /* Pods_HourCalculator.framework */; };
 /* End PBXBuildFile section */
@@ -120,12 +115,6 @@
 		328498452687BE280092D22F /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		328498472687D3F30092D22F /* ThemeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
 		3284984B2687FE380092D22F /* PatchNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchNotesViewController.swift; sourceTree = "<group>"; };
-		329B5211269141790012E307 /* GoogleAppMeasurement.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleAppMeasurement.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/GoogleAppMeasurement.xcframework"; sourceTree = "<group>"; };
-		329B5215269141840012E307 /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
-		329B5218269141910012E307 /* GoogleUtilities.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleUtilities.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/GoogleUtilities.xcframework"; sourceTree = "<group>"; };
-		329B521B2691419E0012E307 /* nanopb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = nanopb.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/nanopb.xcframework"; sourceTree = "<group>"; };
-		329B521E269141A90012E307 /* PromisesObjC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PromisesObjC.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/PromisesObjC.xcframework"; sourceTree = "<group>"; };
-		329B5221269141B20012E307 /* UserMessagingPlatform.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = UserMessagingPlatform.xcframework; path = "../../../../../Downloads/GoogleMobileAdsSdkiOS-8.7.0/UserMessagingPlatform.xcframework"; sourceTree = "<group>"; };
 		32A2C044269234F200EABD3C /* HowToTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToTableViewController.swift; sourceTree = "<group>"; };
 		32A2C0F52696C12600EABD3C /* orange_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orange_logo.png; sourceTree = "<group>"; };
 		32A2C0F62696C12600EABD3C /* blue_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_logo.png; sourceTree = "<group>"; };
@@ -151,15 +140,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				329B5219269141910012E307 /* GoogleUtilities.xcframework in Frameworks */,
 				32F52A85268AD02E00BD9E2F /* Siren in Frameworks */,
-				329B5212269141790012E307 /* GoogleAppMeasurement.xcframework in Frameworks */,
 				32EB446F26ED190700380895 /* CloudKit.framework in Frameworks */,
-				329B521F269141A90012E307 /* PromisesObjC.xcframework in Frameworks */,
-				329B521C2691419E0012E307 /* nanopb.xcframework in Frameworks */,
-				329B5222269141B20012E307 /* UserMessagingPlatform.xcframework in Frameworks */,
-				329B5216269141840012E307 /* GoogleMobileAds.xcframework in Frameworks */,
 				B387D5EF033D6F430219E519 /* Pods_HourCalculator.framework in Frameworks */,
+				3B796BA53079DCD20012E8D0 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,12 +268,6 @@
 			isa = PBXGroup;
 			children = (
 				32EB446E26ED190700380895 /* CloudKit.framework */,
-				329B5221269141B20012E307 /* UserMessagingPlatform.xcframework */,
-				329B521E269141A90012E307 /* PromisesObjC.xcframework */,
-				329B521B2691419E0012E307 /* nanopb.xcframework */,
-				329B5218269141910012E307 /* GoogleUtilities.xcframework */,
-				329B5215269141840012E307 /* GoogleMobileAds.xcframework */,
-				329B5211269141790012E307 /* GoogleAppMeasurement.xcframework */,
 				86962D89DC19621DAEAEA928 /* Pods_HourCalculator.framework */,
 				4C34CBA995020ACB3DB33A69 /* Pods_HourCalculator_HourCalculatorUITests.framework */,
 				442AF45CB91E36B98D369433 /* Pods_HourCalculatorTests.framework */,
@@ -331,6 +309,7 @@
 			name = HourCalculator;
 			packageProductDependencies = (
 				32F52A84268AD02E00BD9E2F /* Siren */,
+				3B796BA43079DCD20012E8D0 /* GoogleMobileAds */,
 			);
 			productName = HourCalculator;
 			productReference = 32629DF326825FD7006632F2 /* HourCalculator.app */;
@@ -408,6 +387,7 @@
 			mainGroup = 32629DEA26825FD7006632F2;
 			packageReferences = (
 				32F52A83268AD02E00BD9E2F /* XCRemoteSwiftPackageReference "Siren" */,
+				3B796BA33079DCD20012E8D0 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			productRefGroup = 32629DF426825FD7006632F2 /* Products */;
 			projectDirPath = "";
@@ -483,9 +463,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator-HourCalculatorUITests/Pods-HourCalculator-HourCalculatorUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -522,9 +506,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-HourCalculator/Pods-HourCalculator-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -761,21 +749,21 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4551DB0F6EEC6CDFFF05027B /* Pods-HourCalculator.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculatorDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 53;
+				CURRENT_PROJECT_VERSION = 54;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
@@ -790,21 +778,21 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8A62DCDC4260F1FC9A1BBF56 /* Pods-HourCalculator.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HourCalculator/HourCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 53;
+				CURRENT_PROJECT_VERSION = 54;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DP6RQZGX67;
 				INFOPLIST_FILE = HourCalculator/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cory.HourCalculator;
@@ -953,6 +941,14 @@
 				minimumVersion = 5.8.1;
 			};
 		};
+		3B796BA33079DCD20012E8D0 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.11.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -960,6 +956,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 32F52A83268AD02E00BD9E2F /* XCRemoteSwiftPackageReference "Siren" */;
 			productName = Siren;
+		};
+		3B796BA43079DCD20012E8D0 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B796BA33079DCD20012E8D0 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 
