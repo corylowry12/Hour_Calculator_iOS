@@ -9,7 +9,7 @@ import GoogleMobileAds
 
 class ViewController: UIViewController {
     
-    lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
+    lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
     @IBOutlet weak var dateDatePicker: UIDatePicker!
     var window : UIWindow?
@@ -87,6 +87,7 @@ class ViewController: UIViewController {
         else if userDefaults.integer(forKey: "theme") == 2 {
             view.window?.overrideUserInterfaceStyle = .unspecified
         }
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -198,6 +199,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view.
         if userDefaults.value(forKey: "timeCardsSort") == nil {
             userDefaults.set(0, forKey: "timeCardsSort")
@@ -207,7 +209,7 @@ class ViewController: UIViewController {
         
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         bannerView.rootViewController = self
-        bannerView.load(GADRequest())
+        bannerView.load(Request())
         
         
         if userDefaults.value(forKey: "historyEnabled") == nil{
@@ -250,6 +252,23 @@ class ViewController: UIViewController {
         }
         
         tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
+        
+        /*dateDatePicker.translatesAutoresizingMaskIntoConstraints = false
+
+            // Deactivate any existing leading, trailing, left, right, or centerX constraints from Storyboard
+            let conflictingConstraints = view.constraints.filter { constraint in
+                let isFirstItem = (constraint.firstItem as? NSObject) == dateDatePicker
+                let isSecondItem = (constraint.secondItem as? NSObject) == dateDatePicker
+                let attributes: [NSLayoutConstraint.Attribute] = [.leading, .trailing, .left, .right, .centerX]
+                return (isFirstItem && attributes.contains(constraint.firstAttribute)) ||
+                       (isSecondItem && attributes.contains(constraint.secondAttribute))
+            }
+            NSLayoutConstraint.deactivate(conflictingConstraints)
+
+            // Apply strict horizontal centering
+            NSLayoutConstraint.activate([
+                dateDatePicker.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            ])*/
         
     }
     
@@ -574,7 +593,7 @@ class ViewController: UIViewController {
     }
     
     
-    func addBannerViewToView(_ bannerView: GADBannerView) {
+    func addBannerViewToView(_ bannerView: BannerView) {
         
         bannerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bannerView)
@@ -596,7 +615,7 @@ class ViewController: UIViewController {
             ])
     }
     
-    func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
+    func bannerViewDidReceiveAd(_ bannerView: BannerView) {
         addBannerViewToView(bannerView)
         bannerView.alpha = 0
         UIView.animate(withDuration: 1, animations: {
