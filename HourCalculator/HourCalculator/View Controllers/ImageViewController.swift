@@ -13,167 +13,146 @@ class ImageViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
     
-    var newImage: UIImage!
-    var name: String!
-    var index: Int!
+    var placeholderThumbnail: UIImage?
+    var fullImageData: Data?
+    var newImage: UIImage?
+    var name: String?
+    var index: Int = -1
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    var gallery: [Gallery] {
-        
+    lazy var gallery: [Gallery] = {
+        guard index != -1 else { return [] }
+        let fetchrequest = NSFetchRequest<Gallery>(entityName: "Gallery")
+        fetchrequest.predicate = NSPredicate(format: "thumbnail != nil AND fullSize != nil")
+        let sort = NSSortDescriptor(key: #keyPath(Gallery.date), ascending: false)
+        fetchrequest.sortDescriptors = [sort]
         do {
-            let fetchrequest = NSFetchRequest<Gallery>(entityName: "Gallery")
-            fetchrequest.predicate = NSPredicate(format: "thumbnail != nil")
-            fetchrequest.predicate = NSPredicate(format: "fullSize != nil")
-            let sort = NSSortDescriptor(key: #keyPath(Gallery.date), ascending: false)
-            fetchrequest.sortDescriptors = [sort]
-            
             return try context.fetch(fetchrequest)
-            
         } catch {
-            
-            print("Couldn't fetch data")
-            
+            print("Couldn't fetch data: \(error)")
+            return []
         }
-        
-        return [Gallery]()
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        
-        if name != nil {
-            self.title = name
-        }
-        else {
-            self.title = "Unknown"
-        }
-        
-        if index != -1 {
-            let swipeGestureLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.LeftSwipeAction(_:)))
-            swipeGestureLeft.direction = .left
-            self.imageView.addGestureRecognizer(swipeGestureLeft)
-            
-            let swipeGestureRight = UISwipeGestureRecognizer(target: self, action: #selector(self.RightSwipeAction(_:)))
-            swipeGestureRight.direction = .right
-            self.imageView.addGestureRecognizer(swipeGestureRight)
-        }
-        
-        DispatchQueue.main.async { [self] in
-            
-            imageView.image = newImage
-            
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-    }
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.largeTitleDisplayMode = .never
         imageView.isUserInteractionEnabled = true
+        imageView.contentMode = .scaleAspectFit
         
+        if let titleName = name, !titleName.trimmingCharacters(in: .whitespaces).isEmpty {
+            self.title = titleName
+        } else {
+            self.title = "Time Card Image"
+        }
+        
+        // 1. Immediately present thumbnail or existing image with zero delay
+        if let immediateImage = newImage ?? placeholderThumbnail {
+            imageView.image = immediateImage
+        }
+        
+        // 2. Decode full-resolution image off the main thread
+        loadFullImageAsynchronously()
+        
+        if index != -1 {
+            setupSwipeGestures()
+        }
     }
     
-    @objc func RightSwipeAction( _ recognizer : UISwipeGestureRecognizer){
+    private func loadFullImageAsynchronously() {
+        guard let data = fullImageData else { return }
         
-        if recognizer.direction == .right{
-            var frame = imageView.frame
-            print("Right Swiped")
-            if (gallery.count - 1) >= index && index > 0 && gallery[index - 1].id_number != 0 {
-                frame.origin.x += 400.0
-                index = index - 1
-                print("swiped right")
-                if gallery[index].fullSize == gallery[index + 1].fullSize {
-                    imageView.image = nil
-                    imageView.image = UIImage(data: gallery[index].fullSize!)
-                }
-                else {
-                    imageView.image = UIImage(data: gallery[index].fullSize!)
-                }
-                
-                if gallery[index].name != nil {
-                    self.title = gallery[index].name
-                }
-                else {
-                    self.title = "Unknown"
-                }
-                
-                UIView.animate(withDuration: 0.50) {
-                    self.imageView.frame = frame
-                }
-                
-                let swipeGestureRight = UISwipeGestureRecognizer(target: self, action: #selector(self.RightSwipeAction(_:)))
-                swipeGestureRight.direction = .right
-                self.imageView.addGestureRecognizer(swipeGestureRight)
-            }
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            guard let decoded = UIImage(data: data) else { return }
             
-            else {
-                let backgroundColor = view.backgroundColor
-                UIView.animate(withDuration: 0.5, animations: {
-                    self.view.backgroundColor = UIColor.red
-                },
-                completion: {_ in
-                    UIView.animate(withDuration: 0.5, animations: {
-                        self.view.backgroundColor = backgroundColor
-                    },
-                    completion: nil)
-                })
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                // Smooth crossfade to full resolution once ready
+                UIView.transition(with: self.imageView, duration: 0.2, options: .transitionCrossDissolve) {
+                    self.imageView.image = decoded
+                }
             }
         }
     }
     
-    @objc func LeftSwipeAction( _ recognizer : UISwipeGestureRecognizer){
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+    }
+    
+    private func setupSwipeGestures() {
+        let swipeGestureLeft = UISwipeGestureRecognizer(target: self, action: #selector(LeftSwipeAction(_:)))
+        swipeGestureLeft.direction = .left
+        imageView.addGestureRecognizer(swipeGestureLeft)
         
-        var frame = imageView.frame
+        let swipeGestureRight = UISwipeGestureRecognizer(target: self, action: #selector(RightSwipeAction(_:)))
+        swipeGestureRight.direction = .right
+        imageView.addGestureRecognizer(swipeGestureRight)
+    }
+    
+    @objc func RightSwipeAction(_ recognizer: UISwipeGestureRecognizer) {
+        guard recognizer.direction == .right else { return }
         
-        if recognizer.direction == .left {
-            print("Left Swiped")
-            
-            if (gallery.count - 1) > index && gallery[index + 1].id_number != 0 {
-                frame.origin.x -= 400.0
-                index = index + 1
-                
-                if gallery[index].fullSize == gallery[index - 1].fullSize {
-                    imageView.image = nil
-                    imageView.image = UIImage(data: gallery[index].fullSize!)
+        if gallery.indices.contains(index - 1) && gallery[index - 1].id_number != 0 {
+            index -= 1
+            loadGalleryImageAtIndex(index, translationX: -40)
+        } else {
+            flashErrorBackground()
+        }
+    }
+    
+    @objc func LeftSwipeAction(_ recognizer: UISwipeGestureRecognizer) {
+        guard recognizer.direction == .left else { return }
+        
+        if gallery.indices.contains(index + 1) && gallery[index + 1].id_number != 0 {
+            index += 1
+            loadGalleryImageAtIndex(index, translationX: 40)
+        } else {
+            flashErrorBackground()
+        }
+    }
+    
+    private func loadGalleryImageAtIndex(_ targetIndex: Int, translationX: CGFloat) {
+        let item = gallery[targetIndex]
+        self.title = (item.name?.isEmpty == false) ? item.name : "Time Card Image"
+        
+        // Use thumbnail immediately for smooth animation
+        if let thumbData = item.thumbnail, let thumb = UIImage(data: thumbData) {
+            self.imageView.image = thumb
+        }
+        
+        self.imageView.transform = CGAffineTransform(translationX: translationX, y: 0)
+        UIView.animate(withDuration: 0.25) {
+            self.imageView.transform = .identity
+        }
+        
+        // Decode full image in background
+        if let fullData = item.fullSize {
+            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+                guard let fullImage = UIImage(data: fullData) else { return }
+                DispatchQueue.main.async {
+                    if self?.index == targetIndex {
+                        self?.imageView.image = fullImage
+                    }
                 }
-                else {
-                    imageView.image = UIImage(data: gallery[index].fullSize!)
-                }
-                
-                UIView.animate(withDuration: 0.50) {
-                    self.imageView.frame = frame
-                }
-                
-                if gallery[index].name != nil {
-                    self.title = gallery[index].name
-                }
-                else {
-                    self.title = "Unknown"
-                }
-                
-                let swipeGestureLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.LeftSwipeAction(_:)))
-                swipeGestureLeft.direction = .left
-                self.imageView.addGestureRecognizer(swipeGestureLeft)
             }
-            
-            else {
-                let backgroundColor = view.backgroundColor
-                UIView.animate(withDuration: 0.5, animations: {
-                    self.view.backgroundColor = UIColor.red
-                },
-                completion: {_ in
-                    UIView.animate(withDuration: 0.5, animations: {
-                        self.view.backgroundColor = backgroundColor
-                    },
-                    completion: nil)
-                })
+        }
+    }
+    
+    private func flashErrorBackground() {
+        let originalColor = view.backgroundColor
+        UIView.animate(withDuration: 0.2, animations: {
+            self.view.backgroundColor = UIColor.systemRed.withAlphaComponent(0.4)
+        }) { _ in
+            UIView.animate(withDuration: 0.2) {
+                self.view.backgroundColor = originalColor
             }
         }
     }
