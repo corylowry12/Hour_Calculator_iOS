@@ -36,7 +36,6 @@
 		328498462687BE280092D22F /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498452687BE280092D22F /* SettingsTableViewCell.swift */; };
 		328498482687D3F30092D22F /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328498472687D3F30092D22F /* ThemeViewController.swift */; };
 		3284984C2687FE380092D22F /* PatchNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3284984B2687FE380092D22F /* PatchNotesViewController.swift */; };
-		32A2C045269234F200EABD3C /* HowToTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A2C044269234F200EABD3C /* HowToTableViewController.swift */; };
 		32A2C0F92696C12600EABD3C /* orange_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F52696C12600EABD3C /* orange_logo.png */; };
 		32A2C0FA2696C12700EABD3C /* blue_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F62696C12600EABD3C /* blue_logo.png */; };
 		32A2C0FB2696C12700EABD3C /* purple_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 32A2C0F72696C12600EABD3C /* purple_logo.png */; };
@@ -115,7 +114,6 @@
 		328498452687BE280092D22F /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		328498472687D3F30092D22F /* ThemeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
 		3284984B2687FE380092D22F /* PatchNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchNotesViewController.swift; sourceTree = "<group>"; };
-		32A2C044269234F200EABD3C /* HowToTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToTableViewController.swift; sourceTree = "<group>"; };
 		32A2C0F52696C12600EABD3C /* orange_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orange_logo.png; sourceTree = "<group>"; };
 		32A2C0F62696C12600EABD3C /* blue_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_logo.png; sourceTree = "<group>"; };
 		32A2C0F72696C12600EABD3C /* purple_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple_logo.png; sourceTree = "<group>"; };
@@ -236,7 +234,6 @@
 				32088B1626D4984500B62C2A /* GalleryCollectionViewViewController.swift */,
 				3254AFA0268E71FB005B13E5 /* HistorySettingsTableViewController.swift */,
 				325A41C72685634100B098C9 /* HistoryViewController.swift */,
-				32A2C044269234F200EABD3C /* HowToTableViewController.swift */,
 				3272B71226D6D33100B2867C /* ImageViewController.swift */,
 				3284984B2687FE380092D22F /* PatchNotesViewController.swift */,
 				328498452687BE280092D22F /* SettingsTableViewCell.swift */,
@@ -560,7 +557,6 @@
 				325F378826978B88000D6FFB /* TimeCardTableViewController.swift in Sources */,
 				32629DFB26825FD7006632F2 /* ViewController.swift in Sources */,
 				32629DF726825FD7006632F2 /* AppDelegate.swift in Sources */,
-				32A2C045269234F200EABD3C /* HowToTableViewController.swift in Sources */,
 				322C564226BDC32900A4E8DD /* TimeCardInfoTableViewController.swift in Sources */,
 				32629DF926825FD7006632F2 /* SceneDelegate.swift in Sources */,
 				325A41C82685634100B098C9 /* HistoryViewController.swift in Sources */,
