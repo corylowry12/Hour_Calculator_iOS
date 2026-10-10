@@ -1,16 +1,33 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Siren",
-        "repositoryURL": "https://github.com/ArtSabintsev/Siren.git",
-        "state": {
-          "branch": null,
-          "revision": "9173fc529731705a737658b2801ccbc19dd385c8",
-          "version": "5.8.1"
-        }
+  "originHash" : "fa12127fa97649fe6336362e1ca37e9a61c182df925a81f49af0b49546e358ed",
+  "pins" : [
+    {
+      "identity" : "siren",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ArtSabintsev/Siren.git",
+      "state" : {
+        "revision" : "9173fc529731705a737658b2801ccbc19dd385c8",
+        "version" : "5.8.1"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "swift-package-manager-google-mobile-ads",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/googleads/swift-package-manager-google-mobile-ads.git",
+      "state" : {
+        "revision" : "d1fa1f5c1dfe3b43d56c73f4de388ad3316618bc",
+        "version" : "13.11.0"
+      }
+    },
+    {
+      "identity" : "swift-package-manager-google-user-messaging-platform",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git",
+      "state" : {
+        "revision" : "13b248eaa73b7826f0efb1bcf455e251d65ecb1b",
+        "version" : "3.1.0"
+      }
+    }
+  ],
+  "version" : 3
 }
