@@ -164,26 +164,23 @@ class ThemeViewController: UITableViewController {
                     number = Int32.random(in: 0...4)
                 }
                 
+                changeIcon(nil)
+                
                 var accent : UIColor!
                 if number == 0 {
                     accent = UIColor(rgb: 0x26A69A)
-                    changeIcon(nil)
                 }
                 else if number == 1 {
                     accent = UIColor(rgb: 0x7841c4)
-                    changeIcon("purple_logo")
                 }
                 else if number == 2 {
                     accent = UIColor(rgb: 0x347deb)
-                    changeIcon("blue_logo")
                 }
                 else if number == 3 {
                     accent = UIColor(rgb: 0xfc783a)
-                    changeIcon("orange_logo")
                 }
                 else if number == 4 {
                     accent = UIColor(rgb: 0xc41d1d)
-                    changeIcon("red_logo")
                 }
                 UIView.transition(with: view.window ?? UIWindow(), duration: 0.5, options: [.transitionCrossDissolve, .curveEaseInOut], animations: {
                     self.view.window?.tintColor = accent
@@ -209,7 +206,7 @@ class ThemeViewController: UITableViewController {
         return indexPath
     }
     
-    func changeIcon(_ iconName: Any?) {
+    func changeIcon(_ iconName: String?) {
         if UIApplication.shared.responds(to: #selector(getter: UIApplication.supportsAlternateIcons)) && UIApplication.shared.supportsAlternateIcons {
             
             typealias setAlternateIconName = @convention(c) (NSObject, Selector, NSString?, @escaping (NSError) -> ()) -> ()
