@@ -16,13 +16,14 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var moreMenuButton: UIBarButtonItem!
     
-    @IBOutlet var exportMenuButton: UIBarButtonItem!
-    @IBOutlet weak var deleteAllMenuButton: UIBarButtonItem!
+    //@IBOutlet var exportMenuButton: UIBarButtonItem!
+    //@IBOutlet weak var deleteAllMenuButton: UIBarButtonItem!
     @IBOutlet weak var deleteSelectedButton: UIButton!
-    @IBOutlet weak var editMenuButton: UIBarButtonItem!
+    //@IBOutlet weak var editMenuButton: UIBarButtonItem!
     
-    @IBOutlet weak var infoButton: UIBarButtonItem!
+    //@IBOutlet weak var infoButton: UIBarButtonItem!
     var tappedItem: Hours!
     
     let userDefaults = UserDefaults.standard
@@ -108,12 +109,12 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         else if longPressGesture.state == UIGestureRecognizer.State.began {
             tableView.setEditing(true, animated: true)
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-            editButton.title = "Cancel"
+            editButton?.image = UIImage(systemName: "xmark")
             deleteSelectedButton.isHidden = false
         }
     }
     
-    lazy var bannerView: GADBannerView! = GADBannerView(adSize: kGADAdSizeBanner)
+    lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
     override var canBecomeFirstResponder: Bool {
         get {
@@ -126,16 +127,16 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             if undo == 1 {
     
                 print("Why are you shaking me?")
-                let alert = UIAlertController(title: "Undo", message: "Would you like to undo recent hour deletion?", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Undo", message: "Would you like to undo recent hour deletion?", preferredStyle: .actionSheet)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
                     (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext.rollback()
                     
                     UIView.transition(with: self.tableView, duration: 0.25, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {self.tableView.reloadData()}, completion: nil)
                     
-                    editMenuButton.isEnabled = true
-                    infoButton.isEnabled = true
-                    deleteAllMenuButton.isEnabled = true
-                    exportMenuButton.isEnabled = true
+                    editButton.isEnabled = true
+                    //infoButton.isEnabled = true
+                    //deleteAllMenuButton.isEnabled = true
+                    //exportMenuButton.isEnabled = true
                     noHoursStoredBackground()
                     
                     undo = 0
@@ -170,21 +171,21 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         NotificationCenter.default.addObserver(self, selector: #selector(HistoryViewController.reloadTableView), name: notificationName, object: nil)
         
         if hourItems.count > 0 {
-            self.deleteAllMenuButton.isEnabled = true
-            self.editMenuButton.isEnabled = true
-            exportMenuButton.isEnabled = true
+            //self.deleteAllMenuButton.isEnabled = true
+            self.editButton.isEnabled = true
+            //exportMenuButton.isEnabled = true
         }
         else {
-            self.deleteAllMenuButton.isEnabled = false
-            self.editMenuButton.isEnabled = false
-            self.exportMenuButton.isEnabled = false
+            //self.deleteAllMenuButton.isEnabled = false
+            self.editButton.isEnabled = false
+            //self.exportMenuButton.isEnabled = false
         }
         
         addBannerViewToView(bannerView)
         
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         bannerView.rootViewController = self
-        bannerView.load(GADRequest())
+        bannerView.load(Request())
         
         self.tableView.delegate = self
         
@@ -197,6 +198,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.allowsMultipleSelectionDuringEditing = true
         
         noHoursStoredBackground()
+        setupMoreMenu()
     }
     
     func noHoursStoredBackground() {
@@ -217,19 +219,64 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
+    private func setupMoreMenu() {
+        let deferredMenu = UIDeferredMenuElement { [weak self] completion in
+            guard let self = self else {
+                completion([])
+                return
+            }
+
+            let hasItems = !self.hourItems.isEmpty
+
+            let exportAction = UIAction(
+                title: "Export",
+                image: UIImage(systemName: "square.and.arrow.up"),
+                attributes: hasItems ? [] : .disabled
+            ) { _ in
+                self.handleExport()
+                self.setupMoreMenu()
+            }
+
+            let infoAction = UIAction(
+                title: "Info",
+                image: UIImage(systemName: "info.circle"),
+                attributes: hasItems ? [] : .disabled
+            ) { _ in
+                self.handleInfo()
+            }
+
+            let deleteAllAction = UIAction(
+                title: "Delete All",
+                image: UIImage(systemName: "trash"),
+                attributes: hasItems ? .destructive : [.destructive, .disabled]
+            ) { _ in
+                self.handleDeleteAll()
+                self.setupMoreMenu()
+            }
+
+            completion([exportAction, infoAction, deleteAllAction])
+        }
+
+        moreMenuButton.menu = UIMenu(title: "", children: [deferredMenu])
+    }
+
+
+    
     override func viewDidAppear(_ animated: Bool) {
         
         noHoursStoredBackground()
         
         if hourItems.count > 0 {
-            self.deleteAllMenuButton.isEnabled = true
-            self.editMenuButton.isEnabled = true
-            self.exportMenuButton.isEnabled = true
+            //self.deleteAllMenuButton.isEnabled = true
+            self.editButton.isEnabled = true
+            //self.exportMenuButton.isEnabled = true
+            self.editButton.isEnabled = true
         }
         else {
-            self.deleteAllMenuButton.isEnabled = false
-            self.editMenuButton.isEnabled = false
-            self.exportMenuButton.isEnabled = false
+            //self.deleteAllMenuButton.isEnabled = false
+            self.editButton.isEnabled = false
+            //self.exportMenuButton.isEnabled = false
+            self.editButton.isEnabled = false
         }
     }
     
@@ -266,16 +313,16 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.tableView.reloadData()
         }, completion: nil)
         if hourItems.count > 0 {
-            self.deleteAllMenuButton.isEnabled = true
-            self.editMenuButton.isEnabled = true
-            self.infoButton.isEnabled = true
-            self.exportMenuButton.isEnabled = true
+            //self.deleteAllMenuButton.isEnabled = true
+            self.editButton.isEnabled = true
+            //self.infoButton.isEnabled = true
+            //self.exportMenuButton.isEnabled = true
         }
         else {
-            self.deleteAllMenuButton.isEnabled = false
-            self.editMenuButton.isEnabled = false
-            infoButton.isEnabled = false
-            exportMenuButton.isEnabled = false
+            //self.deleteAllMenuButton.isEnabled = false
+            self.editButton.isEnabled = false
+            //infoButton.isEnabled = false
+            //exportMenuButton.isEnabled = false
         }
     }
     
@@ -312,14 +359,14 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         undo = 0
         tableView.setEditing(false, animated: false)
-        editButton.title = "Edit"
+        editButton?.image = UIImage(systemName: "pencil")
         deleteSelectedButton.isHidden = true
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .destructive,
                                         title: "Delete") { (action, view, completionHandler) in
-            let alert = UIAlertController(title: "Warning", message: "You are fixing to delete a single entry, would you like to continue?", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Warning", message: "You are fixing to delete a single entry, would you like to continue?", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                 let hourToDelete = self.hourItems[indexPath.row]
                 self.context.delete(hourToDelete)
@@ -333,7 +380,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.noHoursStoredBackground()
                 
                 if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
-                    let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .alert)
+                    let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
                     alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {_ in
                         UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
                     }
@@ -347,7 +394,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.present(alert, animated: true, completion: nil)
         }
         let exportAction = UIContextualAction(style: .normal, title: "Export") { (action, view, completionHandler) in
-            let alert = UIAlertController(title: "Warning", message: "You are fixing to export a single hour. Would you like to continue?", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Warning", message: "You are fixing to export a single hour. Would you like to continue?", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                 var random : Int32!
                 do {
@@ -389,10 +436,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
                 self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
                 if self.hourItems.count == 0 {
-                    self.editButton.isEnabled = false
-                    self.infoButton.isEnabled = false
-                    self.deleteAllMenuButton.isEnabled = false
-                    self.exportMenuButton.isEnabled = false
+                    //self.editButton.isEnabled = false
+                    //self.infoButton.isEnabled = false
+                    //self.deleteAllMenuButton.isEnabled = false
+                    //self.exportMenuButton.isEnabled = false
                 }
             }))
             alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {_ in
@@ -476,7 +523,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    func addBannerViewToView(_ bannerView: GADBannerView) {
+    func addBannerViewToView(_ bannerView: BannerView) {
         
         bannerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bannerView)
@@ -498,7 +545,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             ])
     }
     
-    func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
+    func bannerViewDidReceiveAd(_ bannerView: BannerView) {
         addBannerViewToView(bannerView)
         bannerView.alpha = 0
         UIView.animate(withDuration: 1, animations: {
@@ -506,19 +553,19 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         })
     }
     
-    @IBAction func deleteAllTapped(_ sender: UIBarButtonItem) {
+    private func handleDeleteAll() {
         
         if self.tableView.isEditing == true {
             self.tableView.setEditing(false, animated: true)
             self.deleteSelectedButton.isHidden = true
-            self.editButton.title = "Edit"
+            //self.editButton.title = "Edit"
         }
         
-        let alert = UIAlertController(title: "Delete All?", message: "Are you sure you would like to delete all stored hours?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Delete All?", message: "Are you sure you would like to delete all stored hours?", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
             undo = 1
             DispatchQueue.main.async {
-                for i in (0...hourItems.count - 1).reversed() {
+                for i in (0...self.hourItems.count - 1).reversed() {
                     let index = [0, i] as IndexPath
                     let hourToDelete = self.hourItems[i]
                     
@@ -526,12 +573,12 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     self.tableView.deleteRows(at: [index], with: .fade)
                     
                 }
-                noHoursStoredBackground()
-                tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
+                self.noHoursStoredBackground()
+                tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
             }
             
             if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
-                let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .alert)
+                let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
                 alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {_ in
                     UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
                 }
@@ -545,10 +592,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
             self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
             
-            self.infoButton.isEnabled = false
-            self.deleteAllMenuButton.isEnabled = false
-            self.editMenuButton.isEnabled = false
-            exportMenuButton.isEnabled = false
+            //self.infoButton.isEnabled = false
+            //self.deleteAllMenuButton.isEnabled = false
+            self.editButton.isEnabled = false
+            //exportMenuButton.isEnabled = false
             
             noHoursStoredBackground()
         }
@@ -559,15 +606,15 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         self.present(alert, animated: true)
         
         if hourItems.count > 0 {
-            self.deleteAllMenuButton.isEnabled = true
-            self.editMenuButton.isEnabled = true
-            self.exportMenuButton.isEnabled = true
+            //self.deleteAllMenuButton.isEnabled = true
+            self.editButton.isEnabled = true
+            //self.exportMenuButton.isEnabled = true
         }
         else {
-            self.infoButton.isEnabled = false
-            self.deleteAllMenuButton.isEnabled = false
-            self.editMenuButton.isEnabled = false
-            exportMenuButton.isEnabled = false
+            //self.infoButton.isEnabled = false
+            //self.deleteAllMenuButton.isEnabled = false
+            self.editButton.isEnabled = false
+            //exportMenuButton.isEnabled = false
         }
     }
     
@@ -580,26 +627,26 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 
                 tableView.setEditing(false, animated: true)
                 deleteSelectedButton.isHidden = true
-                editButton.title = "Edit"
+                editButton?.image = UIImage(systemName: "pencil")
             }
             else if tableView.isEditing == true && tableView.indexPathsForSelectedRows?.count != 0 {
                 tableView.setEditing(false, animated: true)
                 deleteSelectedButton.isHidden = true
-                editButton.title = "Edit"
+                editButton?.image = UIImage(systemName: "pencil")
             }
             else if tableView.isEditing == false {
                 deleteSelectedButton.isEnabled = false
                 deleteSelectedButton.alpha = 0.80
                 tableView.setEditing(true, animated: true)
                 deleteSelectedButton.isHidden = false
-                editButton.title = "Cancel"
+                editButton?.image = UIImage(systemName: "xmark")
             }
             else {
                 deleteSelectedButton.isEnabled = false
                 deleteSelectedButton.alpha = 0.80
                 tableView.setEditing(true, animated: true)
                 deleteSelectedButton.isHidden = false
-                editButton.title = "Cancel"
+                editButton?.image = UIImage(systemName: "xmark")
             }
         }
     }
@@ -607,14 +654,14 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBAction func deleteSelectedButtonTapped(_ sender: UIButton) {
         
         if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
-            let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .alert)
+            let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {_ in
                 UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
             }
             ))
             self.present(alert, animated: true, completion: nil)
         }
-        let alert = UIAlertController(title: "Warning", message: "You are fixing to delete selected hours. Would you like to continue?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Warning", message: "You are fixing to delete selected hours. Would you like to continue?", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
         if let indexPaths = tableView.indexPathsForSelectedRows {
             let sortedPaths = indexPaths.sorted {$0.row > $1.row}
@@ -649,7 +696,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
             
             tableView.setEditing(false, animated: true)
-            editButton.title = "Edit"
+            editButton?.image = UIImage(systemName: "pencil")
             deleteSelectedButton.isHidden = true
             
         }))
@@ -659,27 +706,27 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         if (hourItems.count == 0) {
             editButton.isEnabled = false
             deleteSelectedButton.isHidden = false
-            infoButton.isEnabled = false
-            exportMenuButton.isEnabled = false
+            //infoButton.isEnabled = false
+            //exportMenuButton.isEnabled = false
         }
         
         if hourItems.count > 0 {
-            self.deleteAllMenuButton.isEnabled = true
-            self.editMenuButton.isEnabled = true
-            exportMenuButton.isEnabled = true
+            //self.deleteAllMenuButton.isEnabled = true
+            self.editButton.isEnabled = true
+            //exportMenuButton.isEnabled = true
         }
         else {
-            self.deleteAllMenuButton.isEnabled = false
-            self.editMenuButton.isEnabled = false
-            exportMenuButton.isEnabled = false
+            //self.deleteAllMenuButton.isEnabled = false
+            self.editButton.isEnabled = false
+            //exportMenuButton.isEnabled = false
         }
         
     }
     
-    @IBAction func infoButtonTapped(_ sender: UIBarButtonItem) {
+    private func handleInfo() {
         if tableView.isEditing == true {
             tableView.setEditing(false, animated: true)
-            editButton.title = "Edit"
+            editButton?.image = UIImage(systemName: "pencil")
             deleteSelectedButton.isHidden = true
         }
         
@@ -718,7 +765,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 alert = UIAlertController(title: nil, message: nil,  preferredStyle: .actionSheet)
                 let popover = alert.popoverPresentationController
                 popover!.sourceView = self.view
-                popover?.barButtonItem = self.infoButton as UIBarButtonItem
+                //popover?.barButtonItem = self.infoButton as UIBarButtonItem
             }
             else {
             alert = UIAlertController(title: nil, message: nil,  preferredStyle: .actionSheet)
@@ -738,10 +785,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }, completion: nil)
         tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
         if hourItems.count == 0 {
-            self.deleteAllMenuButton.isEnabled = false
-            self.editMenuButton.isEnabled = false
-            self.infoButton.isEnabled = false
-            self.exportMenuButton.isEnabled = false
+            //self.deleteAllMenuButton.isEnabled = false
+            self.editButton.isEnabled = false
+            //self.infoButton.isEnabled = false
+            //self.exportMenuButton.isEnabled = false
         }
         noHoursStoredBackground()
     }
@@ -756,7 +803,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         return dateFormatter.date(from: dateStr)! as NSDate
     }
     
-    @IBAction func exportButton(_ sender: Any) {
+    private func handleExport() {
         
         var hoursForExport: [Hours] {
             
@@ -785,7 +832,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         if tableView.isEditing == true {
-            let alert = UIAlertController(title: "Warning", message: "You are fixing to export selected hours. Would you like to continue?", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Warning", message: "You are fixing to export selected hours. Would you like to continue?", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                 if let indexPaths = self.tableView.indexPathsForSelectedRows {
                     let sortedPaths = indexPaths.sorted {$0.row > $1.row}
@@ -843,11 +890,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
             //tableView.setEditing(false, animated: true)
             deleteSelectedButton.isHidden = true
-            editButton.title = "Edit"
+            editButton?.image = UIImage(systemName: "pencil")
         }
         else {
             if hourItems.count > 7 {
-                let alert = UIAlertController(title: "Warning", message: "You have more than 7 hours stored, would you like to continue?", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Warning", message: "You have more than 7 hours stored, would you like to continue?", preferredStyle: .actionSheet)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                     let timeCards = TimeCards(context: self.context)
                     let gallery = Gallery(context: self.context)
@@ -882,10 +929,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     gallery.id_number = random
                     self.noHoursStoredBackground()
                     self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                    self.editButton.isEnabled = false
-                    self.infoButton.isEnabled = false
-                    self.deleteAllMenuButton.isEnabled = false
-                    self.exportMenuButton.isEnabled = false
+                    //self.editButton.isEnabled = false
+                    //self.infoButton.isEnabled = false
+                    //self.deleteAllMenuButton.isEnabled = false
+                    //self.exportMenuButton.isEnabled = false
                     self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
                     self.undo = 1
                 }))
@@ -928,10 +975,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
                     self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
                     if self.hourItems.count == 0 {
-                        self.editButton.isEnabled = false
-                        self.infoButton.isEnabled = false
-                        self.deleteAllMenuButton.isEnabled = false
-                        self.exportMenuButton.isEnabled = false
+                        //self.editButton.isEnabled = false
+                        //self.infoButton.isEnabled = false
+                        //self.deleteAllMenuButton.isEnabled = false
+                        //self.exportMenuButton.isEnabled = false
                     }
                     
                     self.undo = 1
@@ -940,7 +987,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.present(alert, animated: true, completion: nil)
             }
             else if hourItems.count == 7 {
-                let alert = UIAlertController(title: "Warning", message: "You are fixing to export a weeks worth of hours, would you like to continue?", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Warning", message: "You are fixing to export a weeks worth of hours, would you like to continue?", preferredStyle: .actionSheet)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {_ in
                     let timeCards = TimeCards(context: self.context)
                     let gallery = Gallery(context: self.context)
@@ -974,10 +1021,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     gallery.id_number = random
                     self.noHoursStoredBackground()
                     self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                    self.editButton.isEnabled = false
-                    self.infoButton.isEnabled = false
-                    self.deleteAllMenuButton.isEnabled = false
-                    self.exportMenuButton.isEnabled = false
+                    //self.editButton.isEnabled = false
+                    //self.infoButton.isEnabled = false
+                    //self.deleteAllMenuButton.isEnabled = false
+                    //self.exportMenuButton.isEnabled = false
                     self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
                     self.undo = 1
                 }))
@@ -985,7 +1032,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.present(alert, animated: true, completion: nil)
             }
             else {
-                let alert = UIAlertController(title: "Warning", message: "You have less than a weeks worth of hours, would you like to continue?", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Warning", message: "You have less than a weeks worth of hours, would you like to continue?", preferredStyle: .actionSheet)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
                     let timeCards = TimeCards(context: self.context)
                     let gallery = Gallery(context: self.context)
@@ -1027,10 +1074,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     
                     noHoursStoredBackground()
                     tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                    editButton.isEnabled = false
-                    infoButton.isEnabled = false
-                    deleteAllMenuButton.isEnabled = false
-                    exportMenuButton.isEnabled = false
+                    //editButton.isEnabled = false
+                    //infoButton.isEnabled = false
+                    //deleteAllMenuButton.isEnabled = false
+                    //exportMenuButton.isEnabled = false
                     self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
                     undo = 1
                 }))
