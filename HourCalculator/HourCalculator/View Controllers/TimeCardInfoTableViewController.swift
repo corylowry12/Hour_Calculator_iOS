@@ -45,7 +45,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     private static let isCameraAvailable: Bool = UIImagePickerController.isSourceTypeAvailable(.camera)
-    private var prewarmedCameraPicker: UIImagePickerController?
     
     private var currentCard: TimeCards?
     private var cachedTimeCardItems: [TimeCardInfo] = []
@@ -149,16 +148,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         headerImageView.addGestureRecognizer(longPress)
         
         setupNavigationButtons()
-        
-        if Self.isCameraAvailable {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                let picker = UIImagePickerController()
-                picker.sourceType = .camera
-                picker.delegate = self
-                self.prewarmedCameraPicker = picker
-            }
-        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -466,11 +455,15 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             var chooseActions: [UIAction] = []
             if Self.isCameraAvailable {
                 chooseActions.append(UIAction(title: "Take Photo", image: UIImage(systemName: "camera")) { [weak self] _ in
-                    self?.presentCameraPicker()
+                    DispatchQueue.main.async {
+                        self?.presentCameraPicker()
+                    }
                 })
             }
             chooseActions.append(UIAction(title: "Choose Photo", image: UIImage(systemName: "photo.on.rectangle")) { [weak self] _ in
-                self?.presentModernPhotoPicker()
+                DispatchQueue.main.async {
+                    self?.presentModernPhotoPicker()
+                }
             })
             
             let chooseNewMenu = UIMenu(title: "Choose New Image", image: UIImage(systemName: "arrow.triangle.2.circlepath"), children: chooseActions)
@@ -483,12 +476,16 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         } else {
             if Self.isCameraAvailable {
                 actions.append(UIAction(title: "Take Photo", image: UIImage(systemName: "camera")) { [weak self] _ in
-                    self?.presentCameraPicker()
+                    DispatchQueue.main.async {
+                        self?.presentCameraPicker()
+                    }
                 })
             }
             
             actions.append(UIAction(title: "Choose Photo", image: UIImage(systemName: "photo.on.rectangle")) { [weak self] _ in
-                self?.presentModernPhotoPicker()
+                DispatchQueue.main.async {
+                    self?.presentModernPhotoPicker()
+                }
             })
         }
         
@@ -517,19 +514,11 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         guard Self.isCameraAvailable else { return }
         self.cameraIsBeingUsed = true
         
-        let picker = prewarmedCameraPicker ?? {
-            let p = UIImagePickerController()
-            p.sourceType = .camera
-            p.delegate = self
-            return p
-        }()
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.delegate = self
         
-        present(picker, animated: true) { [weak self] in
-            let next = UIImagePickerController()
-            next.sourceType = .camera
-            next.delegate = self
-            self?.prewarmedCameraPicker = next
-        }
+        present(picker, animated: true)
     }
     
     // MARK: - PHPickerViewControllerDelegate
@@ -691,12 +680,16 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         
         if Self.isCameraAvailable {
             sheet.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { [weak self] _ in
-                self?.presentCameraPicker()
+                DispatchQueue.main.async {
+                    self?.presentCameraPicker()
+                }
             }))
         }
         
         sheet.addAction(UIAlertAction(title: "Choose From Library", style: .default, handler: { [weak self] _ in
-            self?.presentModernPhotoPicker()
+            DispatchQueue.main.async {
+                self?.presentModernPhotoPicker()
+            }
         }))
         
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -704,7 +697,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     @IBAction func addButtonClicked(_ sender: Any) {
-        setupAddMenu()
+        // Handled by addBarButton.menu
     }
     
     // MARK: - UITableView DataSource & Delegate
