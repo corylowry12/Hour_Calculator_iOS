@@ -23,17 +23,11 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         return df
     }()
     
-    private static let displayDateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateFormat = "MMM d, yyyy"
-        return df
-    }()
-    
-    @IBOutlet weak var dateButton: UIButton!
+    @IBOutlet weak var dateButton: LiquidGlassCalendarButton!
     @IBOutlet weak var datePickerInTime: UIDatePicker!
     @IBOutlet weak var datePickerOutTime: UIDatePicker!
     @IBOutlet weak var deleteButton: UIBarButtonItem!
-    @IBOutlet var saveButton: UIButton!
+    @IBOutlet var saveButton: LiquidGlassButton!
     @IBOutlet weak var dateLabel: UILabel!
     
     // Pass the managed object directly rather than indexing via UserDefaults
@@ -69,23 +63,28 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        let accentColor: UIColor
         let accent = userDefaults.integer(forKey: "accent")
         switch accent {
-        case 0: saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
-        case 1: saveButton.backgroundColor = UIColor(rgb: 0x7841c4)
-        case 2: saveButton.backgroundColor = UIColor(rgb: 0x347deb)
-        case 3: saveButton.backgroundColor = UIColor(rgb: 0xfc783a)
-        case 4: saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+        case 0: accentColor = UIColor(rgb: 0x26A69A)
+        case 1: accentColor = UIColor(rgb: 0x7841c4)
+        case 2: accentColor = UIColor(rgb: 0x347deb)
+        case 3: accentColor = UIColor(rgb: 0xfc783a)
+        case 4: accentColor = UIColor(rgb: 0xc41d1d)
         default:
             let randomAccent = userDefaults.integer(forKey: "accentRandom")
             switch randomAccent {
-            case 0: saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
-            case 1: saveButton.backgroundColor = UIColor(rgb: 0x7841c4)
-            case 2: saveButton.backgroundColor = UIColor(rgb: 0x347deb)
-            case 3: saveButton.backgroundColor = UIColor(rgb: 0xfc783a)
-            default: saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+            case 0: accentColor = UIColor(rgb: 0x26A69A)
+            case 1: accentColor = UIColor(rgb: 0x7841c4)
+            case 2: accentColor = UIColor(rgb: 0x347deb)
+            case 3: accentColor = UIColor(rgb: 0xfc783a)
+            default: accentColor = UIColor(rgb: 0xc41d1d)
             }
         }
+        
+        saveButton?.applyAccentGlassColor(accentColor)
+        dateButton?.selectedDate = selectedDate
+        dateButton?.applyAccentColor(accentColor)
     }
     
     override func viewDidLoad() {
@@ -113,86 +112,19 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
             selectedDate = Date()
         }
         
-        setupDateButton()
+        dateButton.selectedDate = selectedDate
+        dateButton.onDateChanged = { [weak self] newDate in
+            guard let self = self else { return }
+            self.selectedDate = newDate
+            self.updateModalPresentationState()
+        }
+        
         updateModalPresentationState()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
-    }
-    
-    private func setupDateButton() {
-        dateButton.layer.cornerRadius = 8
-        dateButton.layer.masksToBounds = true
-        dateButton.backgroundColor = UIColor.systemGray5
-        updateDateButtonTitle()
-    }
-    
-    private func updateDateButtonTitle() {
-        let title = Self.displayDateFormatter.string(from: selectedDate)
-        if var config = dateButton.configuration {
-            config.title = title
-            dateButton.configuration = config
-        } else {
-            dateButton.setTitle(title, for: .normal)
-        }
-    }
-    
-    @IBAction func dateButtonTapped(_ sender: Any) {
-        let alertVC = UIViewController()
-        alertVC.modalPresentationStyle = .overFullScreen
-        alertVC.modalTransitionStyle = .crossDissolve
-        alertVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
-        
-        let dismissButton = UIButton(frame: alertVC.view.bounds)
-        dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        dismissButton.addTarget(self, action: #selector(dismissCalendarModal), for: .touchUpInside)
-        alertVC.view.addSubview(dismissButton)
-        
-        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
-        let glassContainer = UIVisualEffectView(effect: blurEffect)
-        glassContainer.layer.cornerRadius = 24
-        glassContainer.layer.masksToBounds = true
-        glassContainer.layer.borderWidth = 1.0
-        glassContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-        glassContainer.translatesAutoresizingMaskIntoConstraints = false
-        alertVC.view.addSubview(glassContainer)
-        
-        let picker = UIDatePicker()
-        picker.datePickerMode = .date
-        picker.preferredDatePickerStyle = .inline
-        picker.maximumDate = Date()
-        picker.date = selectedDate
-        picker.tintColor = saveButton.backgroundColor
-        picker.backgroundColor = .clear
-        picker.translatesAutoresizingMaskIntoConstraints = false
-        picker.addTarget(self, action: #selector(inlineDateChanged(_:)), for: .valueChanged)
-        glassContainer.contentView.addSubview(picker)
-        
-        NSLayoutConstraint.activate([
-            glassContainer.centerXAnchor.constraint(equalTo: alertVC.view.centerXAnchor),
-            glassContainer.centerYAnchor.constraint(equalTo: alertVC.view.centerYAnchor),
-            glassContainer.widthAnchor.constraint(equalToConstant: 335),
-            
-            picker.topAnchor.constraint(equalTo: glassContainer.contentView.topAnchor, constant: 12),
-            picker.bottomAnchor.constraint(equalTo: glassContainer.contentView.bottomAnchor, constant: -12),
-            picker.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 12),
-            picker.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -12)
-        ])
-        
-        present(alertVC, animated: true)
-    }
-
-    @objc private func inlineDateChanged(_ sender: UIDatePicker) {
-        selectedDate = sender.date
-        updateDateButtonTitle()
-        updateModalPresentationState()
-        dismiss(animated: true)
-    }
-
-    @objc private func dismissCalendarModal() {
-        dismiss(animated: true)
     }
     
     @IBAction func inTimeValueChanged(_ sender: UIDatePicker) {
@@ -396,6 +328,7 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         updateModalPresentationState()
         
         if userDefaults.integer(forKey: "dismissEdit") == 0 {
+            NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
             self.dismiss(animated: true, completion: nil)
         }
     }
