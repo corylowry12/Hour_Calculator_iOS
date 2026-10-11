@@ -185,13 +185,14 @@ class SettingsTableViewController: UITableViewController {
         }, for: .touchUpInside)
         modalVC.view.addSubview(dismissButton)
         
-        let blurEffect = UIBlurEffect(style: .systemMaterialDark)
+        // Use systemMaterial so the sheet is bright/crisp in light mode and sleek in dark mode
+        let blurEffect = UIBlurEffect(style: .systemMaterial)
         let bottomSheetContainer = UIVisualEffectView(effect: blurEffect)
         bottomSheetContainer.layer.cornerRadius = 24
         bottomSheetContainer.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         bottomSheetContainer.layer.masksToBounds = true
         bottomSheetContainer.layer.borderWidth = 1.0
-        bottomSheetContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.15).cgColor
+        bottomSheetContainer.layer.borderColor = UIColor.separator.withAlphaComponent(0.2).cgColor
         bottomSheetContainer.translatesAutoresizingMaskIntoConstraints = false
         modalVC.view.addSubview(bottomSheetContainer)
         
@@ -264,8 +265,8 @@ class SettingsTableViewController: UITableViewController {
             for (amt, btn) in optionButtons {
                 let isSelected = (amt == self.selectedDonationAmount)
                 btn.backgroundColor = isSelected ? self.currentAccentColor : UIColor.secondarySystemFill
-                btn.layer.borderColor = isSelected ? UIColor.white.withAlphaComponent(0.6).cgColor : UIColor.separator.withAlphaComponent(0.2).cgColor
-                btn.layer.borderWidth = isSelected ? 1.5 : 1.0
+                btn.layer.borderColor = isSelected ? self.currentAccentColor.cgColor : UIColor.separator.withAlphaComponent(0.2).cgColor
+                btn.layer.borderWidth = isSelected ? 2.0 : 1.0
                 
                 var config = btn.configuration ?? UIButton.Configuration.filled()
                 config.baseForegroundColor = isSelected ? .white : .label
@@ -273,7 +274,7 @@ class SettingsTableViewController: UITableViewController {
             }
             
             var actionConfig = donateActionButton.configuration ?? UIButton.Configuration.filled()
-            actionConfig.title = "Donate $\(self.selectedDonationAmount)"
+            actionConfig.title = "Leave a tip of $\(self.selectedDonationAmount)"
             donateActionButton.configuration = actionConfig
         }
         
