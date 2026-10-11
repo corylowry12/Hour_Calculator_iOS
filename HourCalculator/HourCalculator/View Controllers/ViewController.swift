@@ -44,17 +44,6 @@ class ViewController: UIViewController {
         return [TimeCards]()
     }
     
-    func changeIcon(_ iconName: String?) {
-        if UIApplication.shared.responds(to: #selector(getter: UIApplication.supportsAlternateIcons)) && UIApplication.shared.supportsAlternateIcons {
-            typealias setAlternateIconName = @convention(c) (NSObject, Selector, NSString?, @escaping (NSError) -> ()) -> ()
-            let selectorString = "_setAlternateIconName:completionHandler:"
-            let selector = NSSelectorFromString(selectorString)
-            let imp = UIApplication.shared.method(for: selector)
-            let method = unsafeBitCast(imp, to: setAlternateIconName.self)
-            method(UIApplication.shared, selector, iconName as NSString?, { _ in })
-        }
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         dateLabel.text = nil
@@ -77,19 +66,14 @@ class ViewController: UIViewController {
         switch accent {
         case 0:
             accentColor = UIColor(rgb: 0x26A69A)
-            changeIcon(nil)
         case 1:
             accentColor = UIColor(rgb: 0x7841c4)
-            changeIcon("purple_logo")
         case 2:
             accentColor = UIColor(rgb: 0x347deb)
-            changeIcon("blue_logo")
         case 3:
             accentColor = UIColor(rgb: 0xfc783a)
-            changeIcon("orange_logo")
         case 4:
             accentColor = UIColor(rgb: 0xc41d1d)
-            changeIcon("red_logo")
         case 5:
             let randomAccent = userDefaults.integer(forKey: "accentRandom")
             switch randomAccent {
@@ -101,7 +85,6 @@ class ViewController: UIViewController {
             }
         default:
             accentColor = UIColor(rgb: 0x26A69A)
-            changeIcon(nil)
         }
         
         calculateButton?.applyAccentGlassColor(accentColor)
