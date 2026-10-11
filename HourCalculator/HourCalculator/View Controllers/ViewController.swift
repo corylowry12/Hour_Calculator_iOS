@@ -4,6 +4,7 @@
 //
 //  Created by Cory Lowry on 6/22/21.
 //
+
 import UIKit
 import GoogleMobileAds
 
@@ -11,15 +12,15 @@ class ViewController: UIViewController {
     
     lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
-    @IBOutlet weak var dateDatePicker: UIButton!
-    var window : UIWindow?
+    @IBOutlet weak var dateDatePicker: LiquidGlassCalendarButton!
+    var window: UIWindow?
     
     var userDefaults = UserDefaults.standard
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var datePickerOutTime: UIDatePicker!
-    @IBOutlet weak var calculateButton: UIButton!
+    @IBOutlet weak var calculateButton: LiquidGlassButton!
     
     var selectedDate: Date = Date()
     
@@ -50,7 +51,7 @@ class ViewController: UIViewController {
             let selector = NSSelectorFromString(selectorString)
             let imp = UIApplication.shared.method(for: selector)
             let method = unsafeBitCast(imp, to: setAlternateIconName.self)
-            method(UIApplication.shared, selector, iconName as! NSString?, { _ in })
+            method(UIApplication.shared, selector, iconName as NSString?, { _ in })
         }
     }
     
@@ -71,47 +72,41 @@ class ViewController: UIViewController {
             dateDatePicker.isHidden = false
         }
         
-        updateDateButtonTitle()
-        
-        if userDefaults.integer(forKey: "accent") == 0 {
-            calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
-            dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
+        let accentColor: UIColor
+        let accent = userDefaults.integer(forKey: "accent")
+        switch accent {
+        case 0:
+            accentColor = UIColor(rgb: 0x26A69A)
             changeIcon(nil)
-        } else if userDefaults.integer(forKey: "accent") == 1 {
-            calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
-            dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
+        case 1:
+            accentColor = UIColor(rgb: 0x7841c4)
             changeIcon("purple_logo")
-        } else if userDefaults.integer(forKey: "accent") == 2 {
-            calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
-            dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
+        case 2:
+            accentColor = UIColor(rgb: 0x347deb)
             changeIcon("blue_logo")
-        } else if userDefaults.integer(forKey: "accent") == 3 {
-            calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
-            dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
+        case 3:
+            accentColor = UIColor(rgb: 0xfc783a)
             changeIcon("orange_logo")
-        } else if userDefaults.integer(forKey: "accent") == 4 {
-            calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-            dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
+        case 4:
+            accentColor = UIColor(rgb: 0xc41d1d)
             changeIcon("red_logo")
-        } else if userDefaults.integer(forKey: "accent") == 5 {
+        case 5:
             let randomAccent = userDefaults.integer(forKey: "accentRandom")
-            if randomAccent == 0 {
-                calculateButton.backgroundColor = UIColor(rgb: 0x26A69A)
-                dateDatePicker.tintColor = UIColor(rgb: 0x26A69A)
-            } else if randomAccent == 1 {
-                calculateButton.backgroundColor = UIColor(rgb: 0x7841c4)
-                dateDatePicker.tintColor = UIColor(rgb: 0x7841c4)
-            } else if randomAccent == 2 {
-                calculateButton.backgroundColor = UIColor(rgb: 0x347deb)
-                dateDatePicker.tintColor = UIColor(rgb: 0x347deb)
-            } else if randomAccent == 3 {
-                calculateButton.backgroundColor = UIColor(rgb: 0xfc783a)
-                dateDatePicker.tintColor = UIColor(rgb: 0xfc783a)
-            } else if randomAccent == 4 {
-                calculateButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-                dateDatePicker.tintColor = UIColor(rgb: 0xc41d1d)
+            switch randomAccent {
+            case 0: accentColor = UIColor(rgb: 0x26A69A)
+            case 1: accentColor = UIColor(rgb: 0x7841c4)
+            case 2: accentColor = UIColor(rgb: 0x347deb)
+            case 3: accentColor = UIColor(rgb: 0xfc783a)
+            default: accentColor = UIColor(rgb: 0xc41d1d)
             }
+        default:
+            accentColor = UIColor(rgb: 0x26A69A)
+            changeIcon(nil)
         }
+        
+        calculateButton?.applyAccentGlassColor(accentColor)
+        dateDatePicker.selectedDate = selectedDate
+        dateDatePicker.applyAccentColor(accentColor)
         
         if userDefaults.value(forKey: "StoredEmptyHours") == nil {
             userDefaults.set(false, forKey: "StoredEmptyHours")
@@ -134,7 +129,7 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -142,7 +137,6 @@ class ViewController: UIViewController {
             userDefaults.set(2, forKey: "theme")
         }
         
-        // Apply theme immediately on initial view setup
         let targetTheme = userDefaults.integer(forKey: "theme")
         let targetStyle: UIUserInterfaceStyle = targetTheme == 0 ? .light : (targetTheme == 1 ? .dark : .unspecified)
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
@@ -199,87 +193,14 @@ class ViewController: UIViewController {
         
         tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
         
-        setupDateButton()
-    }
-    
-    private func setupDateButton() {
-        dateDatePicker.layer.cornerRadius = 8
-        dateDatePicker.layer.masksToBounds = true
-        dateDatePicker.backgroundColor = UIColor.systemGray5
-        updateDateButtonTitle()
-    }
-    
-    private func updateDateButtonTitle() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, yyyy"
-        let title = formatter.string(from: selectedDate)
-        
-        if var config = dateDatePicker.configuration {
-            config.title = title
-            dateDatePicker.configuration = config
-        } else {
-            dateDatePicker.setTitle(title, for: .normal)
+        dateDatePicker.selectedDate = selectedDate
+        dateDatePicker.onDateChanged = { [weak self] newDate in
+            self?.selectedDate = newDate
         }
     }
     
-    @IBAction func dateDatePicker(_ sender: Any) {
-        let alertVC = UIViewController()
-        alertVC.modalPresentationStyle = .overFullScreen
-        alertVC.modalTransitionStyle = .crossDissolve
-        alertVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
-        
-        let dismissButton = UIButton(frame: alertVC.view.bounds)
-        dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        dismissButton.addTarget(self, action: #selector(dismissCalendarModal), for: .touchUpInside)
-        alertVC.view.addSubview(dismissButton)
-        
-        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
-        let glassContainer = UIVisualEffectView(effect: blurEffect)
-        glassContainer.layer.cornerRadius = 24
-        glassContainer.layer.masksToBounds = true
-        glassContainer.layer.borderWidth = 1.0
-        glassContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-        glassContainer.translatesAutoresizingMaskIntoConstraints = false
-        alertVC.view.addSubview(glassContainer)
-        
-        let picker = UIDatePicker()
-        picker.datePickerMode = .date
-        picker.preferredDatePickerStyle = .inline
-        picker.maximumDate = Date()
-        picker.date = selectedDate
-        picker.tintColor = calculateButton.backgroundColor
-        picker.backgroundColor = .clear
-        picker.translatesAutoresizingMaskIntoConstraints = false
-        
-        picker.addTarget(self, action: #selector(inlineDateChanged(_:)), for: .valueChanged)
-        glassContainer.contentView.addSubview(picker)
-        
-        NSLayoutConstraint.activate([
-            glassContainer.centerXAnchor.constraint(equalTo: alertVC.view.centerXAnchor),
-            glassContainer.centerYAnchor.constraint(equalTo: alertVC.view.centerYAnchor),
-            glassContainer.widthAnchor.constraint(equalToConstant: 335),
-            
-            picker.topAnchor.constraint(equalTo: glassContainer.contentView.topAnchor, constant: 12),
-            picker.bottomAnchor.constraint(equalTo: glassContainer.contentView.bottomAnchor, constant: -12),
-            picker.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 12),
-            picker.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -12)
-        ])
-        
-        present(alertVC, animated: true)
-    }
-
-    @objc private func inlineDateChanged(_ sender: UIDatePicker) {
-        selectedDate = sender.date
-        updateDateButtonTitle()
-        dismiss(animated: true)
-    }
-
-    @objc private func dismissCalendarModal() {
-        dismiss(animated: true)
-    }
-    
-    var inHour : Int = 0
-    var inMinute : Int = 0
+    var inHour: Int = 0
+    var inMinute: Int = 0
     
     @IBAction func inTimeValueChanged(_ sender: Any) {
         userDefaults.set(datePicker.date, forKey: "intime")
@@ -289,8 +210,8 @@ class ViewController: UIViewController {
         inMinute = components.minute ?? 0
     }
     
-    var outHour : Int = 0
-    var outMinute : Int = 0
+    var outHour: Int = 0
+    var outMinute: Int = 0
     
     @IBAction func outTimeValueChanged(_ sender: Any) {
         userDefaults.set(datePickerOutTime.date, forKey: "outtime")
@@ -333,7 +254,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func PMtoAM(date : Date, inHour : Int, inMinute : Int, outHour : Int, outMinute : Int, minutesDifference : Int, hoursDifference : Int) {
+    func PMtoAM(date: Date, inHour: Int, inMinute: Int, outHour: Int, outMinute: Int, minutesDifference: Int, hoursDifference: Int) {
         let adjustedHours = hoursDifference + 24
         
         if minutesDifference < 0 {
@@ -374,7 +295,7 @@ class ViewController: UIViewController {
         finalizeCalculation()
     }
     
-    func AMtoPM(date : Date, inHour : Int, inMinute : Int, outHour : Int, outMinute : Int, minutesDifference : Int, hoursDifference : Int) {
+    func AMtoPM(date: Date, inHour: Int, inMinute: Int, outHour: Int, outMinute: Int, minutesDifference: Int, hoursDifference: Int) {
         if hoursDifference < 0 {
             dateLabel.text = "In time can not be greater than out time"
         } else if minutesDifference < 0 {
@@ -444,7 +365,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func storeHours(inTime : String, outTime : String, totalHours : String, date: String, hours : Int, minutes : String) {
+    func storeHours(inTime: String, outTime: String, totalHours: String, date: String, hours: Int, minutes: String) {
         let hoursToBeStored = Hours(context: context)
         hoursToBeStored.inTime = inTime
         hoursToBeStored.outTime = outTime
