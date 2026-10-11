@@ -20,6 +20,9 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let userDefaults = UserDefaults.standard
     
+    // In-memory cache to keep 60/120 FPS table scrolling smooth
+    private let thumbnailCache = NSCache<NSNumber, UIImage>()
+    
     var undo: Int = 0
     var predicateText: String!
     
@@ -135,6 +138,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        thumbnailCache.removeAllObjects()
         tableView.reloadData()
         noHoursStoredBackground()
         self.becomeFirstResponder()
@@ -247,7 +251,9 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
                 guard let self = self else { return }
                 
-                self.predicateText = "\(self.timeCards[indexPath.row].id_number)"
+                let deletedID = self.timeCards[indexPath.row].id_number
+                self.predicateText = "\(deletedID)"
+                self.thumbnailCache.removeObject(forKey: NSNumber(value: deletedID))
                 
                 if self.timeCardInfo.count > 0 {
                     for i in (0...self.timeCardInfo.count - 1).reversed() {
@@ -435,6 +441,30 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             cell.inTimeLabel.text = "Week Of: \(inTime ?? "Unknown")"
         }
         cell.totalLabel.text = "Total Hours: \(roundTotal)"
+        
+        // Thumbnail handling
+        let cardIDNumber = NSNumber(value: card.id_number)
+        
+        if let cachedImage = thumbnailCache.object(forKey: cardIDNumber) {
+            cell.thumbnailImageView.image = cachedImage
+            cell.thumbnailImageView.isHidden = false
+        } else {
+            let cardID = card.id_number
+            let fetchRequest = NSFetchRequest<Gallery>(entityName: "Gallery")
+            fetchRequest.predicate = NSPredicate(format: "id_number == %d", cardID)
+            fetchRequest.fetchLimit = 1
+            
+            if let galleryRecord = (try? context.fetch(fetchRequest))?.first,
+               let thumbData = galleryRecord.thumbnail,
+               let thumbnailImage = UIImage(data: thumbData) {
+                thumbnailCache.setObject(thumbnailImage, forKey: cardIDNumber)
+                cell.thumbnailImageView.image = thumbnailImage
+                cell.thumbnailImageView.isHidden = false
+            } else {
+                cell.thumbnailImageView.image = nil
+                cell.thumbnailImageView.isHidden = true
+            }
+        }
         
         return cell
     }
