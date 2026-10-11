@@ -18,7 +18,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var moreMenuButton: UIBarButtonItem!
-    @IBOutlet weak var deleteSelectedBarButton: UIBarButtonItem!
     
     var tappedItem: Hours!
     
@@ -129,12 +128,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 let targetPath = IndexPath(row: row, section: 0)
                 tableView.selectRow(at: targetPath, animated: true, scrollPosition: .none)
             }
-            updateDeleteSelectedButtonState()
             setupMoreMenu()
         } else {
             setEditingMode(true, animated: true)
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-            updateDeleteSelectedButtonState()
             setupMoreMenu()
         }
     }
@@ -179,9 +176,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             defaults.setValue(0, forKey: "undoAlertMessage")
         }
         
-        deleteSelectedBarButton?.tintColor = .systemRed
-        deleteSelectedBarButton?.isEnabled = false
-        
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPressGesture.minimumPressDuration = 0.5
         tableView.addGestureRecognizer(longPressGesture)
@@ -204,18 +198,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         noHoursStoredBackground()
         setupMoreMenu()
-        
-        deleteSelectedBarButton?.isHidden = true
-        deleteSelectedBarButton?.isEnabled = false
-        deleteSelectedBarButton?.tintColor = .systemRed
     }
     
     private func setEditingMode(_ editing: Bool, animated: Bool) {
         tableView.setEditing(editing, animated: animated)
         editButton?.image = UIImage(systemName: editing ? "xmark" : "pencil")
-        
-        deleteSelectedBarButton?.isHidden = !editing
-        updateDeleteSelectedButtonState()
         setupMoreMenu()
         
         if editing {
@@ -285,11 +272,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    private func updateDeleteSelectedButtonState() {
-        let hasSelection = (tableView.indexPathsForSelectedRows?.count ?? 0) > 0
-        deleteSelectedBarButton?.isEnabled = hasSelection
-    }
-    
     func noHoursStoredBackground() {
         if hourItems.count == 0 {
             let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.accessibilityFrame.size.width, height: self.accessibilityFrame.size.height))
@@ -307,15 +289,24 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     private func setupMoreMenu() {
+        guard let moreMenuButton = moreMenuButton else { return }
+        
+        guard !hourItems.isEmpty else {
+            moreMenuButton.isEnabled = false
+            moreMenuButton.menu = nil
+            return
+        }
+        
+        moreMenuButton.isEnabled = true
         let isEditingMode = tableView.isEditing
         let selectedCount = tableView.indexPathsForSelectedRows?.count ?? 0
-        let hasAnyItems = !hourItems.isEmpty
         
-        let canExport = isEditingMode ? (selectedCount > 0) : hasAnyItems
-        let canShowInfo = isEditingMode ? (selectedCount > 0) : hasAnyItems
+        let canExport = isEditingMode ? (selectedCount > 0) : true
+        let canShowInfo = isEditingMode ? (selectedCount > 0) : true
         
+        let exportTitle = (isEditingMode && selectedCount > 0) ? "Export Selected (\(selectedCount))" : "Export"
         let exportAction = UIAction(
-            title: "Export",
+            title: exportTitle,
             image: UIImage(systemName: "square.and.arrow.up"),
             attributes: canExport ? [] : .disabled
         ) { [weak self] _ in
@@ -330,21 +321,28 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self?.handleInfo()
         }
 
-        let deleteAllAction = UIAction(
-            title: "Delete All",
+        let deleteTitle = (isEditingMode && selectedCount > 0) ? "Delete Selected (\(selectedCount))" : "Delete All"
+        let deleteAction = UIAction(
+            title: deleteTitle,
             image: UIImage(systemName: "trash"),
-            attributes: hasAnyItems ? .destructive : [.destructive, .disabled]
+            attributes: .destructive
         ) { [weak self] _ in
-            self?.handleDeleteAll()
+            guard let self = self else { return }
+            if isEditingMode && selectedCount > 0 {
+                self.confirmDeleteSelected()
+            } else {
+                self.handleDeleteAll()
+            }
         }
 
-        moreMenuButton.menu = UIMenu(title: "", children: [exportAction, infoAction, deleteAllAction])
+        moreMenuButton.menu = UIMenu(title: "", children: [exportAction, infoAction, deleteAction])
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         noHoursStoredBackground()
         self.editButton.isEnabled = hourItems.count > 0
+        self.moreMenuButton.isEnabled = hourItems.count > 0
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -403,6 +401,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.undo = 1
                 self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
                 self.noHoursStoredBackground()
+                self.editButton.isEnabled = self.hourItems.count > 0
                 self.setupMoreMenu()
                 
                 if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
@@ -434,7 +433,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView.isEditing {
-            updateDeleteSelectedButtonState()
             setupMoreMenu()
         } else {
             tableView.deselectRow(at: indexPath, animated: true)
@@ -456,7 +454,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if tableView.isEditing {
-            updateDeleteSelectedButtonState()
             setupMoreMenu()
         }
     }
@@ -521,6 +518,47 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         })
     }
     
+    private func confirmDeleteSelected() {
+        guard let indexPaths = tableView.indexPathsForSelectedRows, !indexPaths.isEmpty else { return }
+        let alert = UIAlertController(title: "Warning", message: "You are fixing to delete selected hours. Would you like to continue?", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            let sortedPaths = indexPaths.sorted { $0.row > $1.row }
+            
+            var items = [Hours]()
+            for indexPath in sortedPaths {
+                items.append(self.hourItems[indexPath.row])
+            }
+            
+            for item in items.reversed() {
+                if let index = self.hourItems.firstIndex(of: item) {
+                    let hourToDelete = self.hourItems[index]
+                    self.context.delete(hourToDelete)
+                }
+            }
+            (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            
+            self.tableView.deleteRows(at: sortedPaths, with: .fade)
+            self.noHoursStoredBackground()
+            self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+            self.undo = 1
+            
+            self.setEditingMode(false, animated: true)
+            self.editButton.isEnabled = self.hourItems.count > 0
+            self.setupMoreMenu()
+            
+            if self.userDefaults.integer(forKey: "undoAlertMessage") == 0 {
+                let undoAlert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
+                undoAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak self] _ in
+                    self?.userDefaults.setValue(1, forKey: "undoAlertMessage")
+                }))
+                self.present(undoAlert, animated: true, completion: nil)
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     private func handleDeleteAll() {
         if self.tableView.isEditing {
             setEditingMode(false, animated: true)
@@ -539,6 +577,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 (UIApplication.shared.delegate as! AppDelegate).saveContext()
                 self.noHoursStoredBackground()
                 tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                self.editButton.isEnabled = false
                 self.setupMoreMenu()
                 
                 if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
@@ -567,47 +606,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBAction func editButtonTapped(_ sender: Any) {
         guard hourItems.count > 0 else { return }
         setEditingMode(!tableView.isEditing, animated: true)
-    }
-    
-    @IBAction func deleteSelectedButtonTapped(_ sender: Any) {
-        let alert = UIAlertController(title: "Warning", message: "You are fixing to delete selected hours. Would you like to continue?", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [self] _ in
-            if let indexPaths = tableView.indexPathsForSelectedRows {
-                let sortedPaths = indexPaths.sorted { $0.row > $1.row }
-                
-                var items = [Hours]()
-                for indexPath in sortedPaths {
-                    items.append(hourItems[indexPath.row])
-                }
-                
-                for item in items.reversed() {
-                    if let index = hourItems.firstIndex(of: item) {
-                        let hourToDelete = self.hourItems[index]
-                        context.delete(hourToDelete)
-                    }
-                }
-                (UIApplication.shared.delegate as! AppDelegate).saveContext()
-                
-                self.tableView.deleteRows(at: sortedPaths, with: .fade)
-                noHoursStoredBackground()
-                tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
-                undo = 1
-            }
-            
-            setEditingMode(false, animated: true)
-            
-            if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
-                let undoAlert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
-                undoAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
-                    UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
-                }))
-                self.present(undoAlert, animated: true, completion: nil)
-            }
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        
-        editButton.isEnabled = hourItems.count > 0
     }
     
     private func handleInfo() {
