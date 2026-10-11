@@ -128,6 +128,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         tableView.delegate = self
         tableView.dataSource = self
         textField.delegate = self
+        textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
         
         addBannerViewToView(bannerView)
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
@@ -746,9 +747,16 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         return cell
     }
     
+    @objc private func textFieldEditingChanged(_ sender: UITextField) {
+        let trimmed = sender.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        self.navigationItem.title = trimmed.isEmpty ? "Time Card Info" : trimmed
+    }
+    
     @IBAction func textFieldClose(_ sender: UITextField) {
         let trimmedText = sender.text?.trimmingCharacters(in: .whitespaces)
         let finalName: String? = (trimmedText?.isEmpty ?? true) ? nil : trimmedText
+        
+        self.navigationItem.title = (finalName == nil || finalName == "Unknown") ? "Time Card Info" : finalName
         
         currentCard?.name = finalName
         for info in cachedTimeCardItems {
@@ -771,6 +779,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string).trimmingCharacters(in: .whitespaces)
         let finalName: String? = updatedText.isEmpty ? nil : updatedText
+        
+        self.navigationItem.title = finalName ?? "Time Card Info"
         
         currentCard?.name = finalName
         for info in cachedTimeCardItems {
