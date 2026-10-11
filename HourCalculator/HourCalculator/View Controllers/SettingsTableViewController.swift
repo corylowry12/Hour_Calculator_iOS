@@ -19,7 +19,7 @@ class SettingsTableViewController: UITableViewController {
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    // In-App Purchase Product Identifiers
+    // In-App Purchase Product Identifiers (configure these in App Store Connect)
     private let donationProductIDs: [Int: String] = [
         1: "com.cory.HourCalculator.tip1",
         5: "com.cory.HourCalculator.tip5",
@@ -118,6 +118,8 @@ class SettingsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tabBarController?.tabBar.tintAdjustmentMode = .normal
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -143,50 +145,28 @@ class SettingsTableViewController: UITableViewController {
         }
     }
     
-    // Only cancel segues if the triggered cell is the Tip/Donate cell
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if let cell = sender as? UITableViewCell {
-            let text = (cell.textLabel?.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-            if text.contains("tip") || text.contains("donate") || text.contains("support") {
-                return false
-            }
-        }
-        return super.shouldPerformSegue(withIdentifier: identifier, sender: sender)
-    }
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        guard let cell = tableView.cellForRow(at: indexPath) else { return }
-        let cellText = (cell.textLabel?.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        
-        // 1. Tip / Donation Bottom Sheet
-        if cellText.contains("tip") || cellText.contains("donate") || cellText.contains("support") || (indexPath.section == 0 && indexPath.row == 0) {
+        // Section 0, Position 0: Donate / Tip Jar
+        if indexPath.section == 0 && indexPath.row == 0 {
             showDonationBottomSheet()
             return
         }
         
-        // 2. Rate & Review
-        if cellText.contains("rate") || cellText.contains("review") || cellText.contains("app store") {
+        guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        let cellText = (cell.textLabel?.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        
+        if cellText.contains("rate") || cellText.contains("review") || cellText.contains("app store") || (indexPath.section == 6 && indexPath.row == 0) {
             if let url = URL(string: "https://apps.apple.com/us/app/hour-calculator-decimal/id1574062704") {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
             return
         }
         
-        // 3. Clear App Data
-        if cellText.contains("clear") || cellText.contains("reset") {
+        if indexPath.section == 7 && indexPath.row == 0 {
             promptClearAppData(sourceView: cell)
             return
-        }
-        
-        // 4. Fallback for Appearance cell if its storyboard segue was removed
-        if cellText.contains("appearance") || cellText.contains("theme") {
-            // If the cell still has a storyboard segue, UIKit handles it automatically.
-            // If it was disconnected, we trigger it via storyboard identifier:
-            if let themeVC = storyboard?.instantiateViewController(withIdentifier: "ThemeViewController") {
-                navigationController?.pushViewController(themeVC, animated: true)
-            }
         }
     }
     
@@ -256,7 +236,7 @@ class SettingsTableViewController: UITableViewController {
         divider.backgroundColor = UIColor.separator.withAlphaComponent(0.35)
         divider.translatesAutoresizingMaskIntoConstraints = false
         
-        // Tiers: Row 1 ($1, $5, $20), Row 2 ($50, $100)
+        // Tiers Stack: Row 1 ($1, $5, $20), Row 2 ($50, $100)
         let amountsRow1 = [1, 5, 20]
         let amountsRow2 = [50, 100]
         var optionButtons: [Int: UIButton] = [:]
@@ -334,8 +314,9 @@ class SettingsTableViewController: UITableViewController {
         mainTierStack.addArrangedSubview(row1Stack)
         mainTierStack.addArrangedSubview(row2Stack)
         
+        // Donate confirmation action button
         var actionConfig = UIButton.Configuration.filled()
-        actionConfig.title = "Donate $\(selectedDonationAmount)"
+        actionConfig.title = "Leave a tip of $\(selectedDonationAmount)"
         actionConfig.baseBackgroundColor = currentAccentColor
         actionConfig.baseForegroundColor = .white
         actionConfig.cornerStyle = .capsule
