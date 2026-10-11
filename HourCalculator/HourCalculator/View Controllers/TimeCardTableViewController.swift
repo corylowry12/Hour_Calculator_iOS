@@ -9,13 +9,15 @@ import Foundation
 import UIKit
 import CoreData
 import GoogleMobileAds
+import UniformTypeIdentifiers
 
-class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIDocumentPickerDelegate {
     
     lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
     @IBOutlet weak var sortBarButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var optionsBarButton: UIBarButtonItem!
     @IBOutlet var tableView: UITableView!
     
     var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -119,6 +121,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 self.noHoursStoredBackground()
                 self.undo = 0
                 self.setupSortMenu()
+                self.setupOptionsMenu()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -140,6 +143,8 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         tableView.allowsMultipleSelectionDuringEditing = true
         
         editButton?.isEnabled = timeCards.count > 0
+        setupSortMenu()
+        setupOptionsMenu()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -153,6 +158,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         
         editButton?.isEnabled = timeCards.count > 0
         setupSortMenu()
+        setupOptionsMenu()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -168,6 +174,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         tableView.setEditing(editing, animated: animated)
         editButton?.image = UIImage(systemName: editing ? "xmark" : "pencil")
         sortBarButton?.isEnabled = !editing && timeCards.count > 0
+        setupOptionsMenu()
     }
     
     @IBAction func editButtonTapped(_ sender: Any) {
@@ -216,6 +223,420 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         sortBarButton.menu = menu
         sortBarButton.target = nil
         sortBarButton.action = nil
+    }
+    
+    // MARK: - Options Menu
+    
+    func setupOptionsMenu() {
+        guard let optionsBarButton = optionsBarButton else { return }
+        
+        let isEditingMode = tableView.isEditing
+        let selectedCount = tableView.indexPathsForSelectedRows?.count ?? 0
+        let hasAnyItems = !timeCards.isEmpty
+        
+        let canExport = isEditingMode ? (selectedCount > 0) : hasAnyItems
+        let exportTitle = (isEditingMode && selectedCount > 0) ? "Export Selected (\(selectedCount))" : "Export to CSV"
+        
+        let exportAction = UIAction(
+            title: exportTitle,
+            image: UIImage(systemName: "square.and.arrow.up"),
+            attributes: canExport ? [] : .disabled
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            self.promptExportCSVConfirmation(onlySelected: isEditingMode)
+        }
+        
+        let importAction = UIAction(
+            title: "Import from CSV",
+            image: UIImage(systemName: "square.and.arrow.down")
+        ) { [weak self] _ in
+            self?.presentCSVDocumentPicker()
+        }
+        
+        let deleteTitle = (isEditingMode && selectedCount > 0) ? "Delete Selected (\(selectedCount))" : "Delete All"
+        let deleteAllAction = UIAction(
+            title: deleteTitle,
+            image: UIImage(systemName: "trash"),
+            attributes: hasAnyItems ? .destructive : [.destructive, .disabled]
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            if isEditingMode && selectedCount > 0 {
+                self.confirmDeleteSelected()
+            } else {
+                self.confirmDeleteAll()
+            }
+        }
+        
+        optionsBarButton.menu = UIMenu(title: "", children: [deleteAllAction, exportAction, importAction])
+        optionsBarButton.target = nil
+        optionsBarButton.action = nil
+    }
+    
+    private func confirmDeleteSelected() {
+        guard let selectedPaths = tableView.indexPathsForSelectedRows, !selectedPaths.isEmpty else { return }
+        let alert = UIAlertController(
+            title: "Warning",
+            message: "You are about to delete \(selectedPaths.count) selected time card(s). Would you like to continue?",
+            preferredStyle: .actionSheet
+        )
+        alert.view.tintColor = currentAccentColor
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            let sortedPaths = selectedPaths.sorted(by: { $0.row > $1.row })
+            
+            for indexPath in sortedPaths {
+                let card = self.timeCards[indexPath.row]
+                let cardID = card.id_number
+                self.thumbnailCache.removeObject(forKey: NSNumber(value: cardID))
+                
+                let infoFetch = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
+                infoFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+                if let infos = try? self.context.fetch(infoFetch) {
+                    for info in infos { self.context.delete(info) }
+                }
+                
+                let galFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
+                galFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+                if let gals = try? self.context.fetch(galFetch) {
+                    for gal in gals { self.context.delete(gal) }
+                }
+                
+                self.context.delete(card)
+            }
+            
+            (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            self.undo = 1
+            self.setEditingMode(false, animated: true)
+            
+            UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
+                self.tableView.reloadData()
+            }, completion: nil)
+            
+            self.editButton?.isEnabled = self.timeCards.count > 0
+            self.noHoursStoredBackground()
+            self.setupSortMenu()
+            self.setupOptionsMenu()
+            self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func confirmDeleteAll() {
+        if tableView.isEditing {
+            setEditingMode(false, animated: true)
+        }
+        
+        let alert = UIAlertController(
+            title: "Delete All?",
+            message: "Are you sure you would like to delete all stored time cards?",
+            preferredStyle: .actionSheet
+        )
+        alert.view.tintColor = currentAccentColor
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            
+            for card in self.timeCards {
+                let cardID = card.id_number
+                self.thumbnailCache.removeObject(forKey: NSNumber(value: cardID))
+                
+                let infoFetch = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
+                infoFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+                if let infos = try? self.context.fetch(infoFetch) {
+                    for info in infos {
+                        self.context.delete(info)
+                    }
+                }
+                
+                let galFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
+                galFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+                if let gals = try? self.context.fetch(galFetch) {
+                    for gal in gals {
+                        self.context.delete(gal)
+                    }
+                }
+                
+                self.context.delete(card)
+            }
+            
+            (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            self.undo = 1
+            
+            UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
+                self.tableView.reloadData()
+            }, completion: nil)
+            
+            self.editButton?.isEnabled = false
+            self.noHoursStoredBackground()
+            self.setupSortMenu()
+            self.setupOptionsMenu()
+            self.tabBarController?.tabBar.items?[2].badgeValue = "0"
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func promptExportCSVConfirmation(onlySelected: Bool) {
+        let title = onlySelected ? "Export Selected to CSV" : "Export to CSV"
+        let alert = UIAlertController(
+            title: title,
+            message: "Attached receipt photos and time card images cannot be exported into CSV format and will be excluded. Would you like to proceed?",
+            preferredStyle: .alert
+        )
+        alert.view.tintColor = currentAccentColor
+        
+        alert.addAction(UIAlertAction(title: "Export", style: .default, handler: { [weak self] _ in
+            self?.generateAndShareCSV(onlySelected: onlySelected)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func generateAndShareCSV(onlySelected: Bool) {
+        let cardsToExport: [TimeCards]
+        if onlySelected, let selectedPaths = tableView.indexPathsForSelectedRows {
+            cardsToExport = selectedPaths.map { self.timeCards[$0.row] }
+        } else {
+            cardsToExport = self.timeCards
+        }
+        
+        var csvContent = "Time Card ID,Time Card Name,Period / Date,Card Total Hours,Entry Date,In Time,Out Time,Entry Hours\n"
+        
+        for card in cardsToExport {
+            let cardID = "\(card.id_number)"
+            let escapedCardName = "\"\(card.name?.replacingOccurrences(of: "\"", with: "\"\"") ?? "Unknown")\""
+            let escapedPeriod = "\"\(card.week?.replacingOccurrences(of: "\"", with: "\"\"") ?? "Unknown")\""
+            let cardTotal = "\(round(card.total * 100) / 100.0)"
+            
+            let fetchRequest = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
+            fetchRequest.predicate = NSPredicate(format: "id_number == %d", card.id_number)
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(TimeCardInfo.date), ascending: true)]
+            
+            let entries = (try? context.fetch(fetchRequest)) ?? []
+            
+            if entries.isEmpty {
+                csvContent += "\(cardID),\(escapedCardName),\(escapedPeriod),\(cardTotal),\"--\",\"--\",\"--\",\"--\"\n"
+            } else {
+                for item in entries {
+                    let entryDate = "\"\(item.date?.replacingOccurrences(of: "\"", with: "\"\"") ?? "Unknown")\""
+                    let inTime = "\"\(item.intime?.replacingOccurrences(of: "\"", with: "\"\"") ?? "Unknown")\""
+                    let outTime = "\"\(item.outtime?.replacingOccurrences(of: "\"", with: "\"\"") ?? "Unknown")\""
+                    let entryHours = "\"\(item.total_hours?.replacingOccurrences(of: "\"", with: "\"\"") ?? "Unknown")\""
+                    
+                    csvContent += "\(cardID),\(escapedCardName),\(escapedPeriod),\(cardTotal),\(entryDate),\(inTime),\(outTime),\(entryHours)\n"
+                }
+            }
+        }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd_h-mm-a"
+        let timestamp = formatter.string(from: Date())
+        let fileName = "HourCalculator_TimeCards_\(timestamp).csv"
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+        
+        do {
+            try csvContent.write(to: tempURL, atomically: true, encoding: .utf8)
+            
+            let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
+            activityVC.view.tintColor = currentAccentColor
+            
+            if let popover = activityVC.popoverPresentationController {
+                popover.barButtonItem = optionsBarButton
+            }
+            
+            present(activityVC, animated: true, completion: nil)
+        } catch {
+            let errorAlert = UIAlertController(title: "Export Failed", message: "Unable to generate CSV file: \(error.localizedDescription)", preferredStyle: .alert)
+            errorAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(errorAlert, animated: true, completion: nil)
+        }
+    }
+    
+    // MARK: - CSV Import Logic
+    
+    private func presentCSVDocumentPicker() {
+        let types: [UTType] = [.commaSeparatedText, .text, .plainText]
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: types, asCopy: true)
+        documentPicker.delegate = self
+        documentPicker.allowsMultipleSelection = false
+        present(documentPicker, animated: true, completion: nil)
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let selectedFileURL = urls.first else { return }
+        
+        let shouldStopAccessing = selectedFileURL.startAccessingSecurityScopedResource()
+        defer {
+            if shouldStopAccessing {
+                selectedFileURL.stopAccessingSecurityScopedResource()
+            }
+        }
+        
+        do {
+            let csvData = try String(contentsOf: selectedFileURL, encoding: .utf8)
+            parseAndImportCSV(csvData)
+        } catch {
+            showImportAlert(title: "Import Error", message: "Failed to read the selected file: \(error.localizedDescription)")
+        }
+    }
+    
+    private func parseCSVRow(_ rowString: String) -> [String] {
+        var columns: [String] = []
+        var currentField = ""
+        var insideQuotes = false
+        
+        var iterator = rowString.makeIterator()
+        while let char = iterator.next() {
+            if char == "\"" {
+                insideQuotes.toggle()
+            } else if char == "," && !insideQuotes {
+                columns.append(currentField.trimmingCharacters(in: .whitespaces))
+                currentField = ""
+            } else {
+                currentField.append(char)
+            }
+        }
+        columns.append(currentField.trimmingCharacters(in: .whitespaces))
+        
+        return columns.map { field in
+            var trimmed = field
+            if trimmed.hasPrefix("\"") && trimmed.hasSuffix("\"") && trimmed.count >= 2 {
+                trimmed.removeFirst()
+                trimmed.removeLast()
+            }
+            return trimmed.replacingOccurrences(of: "\"\"", with: "\"")
+        }
+    }
+    
+    private func parseAndImportCSV(_ rawString: String) {
+        let cleanText = rawString.replacingOccurrences(of: "\r\n", with: "\n").replacingOccurrences(of: "\r", with: "\n")
+        let lines = cleanText.components(separatedBy: "\n").filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+        
+        guard lines.count > 1 else {
+            showImportAlert(title: "Empty File", message: "The selected CSV contains no time card records to import.")
+            return
+        }
+        
+        let headerCols = parseCSVRow(lines[0])
+        let hasIDColumn = headerCols.first?.lowercased().contains("id") ?? false
+        
+        var importedCardsCount = 0
+        var importedEntriesCount = 0
+        
+        var cardMap: [Int32: TimeCards] = [:]
+        
+        let allExisting = self.timeCards
+        var nextAutoID: Int32 = (allExisting.map { $0.id_number }.max() ?? 0) + 1
+        
+        for index in 1..<lines.count {
+            let cols = parseCSVRow(lines[index])
+            guard cols.count >= 7 else { continue }
+            
+            let cardIDString: String
+            let cardName: String
+            let cardPeriod: String
+            let cardTotalStr: String
+            let entryDate: String
+            let entryIn: String
+            let entryOut: String
+            let entryHours: String
+            
+            if hasIDColumn {
+                cardIDString = cols[0]
+                cardName = cols[1]
+                cardPeriod = cols[2]
+                cardTotalStr = cols[3]
+                entryDate = cols.count > 4 ? cols[4] : "--"
+                entryIn = cols.count > 5 ? cols[5] : "--"
+                entryOut = cols.count > 6 ? cols[6] : "--"
+                entryHours = cols.count > 7 ? cols[7] : "--"
+            } else {
+                cardIDString = "0"
+                cardName = cols[0]
+                cardPeriod = cols[1]
+                cardTotalStr = cols[2]
+                entryDate = cols.count > 3 ? cols[3] : "--"
+                entryIn = cols.count > 4 ? cols[4] : "--"
+                entryOut = cols.count > 5 ? cols[5] : "--"
+                entryHours = cols.count > 6 ? cols[6] : "--"
+            }
+            
+            let parsedID = Int32(cardIDString) ?? 0
+            let finalCardID: Int32
+            if parsedID > 0 {
+                finalCardID = parsedID
+                if finalCardID >= nextAutoID {
+                    nextAutoID = finalCardID + 1
+                }
+            } else {
+                finalCardID = nextAutoID
+                nextAutoID += 1
+            }
+            
+            let targetCard: TimeCards
+            if let existing = cardMap[finalCardID] {
+                targetCard = existing
+            } else {
+                let fetchRequest = NSFetchRequest<TimeCards>(entityName: "TimeCards")
+                fetchRequest.predicate = NSPredicate(format: "id_number == %d", finalCardID)
+                fetchRequest.fetchLimit = 1
+                
+                if let found = (try? context.fetch(fetchRequest))?.first {
+                    targetCard = found
+                } else {
+                    targetCard = TimeCards(context: context)
+                    targetCard.id_number = finalCardID
+                    importedCardsCount += 1
+                }
+                
+                targetCard.name = (cardName.isEmpty || cardName == "Unknown") ? nil : cardName
+                targetCard.week = cardPeriod
+                targetCard.total = Double(cardTotalStr) ?? 0.0
+                targetCard.numberBeingExported = (cardPeriod.lowercased().contains("day") || targetCard.week?.contains("/") == true) ? 1 : 2
+                
+                cardMap[finalCardID] = targetCard
+            }
+            
+            if entryDate != "--" && !entryDate.isEmpty && entryIn != "--" && entryOut != "--" {
+                let info = TimeCardInfo(context: context)
+                info.id_number = finalCardID
+                info.name = targetCard.name
+                info.date = entryDate
+                info.intime = entryIn
+                info.outtime = entryOut
+                info.total_hours = entryHours
+                importedEntriesCount += 1
+            }
+        }
+        
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        
+        UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
+            self.tableView.reloadData()
+        }, completion: nil)
+        
+        self.editButton?.isEnabled = self.timeCards.count > 0
+        self.noHoursStoredBackground()
+        self.setupSortMenu()
+        self.setupOptionsMenu()
+        self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+        
+        showImportAlert(
+            title: "Import Complete",
+            message: "Successfully imported \(importedCardsCount) time card(s) and \(importedEntriesCount) entries."
+        )
+    }
+    
+    private func showImportAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.view.tintColor = currentAccentColor
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     func noHoursStoredBackground() {
@@ -297,6 +718,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 self.noHoursStoredBackground()
                 self.undo = 1
                 self.setupSortMenu()
+                self.setupOptionsMenu()
                 
                 self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
             }))
@@ -425,7 +847,10 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if tableView.isEditing { return }
+        if tableView.isEditing {
+            setupOptionsMenu()
+            return
+        }
         tableView.deselectRow(at: indexPath, animated: true)
         
         let selectedCard = timeCards[indexPath.row]
@@ -442,6 +867,12 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             userDefaults.setValue(selectedCard.week, forKey: "week")
             
             performSegue(withIdentifier: "timeCardInfo", sender: nil)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if tableView.isEditing {
+            setupOptionsMenu()
         }
     }
     
