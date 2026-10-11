@@ -54,28 +54,14 @@ class ViewController: UIViewController {
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        if userDefaults.value(forKey: "StoredEmptyHours") == nil {
-            userDefaults.set(false, forKey: "StoredEmptyHours")
-        }
-        if userDefaults.value(forKey: "theme") == nil {
-            userDefaults.set(2, forKey: "theme")
-        }
-        
-        if userDefaults.integer(forKey: "theme") == 0 {
-            view.window?.overrideUserInterfaceStyle = .light
-        } else if userDefaults.integer(forKey: "theme") == 1 {
-            view.window?.overrideUserInterfaceStyle = .dark
-        } else if userDefaults.integer(forKey: "theme") == 2 {
-            view.window?.overrideUserInterfaceStyle = .unspecified
-        }
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         dateLabel.text = nil
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         let os = ProcessInfo().operatingSystemVersion
         
         switch (os.majorVersion, os.minorVersion, os.patchVersion) {
@@ -131,18 +117,6 @@ class ViewController: UIViewController {
             userDefaults.set(false, forKey: "StoredEmptyHours")
         }
         
-        if userDefaults.value(forKey: "theme") == nil {
-            userDefaults.set(2, forKey: "theme")
-        }
-        
-        if userDefaults.integer(forKey: "theme") == 0 {
-            window?.overrideUserInterfaceStyle = .light
-        } else if userDefaults.integer(forKey: "theme") == 1 {
-            window?.overrideUserInterfaceStyle = .dark
-        } else if userDefaults.integer(forKey: "theme") == 2 {
-            window?.overrideUserInterfaceStyle = .unspecified
-        }
-        
         if userDefaults.value(forKey: "automaticDeletion") == nil {
             userDefaults.setValue(0, forKey: "automaticDeletion")
         }
@@ -163,6 +137,19 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if userDefaults.value(forKey: "theme") == nil {
+            userDefaults.set(2, forKey: "theme")
+        }
+        
+        // Apply theme immediately on initial view setup
+        let targetTheme = userDefaults.integer(forKey: "theme")
+        let targetStyle: UIUserInterfaceStyle = targetTheme == 0 ? .light : (targetTheme == 1 ? .dark : .unspecified)
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            windowScene.windows.forEach { $0.overrideUserInterfaceStyle = targetStyle }
+        } else {
+            view.window?.overrideUserInterfaceStyle = targetStyle
+        }
         
         if userDefaults.value(forKey: "timeCardsSort") == nil {
             userDefaults.set(0, forKey: "timeCardsSort")
@@ -224,79 +211,72 @@ class ViewController: UIViewController {
     
     private func updateDateButtonTitle() {
         let formatter = DateFormatter()
-            formatter.dateFormat = "MMM d, yyyy"
-            let title = formatter.string(from: selectedDate)
-            
-            // Update modern UIButton.Configuration (iOS 15+)
-            if var config = dateDatePicker.configuration {
-                config.title = title
-                dateDatePicker.configuration = config
-            } else {
-                // Fallback for legacy button styles
-                dateDatePicker.setTitle(title, for: .normal)
-            }
+        formatter.dateFormat = "MMM d, yyyy"
+        let title = formatter.string(from: selectedDate)
+        
+        if var config = dateDatePicker.configuration {
+            config.title = title
+            dateDatePicker.configuration = config
+        } else {
+            dateDatePicker.setTitle(title, for: .normal)
+        }
     }
     
     @IBAction func dateDatePicker(_ sender: Any) {
         let alertVC = UIViewController()
-            alertVC.modalPresentationStyle = .overFullScreen
-            alertVC.modalTransitionStyle = .crossDissolve
-            alertVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
+        alertVC.modalPresentationStyle = .overFullScreen
+        alertVC.modalTransitionStyle = .crossDissolve
+        alertVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
+        
+        let dismissButton = UIButton(frame: alertVC.view.bounds)
+        dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        dismissButton.addTarget(self, action: #selector(dismissCalendarModal), for: .touchUpInside)
+        alertVC.view.addSubview(dismissButton)
+        
+        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
+        let glassContainer = UIVisualEffectView(effect: blurEffect)
+        glassContainer.layer.cornerRadius = 24
+        glassContainer.layer.masksToBounds = true
+        glassContainer.layer.borderWidth = 1.0
+        glassContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
+        glassContainer.translatesAutoresizingMaskIntoConstraints = false
+        alertVC.view.addSubview(glassContainer)
+        
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .inline
+        picker.maximumDate = Date()
+        picker.date = selectedDate
+        picker.tintColor = calculateButton.backgroundColor
+        picker.backgroundColor = .clear
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        
+        picker.addTarget(self, action: #selector(inlineDateChanged(_:)), for: .valueChanged)
+        glassContainer.contentView.addSubview(picker)
+        
+        NSLayoutConstraint.activate([
+            glassContainer.centerXAnchor.constraint(equalTo: alertVC.view.centerXAnchor),
+            glassContainer.centerYAnchor.constraint(equalTo: alertVC.view.centerYAnchor),
+            glassContainer.widthAnchor.constraint(equalToConstant: 335),
             
-            // 1. Transparent dismiss overlay placed behind the calendar only
-            let dismissButton = UIButton(frame: alertVC.view.bounds)
-            dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            dismissButton.addTarget(self, action: #selector(dismissCalendarModal), for: .touchUpInside)
-            alertVC.view.addSubview(dismissButton)
-            
-            // 2. Liquid Glass Backdrop Container
-            let blurEffect = UIBlurEffect(style: .systemThinMaterial)
-            let glassContainer = UIVisualEffectView(effect: blurEffect)
-            glassContainer.layer.cornerRadius = 24
-            glassContainer.layer.masksToBounds = true
-            glassContainer.layer.borderWidth = 1.0
-            glassContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-            glassContainer.translatesAutoresizingMaskIntoConstraints = false
-            alertVC.view.addSubview(glassContainer)
-            
-            // 3. Inline Calendar Picker
-            let picker = UIDatePicker()
-            picker.datePickerMode = .date
-            picker.preferredDatePickerStyle = .inline
-            picker.maximumDate = Date()
-            picker.date = selectedDate
-            picker.tintColor = calculateButton.backgroundColor
-            picker.backgroundColor = .clear
-            picker.translatesAutoresizingMaskIntoConstraints = false
-            
-            // Explicit target-action to reliably catch inline date clicks
-            picker.addTarget(self, action: #selector(inlineDateChanged(_:)), for: .valueChanged)
-            glassContainer.contentView.addSubview(picker)
-            
-            // 4. Layout Constraints
-            NSLayoutConstraint.activate([
-                glassContainer.centerXAnchor.constraint(equalTo: alertVC.view.centerXAnchor),
-                glassContainer.centerYAnchor.constraint(equalTo: alertVC.view.centerYAnchor),
-                glassContainer.widthAnchor.constraint(equalToConstant: 335),
-                
-                picker.topAnchor.constraint(equalTo: glassContainer.contentView.topAnchor, constant: 12),
-                picker.bottomAnchor.constraint(equalTo: glassContainer.contentView.bottomAnchor, constant: -12),
-                picker.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 12),
-                picker.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -12)
-            ])
-            
-            present(alertVC, animated: true)
-        }
+            picker.topAnchor.constraint(equalTo: glassContainer.contentView.topAnchor, constant: 12),
+            picker.bottomAnchor.constraint(equalTo: glassContainer.contentView.bottomAnchor, constant: -12),
+            picker.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 12),
+            picker.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -12)
+        ])
+        
+        present(alertVC, animated: true)
+    }
 
-        @objc private func inlineDateChanged(_ sender: UIDatePicker) {
-            selectedDate = sender.date
-            updateDateButtonTitle()
-            dismiss(animated: true)
-        }
+    @objc private func inlineDateChanged(_ sender: UIDatePicker) {
+        selectedDate = sender.date
+        updateDateButtonTitle()
+        dismiss(animated: true)
+    }
 
-        @objc private func dismissCalendarModal() {
-            dismiss(animated: true)
-        }
+    @objc private func dismissCalendarModal() {
+        dismiss(animated: true)
+    }
     
     var inHour : Int = 0
     var inMinute : Int = 0
