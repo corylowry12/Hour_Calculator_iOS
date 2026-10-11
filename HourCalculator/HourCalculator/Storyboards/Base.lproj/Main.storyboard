@@ -606,6 +606,7 @@
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="WgQ-Nv-3ge"/>
                     <connections>
                         <outlet property="editButton" destination="Zl1-5D-zLI" id="fwL-bf-Lzs"/>
+                        <outlet property="optionsBarButton" destination="BZr-zR-fn8" id="W8f-3S-j4b"/>
                         <outlet property="sortBarButton" destination="y1N-NU-Xs2" id="wLJ-BH-Pb3"/>
                         <outlet property="tableView" destination="gKl-hp-LCv" id="Vt5-0i-4ED"/>
                         <segue destination="Wnj-wO-PYt" kind="show" identifier="timeCardInfo" id="SW5-fU-BF0"/>
@@ -2096,14 +2097,14 @@
                                 <inset key="scrollIndicatorInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="20"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="HourItems" id="nHE-q2-wXG" customClass="TableViewCell" customModule="HourCalculator" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="55.333332061767578" width="414" height="112.33333587646484"/>
+                                        <rect key="frame" x="8" y="55.333332061767578" width="414" height="113.33333587646484"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nHE-q2-wXG" id="iMb-U4-Vwy">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.66666666666669" height="112.33333587646484"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.66666666666669" height="113.33333587646484"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="In Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uY3-vM-Afw">
-                                                    <rect key="frame" x="12" y="11.999999999999998" width="359.66666666666669" height="21.333333333333329"/>
+                                                    <rect key="frame" x="12" y="11.999999999999998" width="359.66666666666669" height="22.333333333333329"/>
                                                     <accessibility key="accessibilityConfiguration">
                                                         <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                                     </accessibility>
@@ -2112,7 +2113,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Out Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gxm-wY-xn4">
-                                                    <rect key="frame" x="12" y="35.333333333333336" width="359.66666666666669" height="20"/>
+                                                    <rect key="frame" x="12" y="36.333333333333336" width="359.66666666666669" height="20"/>
                                                     <accessibility key="accessibilityConfiguration">
                                                         <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                                     </accessibility>
@@ -2124,7 +2125,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Hours" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="opv-sV-oUm">
-                                                    <rect key="frame" x="12" y="57.333333333333336" width="359.66666666666669" height="20.666666666666664"/>
+                                                    <rect key="frame" x="12" y="58.333333333333336" width="359.66666666666669" height="20.666666666666664"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20.666666666666671" id="A77-hJ-6SU"/>
                                                     </constraints>
@@ -2133,7 +2134,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VtM-kl-7uw">
-                                                    <rect key="frame" x="12" y="80" width="359.66666666666669" height="20.333333333333329"/>
+                                                    <rect key="frame" x="12" y="81" width="359.66666666666669" height="20.333333333333329"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20.333333333333329" id="iCG-KB-nYt"/>
                                                     </constraints>
@@ -2176,17 +2177,9 @@
                                                 <action selector="editButtonTapped:" destination="c2z-ne-z8a" id="00Z-y0-sOB"/>
                                             </connections>
                                         </barButtonItem>
-                                        <rightBarButtonItems>
-                                            <barButtonItem title="More" id="jyZ-Nf-9Dt">
-                                                <imageReference key="image" image="ellipsis.circle" catalog="system" symbolScale="default"/>
-                                            </barButtonItem>
-                                            <barButtonItem title="More" id="8dw-yj-wdC">
-                                                <imageReference key="image" image="trash.circle" catalog="system" symbolScale="default"/>
-                                                <connections>
-                                                    <action selector="deleteSelectedButtonTapped:" destination="c2z-ne-z8a" id="pfy-e0-cDo"/>
-                                                </connections>
-                                            </barButtonItem>
-                                        </rightBarButtonItems>
+                                        <barButtonItem key="rightBarButtonItem" title="More" id="jyZ-Nf-9Dt">
+                                            <imageReference key="image" image="ellipsis.circle" catalog="system" symbolScale="default"/>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -2206,7 +2199,6 @@
                     <tabBarItem key="tabBarItem" title="History" image="outline_history_black_36pt" id="WJ2-pO-sSJ"/>
                     <navigationItem key="navigationItem" id="7Fc-eY-uK5"/>
                     <connections>
-                        <outlet property="deleteSelectedBarButton" destination="8dw-yj-wdC" id="xY9-SI-XXj"/>
                         <outlet property="editButton" destination="Pr4-1J-gro" id="xE7-9o-UOj"/>
                         <outlet property="historyNavigationBar" destination="JnG-FL-Zn1" id="lRe-fJ-1WS"/>
                         <outlet property="moreMenuButton" destination="jyZ-Nf-9Dt" id="067-Lf-RaV"/>
