@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 import UserNotifications
-import Darwin
+import StoreKit
 
 class SettingsTableViewController: UITableViewController {
     
@@ -18,6 +18,38 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet var hourSwitch: UISwitch!
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    // In-App Purchase Product Identifiers
+    private let donationProductIDs: [Int: String] = [
+        1: "com.cory.HourCalculator.tip1",
+        5: "com.cory.HourCalculator.tip5",
+        20: "com.cory.HourCalculator.tip20",
+        50: "com.cory.HourCalculator.tip50",
+        100: "com.cory.HourCalculator.tip100"
+    ]
+    
+    private var selectedDonationAmount: Int = 5
+    
+    var currentAccentColor: UIColor {
+        let accent = userDefaults.integer(forKey: "accent")
+        switch accent {
+        case 0: return UIColor(rgb: 0x26A69A)
+        case 1: return UIColor(rgb: 0x7841c4)
+        case 2: return UIColor(rgb: 0x347deb)
+        case 3: return UIColor(rgb: 0xfc783a)
+        case 4: return UIColor(rgb: 0xc41d1d)
+        case 5:
+            let randomAccent = userDefaults.integer(forKey: "accentRandom")
+            switch randomAccent {
+            case 0: return UIColor(rgb: 0x26A69A)
+            case 1: return UIColor(rgb: 0x7841c4)
+            case 2: return UIColor(rgb: 0x347deb)
+            case 3: return UIColor(rgb: 0xfc783a)
+            default: return UIColor(rgb: 0xc41d1d)
+            }
+        default: return UIColor(rgb: 0x26A69A)
+        }
+    }
     
     var hourItems: [Hours] {
         do {
@@ -91,31 +123,7 @@ class SettingsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let accent = userDefaults.integer(forKey: "accent")
-        if accent == 0 {
-            hourSwitch?.onTintColor = UIColor(rgb: 0x26A69A)
-        } else if accent == 1 {
-            hourSwitch?.onTintColor = UIColor(rgb: 0x7841c4)
-        } else if accent == 2 {
-            hourSwitch?.onTintColor = UIColor(rgb: 0x347deb)
-        } else if accent == 3 {
-            hourSwitch?.onTintColor = UIColor(rgb: 0xfc783a)
-        } else if accent == 4 {
-            hourSwitch?.onTintColor = UIColor(rgb: 0xc41d1d)
-        } else if accent == 5 {
-            let randomAccent = userDefaults.integer(forKey: "accentRandom")
-            if randomAccent == 0 {
-                hourSwitch?.onTintColor = UIColor(rgb: 0x26A69A)
-            } else if randomAccent == 1 {
-                hourSwitch?.onTintColor = UIColor(rgb: 0x7841c4)
-            } else if randomAccent == 2 {
-                hourSwitch?.onTintColor = UIColor(rgb: 0x347deb)
-            } else if randomAccent == 3 {
-                hourSwitch?.onTintColor = UIColor(rgb: 0xfc783a)
-            } else if randomAccent == 4 {
-                hourSwitch?.onTintColor = UIColor(rgb: 0xc41d1d)
-            }
-        }
+        hourSwitch?.onTintColor = currentAccentColor
         
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
@@ -135,24 +143,308 @@ class SettingsTableViewController: UITableViewController {
         }
     }
     
+    // Only cancel segues if the triggered cell is the Tip/Donate cell
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if let cell = sender as? UITableViewCell {
+            let text = (cell.textLabel?.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            if text.contains("tip") || text.contains("donate") || text.contains("support") {
+                return false
+            }
+        }
+        return super.shouldPerformSegue(withIdentifier: identifier, sender: sender)
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
         let cellText = (cell.textLabel?.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         
-        if cellText.contains("rate") || cellText.contains("review") || cellText.contains("app store") || (indexPath.section == 5 && indexPath.row == 0) {
+        // 1. Tip / Donation Bottom Sheet
+        if cellText.contains("tip") || cellText.contains("donate") || cellText.contains("support") || (indexPath.section == 0 && indexPath.row == 0) {
+            showDonationBottomSheet()
+            return
+        }
+        
+        // 2. Rate & Review
+        if cellText.contains("rate") || cellText.contains("review") || cellText.contains("app store") {
             if let url = URL(string: "https://apps.apple.com/us/app/hour-calculator-decimal/id1574062704") {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
             return
         }
         
-        if indexPath.section == 6 && indexPath.row == 0 {
+        // 3. Clear App Data
+        if cellText.contains("clear") || cellText.contains("reset") {
             promptClearAppData(sourceView: cell)
             return
         }
+        
+        // 4. Fallback for Appearance cell if its storyboard segue was removed
+        if cellText.contains("appearance") || cellText.contains("theme") {
+            // If the cell still has a storyboard segue, UIKit handles it automatically.
+            // If it was disconnected, we trigger it via storyboard identifier:
+            if let themeVC = storyboard?.instantiateViewController(withIdentifier: "ThemeViewController") {
+                navigationController?.pushViewController(themeVC, animated: true)
+            }
+        }
     }
+    
+    // MARK: - Donation Bottom Sheet
+    
+    private func showDonationBottomSheet() {
+        let modalVC = UIViewController()
+        modalVC.modalPresentationStyle = .overFullScreen
+        modalVC.modalTransitionStyle = .crossDissolve
+        modalVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        
+        let dismissButton = UIButton(frame: modalVC.view.bounds)
+        dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        dismissButton.addAction(UIAction { [weak modalVC] _ in
+            modalVC?.dismiss(animated: true)
+        }, for: .touchUpInside)
+        modalVC.view.addSubview(dismissButton)
+        
+        let blurEffect = UIBlurEffect(style: .systemMaterialDark)
+        let bottomSheetContainer = UIVisualEffectView(effect: blurEffect)
+        bottomSheetContainer.layer.cornerRadius = 24
+        bottomSheetContainer.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        bottomSheetContainer.layer.masksToBounds = true
+        bottomSheetContainer.layer.borderWidth = 1.0
+        bottomSheetContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.15).cgColor
+        bottomSheetContainer.translatesAutoresizingMaskIntoConstraints = false
+        modalVC.view.addSubview(bottomSheetContainer)
+        
+        // Top-left circular 'X' dismiss button
+        let closeButton = UIButton(type: .system)
+        var closeConfig = UIButton.Configuration.plain()
+        let xSymbolConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
+        closeConfig.image = UIImage(systemName: "xmark", withConfiguration: xSymbolConfig)
+        closeConfig.baseForegroundColor = .secondaryLabel
+        closeConfig.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
+        closeButton.configuration = closeConfig
+        closeButton.backgroundColor = UIColor.secondarySystemFill
+        closeButton.layer.cornerRadius = 15
+        closeButton.layer.masksToBounds = true
+        closeButton.addAction(UIAction { [weak modalVC] _ in
+            modalVC?.dismiss(animated: true)
+        }, for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let iconConfig = UIImage.SymbolConfiguration(pointSize: 32, weight: .semibold)
+        let iconImageView = UIImageView(image: UIImage(systemName: "heart.fill", withConfiguration: iconConfig))
+        iconImageView.tintColor = currentAccentColor
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "Support the Developer"
+        titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        titleLabel.textAlignment = .center
+        titleLabel.textColor = .label
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = "Choose an amount to support ongoing development."
+        subtitleLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.textColor = .secondaryLabel
+        subtitleLabel.numberOfLines = 2
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let divider = UIView()
+        divider.backgroundColor = UIColor.separator.withAlphaComponent(0.35)
+        divider.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Tiers: Row 1 ($1, $5, $20), Row 2 ($50, $100)
+        let amountsRow1 = [1, 5, 20]
+        let amountsRow2 = [50, 100]
+        var optionButtons: [Int: UIButton] = [:]
+        
+        let mainTierStack = UIStackView()
+        mainTierStack.axis = .vertical
+        mainTierStack.spacing = 10
+        mainTierStack.alignment = .fill
+        mainTierStack.distribution = .fillEqually
+        mainTierStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        let row1Stack = UIStackView()
+        row1Stack.axis = .horizontal
+        row1Stack.spacing = 10
+        row1Stack.distribution = .fillEqually
+        
+        let row2Stack = UIStackView()
+        row2Stack.axis = .horizontal
+        row2Stack.spacing = 10
+        row2Stack.distribution = .fillEqually
+        
+        let donateActionButton = UIButton(type: .system)
+        
+        func updateSelectionUI() {
+            for (amt, btn) in optionButtons {
+                let isSelected = (amt == self.selectedDonationAmount)
+                btn.backgroundColor = isSelected ? self.currentAccentColor : UIColor.secondarySystemFill
+                btn.layer.borderColor = isSelected ? UIColor.white.withAlphaComponent(0.6).cgColor : UIColor.separator.withAlphaComponent(0.2).cgColor
+                btn.layer.borderWidth = isSelected ? 1.5 : 1.0
+                
+                var config = btn.configuration ?? UIButton.Configuration.filled()
+                config.baseForegroundColor = isSelected ? .white : .label
+                btn.configuration = config
+            }
+            
+            var actionConfig = donateActionButton.configuration ?? UIButton.Configuration.filled()
+            actionConfig.title = "Donate $\(self.selectedDonationAmount)"
+            donateActionButton.configuration = actionConfig
+        }
+        
+        func createTierButton(amount: Int) -> UIButton {
+            let button = UIButton(type: .system)
+            var config = UIButton.Configuration.filled()
+            config.title = "$\(amount)"
+            config.baseBackgroundColor = .clear
+            config.cornerStyle = .medium
+            config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+                var outgoing = incoming
+                outgoing.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+                return outgoing
+            }
+            button.configuration = config
+            button.layer.cornerRadius = 14
+            button.layer.masksToBounds = true
+            button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            button.addAction(UIAction { [weak self] _ in
+                self?.selectedDonationAmount = amount
+                updateSelectionUI()
+            }, for: .touchUpInside)
+            return button
+        }
+        
+        for amt in amountsRow1 {
+            let btn = createTierButton(amount: amt)
+            optionButtons[amt] = btn
+            row1Stack.addArrangedSubview(btn)
+        }
+        
+        for amt in amountsRow2 {
+            let btn = createTierButton(amount: amt)
+            optionButtons[amt] = btn
+            row2Stack.addArrangedSubview(btn)
+        }
+        
+        mainTierStack.addArrangedSubview(row1Stack)
+        mainTierStack.addArrangedSubview(row2Stack)
+        
+        var actionConfig = UIButton.Configuration.filled()
+        actionConfig.title = "Donate $\(selectedDonationAmount)"
+        actionConfig.baseBackgroundColor = currentAccentColor
+        actionConfig.baseForegroundColor = .white
+        actionConfig.cornerStyle = .capsule
+        actionConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+            return outgoing
+        }
+        donateActionButton.configuration = actionConfig
+        donateActionButton.addAction(UIAction { [weak self, weak modalVC] _ in
+            guard let self = self else { return }
+            self.executeDonationPurchase(amount: self.selectedDonationAmount, presentingVC: modalVC)
+        }, for: .touchUpInside)
+        donateActionButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        updateSelectionUI()
+        
+        bottomSheetContainer.contentView.addSubview(closeButton)
+        bottomSheetContainer.contentView.addSubview(iconImageView)
+        bottomSheetContainer.contentView.addSubview(titleLabel)
+        bottomSheetContainer.contentView.addSubview(subtitleLabel)
+        bottomSheetContainer.contentView.addSubview(divider)
+        bottomSheetContainer.contentView.addSubview(mainTierStack)
+        bottomSheetContainer.contentView.addSubview(donateActionButton)
+        
+        NSLayoutConstraint.activate([
+            bottomSheetContainer.leadingAnchor.constraint(equalTo: modalVC.view.leadingAnchor),
+            bottomSheetContainer.trailingAnchor.constraint(equalTo: modalVC.view.trailingAnchor),
+            bottomSheetContainer.bottomAnchor.constraint(equalTo: modalVC.view.bottomAnchor),
+            
+            closeButton.topAnchor.constraint(equalTo: bottomSheetContainer.contentView.topAnchor, constant: 16),
+            closeButton.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 16),
+            closeButton.widthAnchor.constraint(equalToConstant: 30),
+            closeButton.heightAnchor.constraint(equalToConstant: 30),
+            
+            iconImageView.topAnchor.constraint(equalTo: bottomSheetContainer.contentView.topAnchor, constant: 20),
+            iconImageView.centerXAnchor.constraint(equalTo: bottomSheetContainer.contentView.centerXAnchor),
+            iconImageView.widthAnchor.constraint(equalToConstant: 34),
+            iconImageView.heightAnchor.constraint(equalToConstant: 34),
+            
+            titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 8),
+            titleLabel.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: bottomSheetContainer.contentView.trailingAnchor, constant: -20),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            subtitleLabel.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 24),
+            subtitleLabel.trailingAnchor.constraint(equalTo: bottomSheetContainer.contentView.trailingAnchor, constant: -24),
+            
+            divider.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 14),
+            divider.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 20),
+            divider.trailingAnchor.constraint(equalTo: bottomSheetContainer.contentView.trailingAnchor, constant: -20),
+            divider.heightAnchor.constraint(equalToConstant: 0.5),
+            
+            mainTierStack.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 16),
+            mainTierStack.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 20),
+            mainTierStack.trailingAnchor.constraint(equalTo: bottomSheetContainer.contentView.trailingAnchor, constant: -20),
+            
+            donateActionButton.topAnchor.constraint(equalTo: mainTierStack.bottomAnchor, constant: 18),
+            donateActionButton.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 20),
+            donateActionButton.trailingAnchor.constraint(equalTo: bottomSheetContainer.contentView.trailingAnchor, constant: -20),
+            donateActionButton.heightAnchor.constraint(equalToConstant: 48),
+            
+            donateActionButton.bottomAnchor.constraint(equalTo: modalVC.view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+        ])
+        
+        present(modalVC, animated: true)
+    }
+    
+    // MARK: - StoreKit 2 Purchase Flow
+    
+    private func executeDonationPurchase(amount: Int, presentingVC: UIViewController?) {
+        guard let productID = donationProductIDs[amount] else { return }
+        
+        Task { @MainActor in
+            do {
+                let products = try await Product.products(for: [productID])
+                guard let product = products.first else {
+                    let alert = UIAlertController(title: "Notice", message: "In-App Purchases are currently being configured in App Store Connect for \(productID).", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    presentingVC?.present(alert, animated: true)
+                    return
+                }
+                
+                let result = try await product.purchase()
+                switch result {
+                case .success(let verification):
+                    switch verification {
+                    case .verified(let transaction):
+                        await transaction.finish()
+                        presentingVC?.dismiss(animated: true) { [weak self] in
+                            self?.showSuccessAlert(title: "Thank You! ❤️", message: "Your contribution of $\(amount) directly supports ongoing updates and improvements.")
+                        }
+                    case .unverified:
+                        break
+                    }
+                case .userCancelled, .pending:
+                    break
+                @unknown default:
+                    break
+                }
+            } catch {
+                let alert = UIAlertController(title: "Purchase Error", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                presentingVC?.present(alert, animated: true)
+            }
+        }
+    }
+    
+    // MARK: - Clear Data Helpers
     
     private func promptClearAppData(sourceView: UIView) {
         let actionSheet = UIAlertController(
@@ -300,7 +592,6 @@ class SettingsTableViewController: UITableViewController {
                 
                 self.patchNotesCell?.accessoryView = nil
                 
-                // Re-enable History tab and clear badges
                 if let historyTab = self.tabBarController?.tabBar.items?[1] {
                     historyTab.isEnabled = true
                     historyTab.badgeValue = "0"
