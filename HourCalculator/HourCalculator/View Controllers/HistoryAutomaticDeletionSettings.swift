@@ -11,62 +11,88 @@ import CoreData
 
 class HistoryAutomaticDeletionSettings: UITableViewController {
     
-    let historyAutomaticDeletion = UserDefaults.standard.integer(forKey: "automaticDeletion")
-    
+    let userDefaults = UserDefaults.standard
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     var hourItems: [Hours] {
-        
+        let fetchrequest = NSFetchRequest<Hours>(entityName: "Hours")
+        fetchrequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)]
         do {
-            let fetchrequest = NSFetchRequest<Hours>(entityName: "Hours")
-            let sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
-            fetchrequest.sortDescriptors = [sort]
             return try context.fetch(fetchrequest)
-            
         } catch {
-            
-            print("Couldn't fetch data")
-            
+            print("Couldn't fetch data: \(error)")
+            return []
         }
-        
-        return [Hours]()
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.separatorStyle = .singleLine
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateCheckmarks()
+    }
+    
+    private func updateCheckmarks() {
+        let currentSelection = userDefaults.integer(forKey: "automaticDeletion")
+        let totalRows = tableView.numberOfRows(inSection: 0)
         
-        let indexPathAutomaticDeletion = IndexPath(row: historyAutomaticDeletion, section: 0)
-        
-        tableView.selectRow(at: indexPathAutomaticDeletion, animated: false, scrollPosition: .none)
-        tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPathAutomaticDeletion)
+        for row in 0..<totalRows {
+            let cell = tableView.cellForRow(at: IndexPath(row: row, section: 0))
+            cell?.accessoryType = (row == currentSelection) ? .checkmark : .none
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userDefaults = UserDefaults.standard
+        // Deselect immediately so separator lines are never suppressed
+        tableView.deselectRow(at: indexPath, animated: true)
         
-        tableView.cellForRow(at: [0, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .none
-        userDefaults.set(indexPath.row, forKey: "automaticDeletion")
-        tableView.cellForRow(at: [0, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .checkmark
+        let previousSelection = userDefaults.integer(forKey: "automaticDeletion")
+        let newSelection = indexPath.row
         
-        if userDefaults.integer(forKey: "automaticDeletion") < hourItems.count &&
-            userDefaults.integer(forKey: "automaticDeletion") != 0 {
-            let alert = UIAlertController(title: "Warning", message: "You have more hours stored then entries allowed. Would you like to delete them?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self]_ in
-                for i in (0...hourItems.count).reversed() {
-                    if i > userDefaults.integer(forKey: "automaticDeletion") {
-                        let hourToDelete = hourItems.first
-                        context.delete(hourToDelete!)
-                    }
-                }
-                (UIApplication.shared.delegate as! AppDelegate).saveContext()
-                tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
+        userDefaults.set(newSelection, forKey: "automaticDeletion")
+        updateCheckmarks()
+        
+        let currentCount = hourItems.count
+        if newSelection != 0 && newSelection < currentCount {
+            let alert = UIAlertController(
+                title: "Warning",
+                message: "You have more hours stored than entries allowed. Would you like to delete the older entries?",
+                preferredStyle: .alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] _ in
+                guard let self = self else { return }
+                self.purgeExcessHours(keepCount: newSelection)
             }))
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-                tableView.cellForRow(at: [0, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .none
-                userDefaults.set(0, forKey: "automaticDeletion")
-                tableView.cellForRow(at: [0, userDefaults.integer(forKey: "automaticDeletion")])?.accessoryType = .checkmark
+            
+            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { [weak self] _ in
+                // Revert back to the previous selection
+                self?.userDefaults.set(previousSelection, forKey: "automaticDeletion")
+                self?.updateCheckmarks()
             }))
-            self.present(alert, animated: true, completion: nil)
+            
+            present(alert, animated: true)
         }
+    }
+    
+    private func purgeExcessHours(keepCount: Int) {
+        // Fetch items sorted oldest first to safely delete only the overflow entries
+        let fetchRequest = NSFetchRequest<Hours>(entityName: "Hours")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)]
+        
+        guard let allHours = try? context.fetch(fetchRequest), allHours.count > keepCount else { return }
+        
+        let excessCount = allHours.count - keepCount
+        for i in 0..<excessCount {
+            context.delete(allHours[i])
+        }
+        
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        
+        let remainingCount = hourItems.count
+        tabBarController?.tabBar.items?[1].badgeValue = remainingCount > 0 ? String(remainingCount) : nil
     }
 }
