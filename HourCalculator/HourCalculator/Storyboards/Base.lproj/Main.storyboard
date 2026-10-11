@@ -537,7 +537,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e4B-NH-b0L">
-                                                    <rect key="frame" x="20" y="72.666666666666657" width="287" height="21"/>
+                                                    <rect key="frame" x="20" y="72.666666666666671" width="287" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -578,7 +578,15 @@
                                 <rect key="frame" x="0.0" y="118" width="430" height="54"/>
                                 <items>
                                     <navigationItem title="Time Cards" largeTitleDisplayMode="never" id="qbm-WK-2dq">
-                                        <barButtonItem key="rightBarButtonItem" image="line.3.horizontal.decrease.circle" catalog="system" id="y1N-NU-Xs2"/>
+                                        <barButtonItem key="leftBarButtonItem" image="pencil" catalog="system" style="plain" id="Zl1-5D-zLI">
+                                            <connections>
+                                                <action selector="editButtonTapped:" destination="PkP-zP-EeS" id="flE-UL-FcX"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <rightBarButtonItems>
+                                            <barButtonItem image="ellipsis.circle" catalog="system" id="BZr-zR-fn8"/>
+                                            <barButtonItem image="line.3.horizontal.decrease.circle" catalog="system" id="y1N-NU-Xs2"/>
+                                        </rightBarButtonItems>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -597,7 +605,8 @@
                     </view>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="WgQ-Nv-3ge"/>
                     <connections>
-                        <outlet property="sortBarButton" destination="y1N-NU-Xs2" id="Sjx-dP-ZzE"/>
+                        <outlet property="editButton" destination="Zl1-5D-zLI" id="fwL-bf-Lzs"/>
+                        <outlet property="sortBarButton" destination="y1N-NU-Xs2" id="wLJ-BH-Pb3"/>
                         <outlet property="tableView" destination="gKl-hp-LCv" id="Vt5-0i-4ED"/>
                         <segue destination="Wnj-wO-PYt" kind="show" identifier="timeCardInfo" id="SW5-fU-BF0"/>
                     </connections>
@@ -1499,12 +1508,34 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="nrw-qj-INQ">
+                                        <rect key="frame" x="20" y="141" width="390" height="103"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nrw-qj-INQ" id="V9y-Ao-tTk">
+                                            <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Added the ability to import and export time cards to/from a csv file" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uWY-Co-ouR">
+                                                    <rect key="frame" x="20" y="15" width="350" height="73"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="uWY-Co-ouR" firstAttribute="leading" secondItem="V9y-Ao-tTk" secondAttribute="leadingMargin" id="3tm-bg-X5v"/>
+                                                <constraint firstItem="uWY-Co-ouR" firstAttribute="top" secondItem="V9y-Ao-tTk" secondAttribute="topMargin" id="Auo-ea-Rr2"/>
+                                                <constraint firstItem="uWY-Co-ouR" firstAttribute="centerY" secondItem="V9y-Ao-tTk" secondAttribute="centerY" id="BhR-w9-a1F"/>
+                                                <constraint firstItem="uWY-Co-ouR" firstAttribute="trailing" secondItem="V9y-Ao-tTk" secondAttribute="trailingMargin" id="H9q-Mn-TMZ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Bugs" id="JCY-kc-QJq">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="LDy-Dg-dLw">
-                                        <rect key="frame" x="20" y="197" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="300" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LDy-Dg-dLw" id="Nd2-e4-G4B">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1526,7 +1557,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="aM0-i5-zPj">
-                                        <rect key="frame" x="20" y="300" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="403" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aM0-i5-zPj" id="1Fu-AF-RIw">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1548,7 +1579,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="QIC-Yk-RMV">
-                                        <rect key="frame" x="20" y="403" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="506" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QIC-Yk-RMV" id="zur-1t-JaU">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1570,7 +1601,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="i7J-hH-bBq">
-                                        <rect key="frame" x="20" y="506" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="609" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="i7J-hH-bBq" id="k2r-ye-cO6">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1592,7 +1623,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="Ynw-z7-Ayw">
-                                        <rect key="frame" x="20" y="609" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="712" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ynw-z7-Ayw" id="jXH-YR-Va2">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1614,13 +1645,13 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="rSj-3L-F7i">
-                                        <rect key="frame" x="20" y="712" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="815" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rSj-3L-F7i" id="yto-81-BVK">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fixed issue with clear app data in the settings not properly disposing of memory and cache" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C6I-qJ-iwb">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Fixed issue with clear app data in the settings not properly disposing of memory and cache" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C6I-qJ-iwb">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
@@ -1636,7 +1667,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="lXM-gE-aIe">
-                                        <rect key="frame" x="20" y="815" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="918" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lXM-gE-aIe" id="tnw-L9-1tg">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1658,13 +1689,13 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="wxV-OG-O1L">
-                                        <rect key="frame" x="20" y="918" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="1021" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wxV-OG-O1L" id="3bx-7m-kIm">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fixed issue with dividers not showing between items in certain settings pages" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zgs-21-SEY">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Fixed issue with dividers not showing between items in certain settings pages" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zgs-21-SEY">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
@@ -1680,13 +1711,13 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="obO-NC-Dhi">
-                                        <rect key="frame" x="20" y="1021" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="1124" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="obO-NC-Dhi" id="MtI-w7-d0O">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U9F-BZ-kGZ">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U9F-BZ-kGZ">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <string key="text">Fixed issue where if you cleared app data in the settings and history was disabled, it wouldnt reenable the tab until the app was relaunched</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -1703,13 +1734,13 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="ZbZ-bS-XZY">
-                                        <rect key="frame" x="20" y="1124" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="1227" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZbZ-bS-XZY" id="eqi-8o-LHx">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eTe-ls-bww">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eTe-ls-bww">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <string key="text">Fixed issue where if edit hours was set to dismiss automatically, it would and but the item in history would not update until you left the tab and went back</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -1730,13 +1761,13 @@
                             <tableViewSection headerTitle="Improvements" id="2oK-jz-RlP" userLabel="Improvements">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="4mo-bQ-9aD">
-                                        <rect key="frame" x="20" y="1283" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="1386" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4mo-bQ-9aD" id="qrT-Jr-WKo">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Removed the &quot;Created by&quot; from the launch screen" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6E7-7o-6QH">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Removed the &quot;Created by&quot; from the launch screen" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6E7-7o-6QH">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
@@ -1752,13 +1783,13 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="fj0-JI-Scr">
-                                        <rect key="frame" x="20" y="1386" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="1489" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fj0-JI-Scr" id="2ro-kO-sxV">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reworked how the dependencies are installed in the app" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="94h-Ru-wdF">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Reworked how the dependencies are installed in the app" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="94h-Ru-wdF">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
@@ -1774,13 +1805,13 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="oO5-Ns-aLl">
-                                        <rect key="frame" x="20" y="1489" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="1592" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oO5-Ns-aLl" id="WT8-mn-JEk">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Updated the target SDK for the app to be iOS 27" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVT-uV-2cF">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Updated the target SDK for the app to be iOS 27" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVT-uV-2cF">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
@@ -1796,13 +1827,13 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="4eO-FW-5ht">
-                                        <rect key="frame" x="20" y="1592" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="1695" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4eO-FW-5ht" id="AKH-if-GAe">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Removed setting app icon to anything but default if theme is set to &quot;random&quot; to prevent an alert every time you open the app" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hVm-m3-fUA">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Removed setting app icon to anything but default if theme is set to &quot;random&quot; to prevent an alert every time you open the app" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hVm-m3-fUA">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
@@ -1818,13 +1849,13 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="CKj-iz-mlg">
-                                        <rect key="frame" x="20" y="1695" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="1798" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CKj-iz-mlg" id="9Cg-Zp-3YB">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reworked sorting time cards to make it look and act a little nicer" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="awk-mC-GCL">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Reworked sorting time cards to make it look and act a little nicer" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="awk-mC-GCL">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
@@ -1840,13 +1871,13 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="ZSw-jl-xDQ">
-                                        <rect key="frame" x="20" y="1777.6666666666667" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="1901" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZSw-jl-xDQ" id="PFO-Kc-PfY">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reworked the data handling in the time card views to hopefully make it more robust and less prone to bugs" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cy7-Sq-Iap">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Reworked the data handling in the time card views to hopefully make it more robust and less prone to bugs" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cy7-Sq-Iap">
                                                     <rect key="frame" x="20" y="15" width="350" height="73"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
@@ -1862,7 +1893,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="65s-Na-lv8">
-                                        <rect key="frame" x="20" y="1901" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="2004" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="65s-Na-lv8" id="1UD-Vi-JQ0">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1884,7 +1915,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="onT-TV-V7e">
-                                        <rect key="frame" x="20" y="2004" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="2107" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="onT-TV-V7e" id="RMz-dX-YdN">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1906,7 +1937,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="I0S-pF-WKa">
-                                        <rect key="frame" x="20" y="2107" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="2210" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="I0S-pF-WKa" id="H2c-hu-tgl">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1928,7 +1959,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="Xlf-y7-LEb">
-                                        <rect key="frame" x="20" y="2210" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="2313" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Xlf-y7-LEb" id="8Qb-1S-MUn">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1950,7 +1981,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="cLi-Is-yxe">
-                                        <rect key="frame" x="20" y="2313" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="2416" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cLi-Is-yxe" id="88R-pW-oVu">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1972,7 +2003,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="sAH-aa-12s">
-                                        <rect key="frame" x="20" y="2416" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="2519" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sAH-aa-12s" id="bUf-4H-pz0">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -1994,7 +2025,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="ovz-l3-H1J">
-                                        <rect key="frame" x="20" y="2519" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="2622" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ovz-l3-H1J" id="wHK-Pf-crX">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
@@ -2016,7 +2047,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="103" id="b83-OB-1Ja">
-                                        <rect key="frame" x="20" y="2622" width="390" height="103"/>
+                                        <rect key="frame" x="20" y="2725" width="390" height="103"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="b83-OB-1Ja" id="wnL-0I-XvY">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
