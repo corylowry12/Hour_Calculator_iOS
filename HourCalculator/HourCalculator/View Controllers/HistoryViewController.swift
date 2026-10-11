@@ -642,21 +642,40 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         let modalVC = UIViewController()
         modalVC.modalPresentationStyle = .overFullScreen
         modalVC.modalTransitionStyle = .crossDissolve
-        modalVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.35)
+        modalVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
+        // Tap dimmed backdrop above the sheet to dismiss
         let dismissButton = UIButton(frame: modalVC.view.bounds)
         dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         dismissButton.addTarget(self, action: #selector(dismissLiquidGlassModal), for: .touchUpInside)
         modalVC.view.addSubview(dismissButton)
         
-        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
-        let glassContainer = UIVisualEffectView(effect: blurEffect)
-        glassContainer.layer.cornerRadius = 24
-        glassContainer.layer.masksToBounds = true
-        glassContainer.layer.borderWidth = 1.0
-        glassContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.25).cgColor
-        glassContainer.translatesAutoresizingMaskIntoConstraints = false
-        modalVC.view.addSubview(glassContainer)
+        // Fixed bottom container pinned to the bottom of the screen
+        let blurEffect = UIBlurEffect(style: .systemMaterialDark)
+        let bottomSheetContainer = UIVisualEffectView(effect: blurEffect)
+        bottomSheetContainer.layer.cornerRadius = 24
+        bottomSheetContainer.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        bottomSheetContainer.layer.masksToBounds = true
+        bottomSheetContainer.layer.borderWidth = 1.0
+        bottomSheetContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.15).cgColor
+        bottomSheetContainer.translatesAutoresizingMaskIntoConstraints = false
+        modalVC.view.addSubview(bottomSheetContainer)
+        
+        // Top-left circular 'X' dismiss button
+        let closeButton = UIButton(type: .system)
+        var closeConfig = UIButton.Configuration.plain()
+        let xSymbolConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
+        closeConfig.image = UIImage(systemName: "xmark", withConfiguration: xSymbolConfig)
+        closeConfig.baseForegroundColor = .secondaryLabel
+        closeConfig.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
+        closeButton.configuration = closeConfig
+        closeButton.backgroundColor = UIColor.secondarySystemFill
+        closeButton.layer.cornerRadius = 15
+        closeButton.layer.masksToBounds = true
+        closeButton.addAction(UIAction { [weak modalVC] _ in
+            modalVC?.dismiss(animated: true)
+        }, for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
         
         let iconConfig = UIImage.SymbolConfiguration(pointSize: 32, weight: .semibold)
         let iconImageView = UIImageView(image: UIImage(systemName: "clock.badge.checkmark.fill", withConfiguration: iconConfig))
@@ -666,7 +685,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         let titleLabel = UILabel()
         titleLabel.text = isSelection ? "Selected Summary" : "History Summary"
-        titleLabel.font = UIFont.systemFont(ofSize: 19, weight: .bold)
+        titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         titleLabel.textAlignment = .center
         titleLabel.textColor = .label
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -677,14 +696,14 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 16
+        stackView.spacing = 12
         stackView.alignment = .fill
         stackView.distribution = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         func createInfoCard(icon: String, title: String, value: String) -> UIView {
             let card = UIView()
-            card.backgroundColor = UIColor.secondarySystemFill.withAlphaComponent(0.35)
+            card.backgroundColor = UIColor.secondarySystemFill
             card.layer.cornerRadius = 14
             card.layer.masksToBounds = true
             card.translatesAutoresizingMaskIntoConstraints = false
@@ -696,7 +715,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
             let textStack = UIStackView()
             textStack.axis = .vertical
-            textStack.spacing = 3
+            textStack.spacing = 2
             textStack.alignment = .fill
             textStack.translatesAutoresizingMaskIntoConstraints = false
             
@@ -707,7 +726,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
             let rowValue = UILabel()
             rowValue.text = value
-            rowValue.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+            rowValue.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
             rowValue.textColor = .label
             rowValue.adjustsFontSizeToFitWidth = true
             rowValue.minimumScaleFactor = 0.8
@@ -719,15 +738,15 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             card.addSubview(textStack)
             
             NSLayoutConstraint.activate([
-                rowIcon.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 14),
+                rowIcon.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
                 rowIcon.centerYAnchor.constraint(equalTo: card.centerYAnchor),
                 rowIcon.widthAnchor.constraint(equalToConstant: 24),
                 rowIcon.heightAnchor.constraint(equalToConstant: 24),
                 
-                textStack.leadingAnchor.constraint(equalTo: rowIcon.trailingAnchor, constant: 12),
-                textStack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -14),
-                textStack.topAnchor.constraint(equalTo: card.topAnchor, constant: 10),
-                textStack.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -10)
+                textStack.leadingAnchor.constraint(equalTo: rowIcon.trailingAnchor, constant: 14),
+                textStack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
+                textStack.topAnchor.constraint(equalTo: card.topAnchor, constant: 12),
+                textStack.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -12)
             ])
             
             return card
@@ -740,56 +759,44 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         stackView.addArrangedSubview(entriesRow)
         stackView.addArrangedSubview(totalHoursRow)
         
-        let closeButton = UIButton(type: .system)
-        var btnConfig = UIButton.Configuration.filled()
-        btnConfig.title = "Done"
-        btnConfig.baseBackgroundColor = currentAccentColor
-        btnConfig.baseForegroundColor = .white
-        btnConfig.cornerStyle = .capsule
-        btnConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-            var outgoing = incoming
-            outgoing.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-            return outgoing
-        }
-        closeButton.configuration = btnConfig
-        closeButton.addTarget(self, action: #selector(dismissLiquidGlassModal), for: .touchUpInside)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        glassContainer.contentView.addSubview(iconImageView)
-        glassContainer.contentView.addSubview(titleLabel)
-        glassContainer.contentView.addSubview(divider)
-        glassContainer.contentView.addSubview(stackView)
-        glassContainer.contentView.addSubview(closeButton)
+        bottomSheetContainer.contentView.addSubview(closeButton)
+        bottomSheetContainer.contentView.addSubview(iconImageView)
+        bottomSheetContainer.contentView.addSubview(titleLabel)
+        bottomSheetContainer.contentView.addSubview(divider)
+        bottomSheetContainer.contentView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            glassContainer.centerXAnchor.constraint(equalTo: modalVC.view.centerXAnchor),
-            glassContainer.centerYAnchor.constraint(equalTo: modalVC.view.centerYAnchor),
-            glassContainer.widthAnchor.constraint(equalTo: modalVC.view.widthAnchor, multiplier: 0.84),
-            glassContainer.widthAnchor.constraint(lessThanOrEqualToConstant: 350),
+            // Pinned flush to the very bottom edge of the display
+            bottomSheetContainer.leadingAnchor.constraint(equalTo: modalVC.view.leadingAnchor),
+            bottomSheetContainer.trailingAnchor.constraint(equalTo: modalVC.view.trailingAnchor),
+            bottomSheetContainer.bottomAnchor.constraint(equalTo: modalVC.view.bottomAnchor),
             
-            iconImageView.topAnchor.constraint(equalTo: glassContainer.contentView.topAnchor, constant: 22),
-            iconImageView.centerXAnchor.constraint(equalTo: glassContainer.contentView.centerXAnchor),
+            // Top-left 'X' button
+            closeButton.topAnchor.constraint(equalTo: bottomSheetContainer.contentView.topAnchor, constant: 16),
+            closeButton.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 16),
+            closeButton.widthAnchor.constraint(equalToConstant: 30),
+            closeButton.heightAnchor.constraint(equalToConstant: 30),
+            
+            iconImageView.topAnchor.constraint(equalTo: bottomSheetContainer.contentView.topAnchor, constant: 20),
+            iconImageView.centerXAnchor.constraint(equalTo: bottomSheetContainer.contentView.centerXAnchor),
             iconImageView.widthAnchor.constraint(equalToConstant: 34),
             iconImageView.heightAnchor.constraint(equalToConstant: 34),
             
-            titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 10),
-            titleLabel.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -20),
+            titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 8),
+            titleLabel.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: bottomSheetContainer.contentView.trailingAnchor, constant: -20),
             
-            divider.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 14),
-            divider.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 20),
-            divider.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -20),
+            divider.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+            divider.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 20),
+            divider.trailingAnchor.constraint(equalTo: bottomSheetContainer.contentView.trailingAnchor, constant: -20),
             divider.heightAnchor.constraint(equalToConstant: 0.5),
             
-            stackView.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 16),
-            stackView.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 18),
-            stackView.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -18),
+            stackView.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 14),
+            stackView.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: bottomSheetContainer.contentView.trailingAnchor, constant: -20),
             
-            closeButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
-            closeButton.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 18),
-            closeButton.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -18),
-            closeButton.heightAnchor.constraint(equalToConstant: 44),
-            closeButton.bottomAnchor.constraint(equalTo: glassContainer.contentView.bottomAnchor, constant: -20)
+            // Anchored directly to safe area bottom for proper home indicator padding
+            stackView.bottomAnchor.constraint(equalTo: modalVC.view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
         
         present(modalVC, animated: true)
