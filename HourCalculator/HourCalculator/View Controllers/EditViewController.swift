@@ -10,6 +10,25 @@ import CoreData
 
 class EditViewController: UIViewController, UIAdaptivePresentationControllerDelegate {
     
+    // Cached static formatters to avoid re-allocating on every check
+    private static let timeFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "hh:mm a"
+        return df
+    }()
+    
+    private static let storedDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "MM/dd/yyyy"
+        return df
+    }()
+    
+    private static let displayDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "MMM d, yyyy"
+        return df
+    }()
+    
     @IBOutlet weak var dateButton: UIButton!
     @IBOutlet weak var datePickerInTime: UIDatePicker!
     @IBOutlet weak var datePickerOutTime: UIDatePicker!
@@ -17,7 +36,8 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
     @IBOutlet var saveButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
     
-    var data: Int!
+    // Pass the managed object directly rather than indexing via UserDefaults
+    var currentHourItem: Hours?
     var selectedDate: Date = Date()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -28,47 +48,16 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
     var outHour: Int = 0
     var outMinute: Int = 0
     
-    var hourItems: [Hours] {
-        do {
-            var sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
-            let fetchrequest = NSFetchRequest<Hours>(entityName: "Hours")
-            let sortChoice = userDefaults.integer(forKey: "historySort")
-            
-            if sortChoice == 0 {
-                sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
-            } else if sortChoice == 1 {
-                sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)
-            } else if sortChoice == 2 {
-                sort = NSSortDescriptor(key: #keyPath(Hours.totalHours), ascending: true)
-            } else if sortChoice == 3 {
-                sort = NSSortDescriptor(key: #keyPath(Hours.totalHours), ascending: false)
-            }
-            
-            fetchrequest.sortDescriptors = [sort]
-            return try context.fetch(fetchrequest)
-        } catch {
-            print("Couldn't fetch data")
-        }
-        return [Hours]()
-    }
-    
     var hasUnsavedChanges: Bool {
-        guard let data = data, data < hourItems.count else { return false }
-        let storedItem = hourItems[data]
+        guard let item = currentHourItem else { return false }
         
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "hh:mm a"
+        let currentInTime = Self.timeFormatter.string(from: datePickerInTime.date)
+        let currentOutTime = Self.timeFormatter.string(from: datePickerOutTime.date)
+        let currentDate = Self.storedDateFormatter.string(from: selectedDate)
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
-        
-        let currentInTime = timeFormatter.string(from: datePickerInTime.date)
-        let currentOutTime = timeFormatter.string(from: datePickerOutTime.date)
-        let currentDate = dateFormatter.string(from: selectedDate)
-        
-        let inChanged = (currentInTime != storedItem.inTime)
-        let outChanged = (currentOutTime != storedItem.outTime)
-        let dateChanged = (currentDate != storedItem.date)
+        let inChanged = (currentInTime != item.inTime)
+        let outChanged = (currentOutTime != item.outTime)
+        let dateChanged = (currentDate != item.date)
         
         return inChanged || outChanged || dateChanged
     }
@@ -81,28 +70,20 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         super.viewWillAppear(animated)
         
         let accent = userDefaults.integer(forKey: "accent")
-        if accent == 0 {
-            saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
-        } else if accent == 1 {
-            saveButton.backgroundColor = UIColor(rgb: 0x7841c4)
-        } else if accent == 2 {
-            saveButton.backgroundColor = UIColor(rgb: 0x347deb)
-        } else if accent == 3 {
-            saveButton.backgroundColor = UIColor(rgb: 0xfc783a)
-        } else if accent == 4 {
-            saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
-        } else if accent == 5 {
+        switch accent {
+        case 0: saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
+        case 1: saveButton.backgroundColor = UIColor(rgb: 0x7841c4)
+        case 2: saveButton.backgroundColor = UIColor(rgb: 0x347deb)
+        case 3: saveButton.backgroundColor = UIColor(rgb: 0xfc783a)
+        case 4: saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+        default:
             let randomAccent = userDefaults.integer(forKey: "accentRandom")
-            if randomAccent == 0 {
-                saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
-            } else if randomAccent == 1 {
-                saveButton.backgroundColor = UIColor(rgb: 0x7841c4)
-            } else if randomAccent == 2 {
-                saveButton.backgroundColor = UIColor(rgb: 0x347deb)
-            } else if randomAccent == 3 {
-                saveButton.backgroundColor = UIColor(rgb: 0xfc783a)
-            } else if randomAccent == 4 {
-                saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
+            switch randomAccent {
+            case 0: saveButton.backgroundColor = UIColor(rgb: 0x26A69A)
+            case 1: saveButton.backgroundColor = UIColor(rgb: 0x7841c4)
+            case 2: saveButton.backgroundColor = UIColor(rgb: 0x347deb)
+            case 3: saveButton.backgroundColor = UIColor(rgb: 0xfc783a)
+            default: saveButton.backgroundColor = UIColor(rgb: 0xc41d1d)
             }
         }
     }
@@ -113,37 +94,23 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         navigationController?.presentationController?.delegate = self
         presentationController?.delegate = self
         
-        guard let idString = userDefaults.string(forKey: "ID"),
-              let index = Int(idString),
-              index < hourItems.count else {
+        guard let currentItem = currentHourItem else {
+            dismiss(animated: true)
             return
         }
         
-        data = index
-        let currentItem = hourItems[data]
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "hh:mm a"
-        
-        let storedDateFormatter = DateFormatter()
-        storedDateFormatter.dateFormat = "MM/dd/yyyy"
-        
-        if let inString = currentItem.inTime, let parsedInDate = timeFormatter.date(from: inString) {
+        if let inString = currentItem.inTime, let parsedInDate = Self.timeFormatter.date(from: inString) {
             datePickerInTime.date = parsedInDate
         }
         
-        if let outString = currentItem.outTime, let parsedOutDate = timeFormatter.date(from: outString) {
+        if let outString = currentItem.outTime, let parsedOutDate = Self.timeFormatter.date(from: outString) {
             datePickerOutTime.date = parsedOutDate
         }
         
-        if let dateString = currentItem.date, let parsedDate = storedDateFormatter.date(from: dateString) {
+        if let dateString = currentItem.date, let parsedDate = Self.storedDateFormatter.date(from: dateString) {
             selectedDate = parsedDate
         } else {
-            let alert = UIAlertController(title: "Error", message: "There was an error loading the date. Please try again or re-enter the entry.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-                self.dismiss(animated: true, completion: nil)
-            })
-            self.present(alert, animated: true, completion: nil)
+            selectedDate = Date()
         }
         
         setupDateButton()
@@ -152,7 +119,6 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("Update"), object: nil)
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
     }
     
@@ -164,10 +130,7 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
     }
     
     private func updateDateButtonTitle() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, yyyy"
-        let title = formatter.string(from: selectedDate)
-        
+        let title = Self.displayDateFormatter.string(from: selectedDate)
         if var config = dateButton.configuration {
             config.title = title
             dateButton.configuration = config
@@ -182,13 +145,11 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         alertVC.modalTransitionStyle = .crossDissolve
         alertVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
         
-        // 1. Transparent dismiss overlay behind calendar
         let dismissButton = UIButton(frame: alertVC.view.bounds)
         dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         dismissButton.addTarget(self, action: #selector(dismissCalendarModal), for: .touchUpInside)
         alertVC.view.addSubview(dismissButton)
         
-        // 2. Liquid Glass Container
         let blurEffect = UIBlurEffect(style: .systemThinMaterial)
         let glassContainer = UIVisualEffectView(effect: blurEffect)
         glassContainer.layer.cornerRadius = 24
@@ -198,7 +159,6 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         glassContainer.translatesAutoresizingMaskIntoConstraints = false
         alertVC.view.addSubview(glassContainer)
         
-        // 3. Inline Calendar Picker
         let picker = UIDatePicker()
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .inline
@@ -210,7 +170,6 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         picker.addTarget(self, action: #selector(inlineDateChanged(_:)), for: .valueChanged)
         glassContainer.contentView.addSubview(picker)
         
-        // 4. Layout Constraints
         NSLayoutConstraint.activate([
             glassContainer.centerXAnchor.constraint(equalTo: alertVC.view.centerXAnchor),
             glassContainer.centerYAnchor.constraint(equalTo: alertVC.view.centerYAnchor),
@@ -276,7 +235,6 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         if hasUnsavedChanges {
             promptPendingChanges()
         } else {
-            userDefaults.removeObject(forKey: "ID")
             self.dismiss(animated: true, completion: nil)
             NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
         }
@@ -289,32 +247,33 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
             preferredStyle: .alert
         )
         
-        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
             self.save()
             self.dismiss(animated: true, completion: nil)
             NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
         }))
         
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-            self.dismiss(animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { [weak self] _ in
+            self?.dismiss(animated: true, completion: nil)
         }))
         
         self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction func deleteButtonTapped(_ sender: Any) {
-        let hourToDelete = self.hourItems[data]
+        guard let hourToDelete = currentHourItem else { return }
         let alert = UIAlertController(title: "Delete?", message: "Would you like to delete this hour?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
             self.context.delete(hourToDelete)
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
             
             let doneAlert = UIAlertController(title: nil, message: "Entry Deleted   ✓", preferredStyle: .alert)
-            doneAlert.view.tintColor = UIColor.black
             self.present(doneAlert, animated: true, completion: nil)
             NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                 doneAlert.dismiss(animated: true) {
                     self.dismiss(animated: true, completion: nil)
                 }
@@ -325,6 +284,8 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
     }
     
     func PMtoAM() {
+        guard let hoursToBeStored = currentHourItem else { return }
+        
         let inComponents = Calendar.current.dateComponents([.hour, .minute], from: datePickerInTime.date)
         inHour = inComponents.hour ?? 0
         inMinute = inComponents.minute ?? 0
@@ -336,16 +297,9 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         let minutesDifference = outMinute - inMinute
         let hoursDifference = outHour - inHour + 24
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm a"
-        let inTimeDate = dateFormatter.string(from: datePickerInTime.date)
-        let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-        
-        let dateFormatterForDateTaken = DateFormatter()
-        dateFormatterForDateTaken.dateFormat = "MM/dd/yyyy"
-        let dateEntered = dateFormatterForDateTaken.string(from: selectedDate)
-        
-        let hoursToBeStored = hourItems[data]
+        let inTimeDate = Self.timeFormatter.string(from: datePickerInTime.date)
+        let outTimeDate = Self.timeFormatter.string(from: datePickerOutTime.date)
+        let dateEntered = Self.storedDateFormatter.string(from: selectedDate)
         
         if minutesDifference < 0 {
             let minutesDecimal = Double(minutesDifference) / 60.00
@@ -387,6 +341,8 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
     }
     
     func save() {
+        guard let hoursToBeStored = currentHourItem else { return }
+        
         let inComponents = Calendar.current.dateComponents([.hour, .minute], from: datePickerInTime.date)
         inHour = inComponents.hour ?? 0
         inMinute = inComponents.minute ?? 0
@@ -398,16 +354,9 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
         let minutesDifference = outMinute - inMinute
         let hoursDifference = outHour - inHour
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm a"
-        let inTimeDate = dateFormatter.string(from: datePickerInTime.date)
-        let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-        
-        let dateFormatterForDateTaken = DateFormatter()
-        dateFormatterForDateTaken.dateFormat = "MM/dd/yyyy"
-        let dateEntered = dateFormatterForDateTaken.string(from: selectedDate)
-        
-        let hoursToBeStored = hourItems[data]
+        let inTimeDate = Self.timeFormatter.string(from: datePickerInTime.date)
+        let outTimeDate = Self.timeFormatter.string(from: datePickerOutTime.date)
+        let dateEntered = Self.storedDateFormatter.string(from: selectedDate)
         
         if hoursDifference < 0 {
             dateLabel.text = "In time can not be greater than out time"
@@ -456,7 +405,6 @@ class EditViewController: UIViewController, UIAdaptivePresentationControllerDele
     }
 
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        userDefaults.removeObject(forKey: "ID")
         NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
     }
 }
