@@ -8,17 +8,17 @@
 import UIKit
 import GoogleMobileAds
 import CoreData
+import PhotosUI
 import SwipeableTabBarController
 
-class HistoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class HistoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PHPickerViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var historyNavigationBar: UINavigationBar!
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var moreMenuButton: UIBarButtonItem!
-    
-    @IBOutlet weak var deleteSelectedButton: UIButton!
+    @IBOutlet weak var deleteSelectedBarButton: UIBarButtonItem!
     
     var tappedItem: Hours!
     
@@ -30,6 +30,15 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     var undo = 0
     var total: Double = 0.0
     
+    private var pendingExportItems: [Hours] = []
+    private var pendingDeletePaths: [IndexPath] = []
+    private var pendingExportImage: UIImage?
+    
+    private weak var exportModalVC: UIViewController?
+    private weak var exportModalTextField: UITextField?
+    private weak var exportModalPhotoButton: UIButton?
+    private weak var exportModalPreviewImageView: UIImageView?
+    
     var currentAccentColor: UIColor {
         let accent = userDefaults.integer(forKey: "accent")
         switch accent {
@@ -40,6 +49,16 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         case 4: return UIColor(rgb: 0xc41d1d)
         default: return UIColor(rgb: 0x26A69A)
         }
+    }
+    
+    private var currentDisplayScale: CGFloat {
+        if let windowScene = view.window?.windowScene {
+            return windowScene.screen.scale
+        }
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            return windowScene.screen.scale
+        }
+        return traitCollection.displayScale > 0 ? traitCollection.displayScale : 2.0
     }
     
     var timeCards: [TimeCards] {
@@ -97,16 +116,26 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
+        guard longPressGesture.state == .began else { return }
+        
         let p = longPressGesture.location(in: tableView)
-        let indexPath = tableView.indexPathForRow(at: p)
-        if indexPath == nil {
-            print("Long press failed")
-        }
-        else if longPressGesture.state == UIGestureRecognizer.State.began {
-            tableView.setEditing(true, animated: true)
+        guard let indexPath = tableView.indexPathForRow(at: p) else { return }
+        
+        if tableView.isEditing {
+            let feedback = UIImpactFeedbackGenerator(style: .medium)
+            feedback.impactOccurred()
+            
+            for row in 0..<hourItems.count {
+                let targetPath = IndexPath(row: row, section: 0)
+                tableView.selectRow(at: targetPath, animated: true, scrollPosition: .none)
+            }
+            updateDeleteSelectedButtonState()
+            setupMoreMenu()
+        } else {
+            setEditingMode(true, animated: true)
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-            editButton?.image = UIImage(systemName: "xmark")
-            deleteSelectedButton.isHidden = false
+            updateDeleteSelectedButtonState()
+            setupMoreMenu()
         }
     }
     
@@ -133,6 +162,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 
                 tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
                 tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
+                setupMoreMenu()
             }))
             alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -148,6 +178,9 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         if defaults.value(forKey: "undoAlertMessage") == nil {
             defaults.setValue(0, forKey: "undoAlertMessage")
         }
+        
+        deleteSelectedBarButton?.tintColor = .systemRed
+        deleteSelectedBarButton?.isEnabled = false
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPressGesture.minimumPressDuration = 0.5
@@ -171,6 +204,90 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         noHoursStoredBackground()
         setupMoreMenu()
+        
+        deleteSelectedBarButton?.isHidden = true
+        deleteSelectedBarButton?.isEnabled = false
+        deleteSelectedBarButton?.tintColor = .systemRed
+    }
+    
+    private func setEditingMode(_ editing: Bool, animated: Bool) {
+        tableView.setEditing(editing, animated: animated)
+        editButton?.image = UIImage(systemName: editing ? "xmark" : "pencil")
+        
+        deleteSelectedBarButton?.isHidden = !editing
+        updateDeleteSelectedButtonState()
+        setupMoreMenu()
+        
+        if editing {
+            showSelectAllTooltipIfNeeded()
+        }
+    }
+    
+    private func showSelectAllTooltipIfNeeded() {
+        guard !userDefaults.bool(forKey: "hasShownSelectAllTooltip") else { return }
+        userDefaults.set(true, forKey: "hasShownSelectAllTooltip")
+        
+        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
+        let tooltip = UIVisualEffectView(effect: blurEffect)
+        tooltip.layer.cornerRadius = 18
+        tooltip.layer.masksToBounds = true
+        tooltip.layer.borderWidth = 1.0
+        tooltip.layer.borderColor = UIColor.white.withAlphaComponent(0.25).cgColor
+        tooltip.translatesAutoresizingMaskIntoConstraints = false
+        
+        let icon = UIImageView(image: UIImage(systemName: "hand.tap.fill"))
+        icon.tintColor = currentAccentColor
+        icon.contentMode = .scaleAspectFit
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        
+        let label = UILabel()
+        label.text = "Tip: Long press any row while editing to select all entries."
+        label.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
+        label.textColor = .label
+        label.numberOfLines = 2
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        tooltip.contentView.addSubview(icon)
+        tooltip.contentView.addSubview(label)
+        view.addSubview(tooltip)
+        
+        let topAnchorTarget = historyNavigationBar?.bottomAnchor ?? view.safeAreaLayoutGuide.topAnchor
+        
+        NSLayoutConstraint.activate([
+            tooltip.topAnchor.constraint(equalTo: topAnchorTarget, constant: 10),
+            tooltip.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tooltip.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            icon.leadingAnchor.constraint(equalTo: tooltip.contentView.leadingAnchor, constant: 14),
+            icon.centerYAnchor.constraint(equalTo: tooltip.contentView.centerYAnchor),
+            icon.widthAnchor.constraint(equalToConstant: 22),
+            icon.heightAnchor.constraint(equalToConstant: 22),
+            
+            label.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 10),
+            label.trailingAnchor.constraint(equalTo: tooltip.contentView.trailingAnchor, constant: -14),
+            label.topAnchor.constraint(equalTo: tooltip.contentView.topAnchor, constant: 10),
+            label.bottomAnchor.constraint(equalTo: tooltip.contentView.bottomAnchor, constant: -10)
+        ])
+        
+        tooltip.alpha = 0
+        tooltip.transform = CGAffineTransform(translationX: 0, y: -16)
+        
+        UIView.animate(withDuration: 0.35, delay: 0.1, options: [.curveEaseOut], animations: {
+            tooltip.alpha = 1.0
+            tooltip.transform = .identity
+        }) { _ in
+            UIView.animate(withDuration: 0.35, delay: 3.5, options: [.curveEaseIn], animations: {
+                tooltip.alpha = 0
+                tooltip.transform = CGAffineTransform(translationX: 0, y: -16)
+            }) { _ in
+                tooltip.removeFromSuperview()
+            }
+        }
+    }
+    
+    private func updateDeleteSelectedButtonState() {
+        let hasSelection = (tableView.indexPathsForSelectedRows?.count ?? 0) > 0
+        deleteSelectedBarButton?.isEnabled = hasSelection
     }
     
     func noHoursStoredBackground() {
@@ -190,44 +307,38 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     private func setupMoreMenu() {
-        let deferredMenu = UIDeferredMenuElement { [weak self] completion in
-            guard let self = self else {
-                completion([])
-                return
-            }
-
-            let hasItems = !self.hourItems.isEmpty
-
-            let exportAction = UIAction(
-                title: "Export",
-                image: UIImage(systemName: "square.and.arrow.up"),
-                attributes: hasItems ? [] : .disabled
-            ) { _ in
-                self.handleExport()
-                self.setupMoreMenu()
-            }
-
-            let infoAction = UIAction(
-                title: "Info",
-                image: UIImage(systemName: "info.circle"),
-                attributes: hasItems ? [] : .disabled
-            ) { _ in
-                self.handleInfo()
-            }
-
-            let deleteAllAction = UIAction(
-                title: "Delete All",
-                image: UIImage(systemName: "trash"),
-                attributes: hasItems ? .destructive : [.destructive, .disabled]
-            ) { _ in
-                self.handleDeleteAll()
-                self.setupMoreMenu()
-            }
-
-            completion([exportAction, infoAction, deleteAllAction])
+        let isEditingMode = tableView.isEditing
+        let selectedCount = tableView.indexPathsForSelectedRows?.count ?? 0
+        let hasAnyItems = !hourItems.isEmpty
+        
+        let canExport = isEditingMode ? (selectedCount > 0) : hasAnyItems
+        let canShowInfo = isEditingMode ? (selectedCount > 0) : hasAnyItems
+        
+        let exportAction = UIAction(
+            title: "Export",
+            image: UIImage(systemName: "square.and.arrow.up"),
+            attributes: canExport ? [] : .disabled
+        ) { [weak self] _ in
+            self?.handleExport()
         }
 
-        moreMenuButton.menu = UIMenu(title: "", children: [deferredMenu])
+        let infoAction = UIAction(
+            title: "Info",
+            image: UIImage(systemName: "info.circle"),
+            attributes: canShowInfo ? [] : .disabled
+        ) { [weak self] _ in
+            self?.handleInfo()
+        }
+
+        let deleteAllAction = UIAction(
+            title: "Delete All",
+            image: UIImage(systemName: "trash"),
+            attributes: hasAnyItems ? .destructive : [.destructive, .disabled]
+        ) { [weak self] _ in
+            self?.handleDeleteAll()
+        }
+
+        moreMenuButton.menu = UIMenu(title: "", children: [exportAction, infoAction, deleteAllAction])
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -245,9 +356,9 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.tableView.reloadData()
         }, completion: nil)
         
-        deleteSelectedButton.backgroundColor = currentAccentColor
         noHoursStoredBackground()
         editButton.isEnabled = hourItems.count > 0
+        setupMoreMenu()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -277,29 +388,29 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         undo = 0
-        tableView.setEditing(false, animated: false)
-        editButton?.image = UIImage(systemName: "pencil")
-        deleteSelectedButton.isHidden = true
+        setEditingMode(false, animated: false)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
             let alert = UIAlertController(title: "Warning", message: "You are fixing to delete a single entry, would you like to continue?", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
                 let hourToDelete = self.hourItems[indexPath.row]
                 self.context.delete(hourToDelete)
+                (UIApplication.shared.delegate as! AppDelegate).saveContext()
                 
                 self.tableView.deleteRows(at: [indexPath], with: .fade)
                 self.undo = 1
                 self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
                 self.noHoursStoredBackground()
+                self.setupMoreMenu()
                 
                 if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
-                    let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+                    let undoAlert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
+                    undoAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
                         UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
                     }))
-                    self.present(alert, animated: true, completion: nil)
+                    self.present(undoAlert, animated: true, completion: nil)
                 }
             }))
             alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
@@ -308,47 +419,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.present(alert, animated: true, completion: nil)
         }
         
-        let exportAction = UIContextualAction(style: .normal, title: "Export") { (action, view, completionHandler) in
-            let alert = UIAlertController(title: "Warning", message: "You are fixing to export a single hour. Would you like to continue?", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
-                var random: Int32!
-                repeat {
-                    random = Int32.random(in: 1...500)
-                } while self.timeCards.contains(where: { $0.id_number == random })
-                
-                let timeCards = TimeCards(context: self.context)
-                let date = "\(self.hourItems[indexPath.row].date ?? "Unknown")"
-                timeCards.week = date
-                timeCards.id_number = random
-                
-                let hourToDelete = self.hourItems[indexPath.row]
-                self.total = Double(self.hourItems[indexPath.row].totalHours ?? "0") ?? 0.0
-                
-                let timeCardsInfo = TimeCardInfo(context: self.context)
-                timeCardsInfo.id_number = random
-                timeCardsInfo.intime = self.hourItems[indexPath.row].inTime
-                timeCardsInfo.outtime = self.hourItems[indexPath.row].outTime
-                timeCardsInfo.total_hours = self.hourItems[indexPath.row].totalHours
-                timeCardsInfo.date = self.hourItems[indexPath.row].date
-                
-                let gallery = Gallery(context: self.context)
-                gallery.id_number = random
-                
-                self.context.delete(hourToDelete)
-                self.tableView.deleteRows(at: [indexPath], with: .left)
-                
-                self.undo = 1
-                timeCards.total = self.total
-                timeCards.numberBeingExported = Int64(1)
-                
-                self.noHoursStoredBackground()
-                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-            }))
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-                completionHandler(false)
-            }))
-            self.present(alert, animated: true, completion: nil)
+        let exportAction = UIContextualAction(style: .normal, title: "Export") { [weak self] (action, view, completionHandler) in
+            guard let self = self else { return }
+            let hourToExport = self.hourItems[indexPath.row]
+            self.promptExportNaming(itemsToExport: [hourToExport], indexPathsToDelete: [indexPath])
+            completionHandler(true)
         }
         
         let swipeActionConfig = UISwipeActionsConfiguration(actions: [action, exportAction])
@@ -357,34 +432,32 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         return swipeActionConfig
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView.isEditing {
+            updateDeleteSelectedButtonState()
+            setupMoreMenu()
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
+            let selectedHour = hourItems[indexPath.row]
+            performSegue(withIdentifier: "EditItem", sender: selectedHour)
+        }
+    }
+
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
-            let defaults = UserDefaults.standard
-            defaults.set(indexPath.row, forKey: "ID")
-            self.performSegue(withIdentifier: "EditItem", sender: nil)
+        let action = UIContextualAction(style: .normal, title: "Edit") { [weak self] (action, view, completionHandler) in
+            guard let self = self else { return }
+            let selectedHour = self.hourItems[indexPath.row]
+            self.performSegue(withIdentifier: "EditItem", sender: selectedHour)
+            completionHandler(true)
         }
         action.backgroundColor = .systemOrange
         return UISwipeActionsConfiguration(actions: [action])
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.count > 0 {
-            deleteSelectedButton.isEnabled = true
-            deleteSelectedButton.alpha = 1.0
-        }
-        
-        if !tableView.isEditing {
-            tableView.deselectRow(at: indexPath, animated: false)
-            let defaults = UserDefaults.standard
-            defaults.set(indexPath.row, forKey: "ID")
-            performSegue(withIdentifier: "EditItem", sender: nil)
-        }
-    }
-    
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if tableView.indexPathsForSelectedRows == nil {
-            deleteSelectedButton.isEnabled = false
-            deleteSelectedButton.alpha = 0.80
+        if tableView.isEditing {
+            updateDeleteSelectedButtonState()
+            setupMoreMenu()
         }
     }
     
@@ -450,31 +523,31 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     private func handleDeleteAll() {
         if self.tableView.isEditing {
-            self.tableView.setEditing(false, animated: true)
-            self.deleteSelectedButton.isHidden = true
+            setEditingMode(false, animated: true)
         }
         
         let alert = UIAlertController(title: "Delete All?", message: "Are you sure you would like to delete all stored hours?", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self] _ in
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [self] _ in
             undo = 1
             DispatchQueue.main.async {
                 for i in (0...self.hourItems.count - 1).reversed() {
                     let index = [0, i] as IndexPath
                     let hourToDelete = self.hourItems[i]
-                    
                     self.context.delete(hourToDelete)
                     self.tableView.deleteRows(at: [index], with: .fade)
                 }
+                (UIApplication.shared.delegate as! AppDelegate).saveContext()
                 self.noHoursStoredBackground()
                 tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-            }
-            
-            if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
-                let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
-                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
-                    UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
-                }))
-                self.present(alert, animated: true, completion: nil)
+                self.setupMoreMenu()
+                
+                if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
+                    let undoAlert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
+                    undoAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+                        UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
+                    }))
+                    self.present(undoAlert, animated: true, completion: nil)
+                }
             }
             
             let range = NSMakeRange(0, self.tableView.numberOfSections)
@@ -484,45 +557,21 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
             self.editButton.isEnabled = false
             noHoursStoredBackground()
+            setupMoreMenu()
         }))
         
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true)
     }
     
     @IBAction func editButtonTapped(_ sender: Any) {
-        if hourItems.count > 0 {
-            if tableView.isEditing && (tableView.indexPathsForSelectedRows?.count ?? 0) == 0 {
-                tableView.setEditing(false, animated: true)
-                deleteSelectedButton.isHidden = true
-                editButton?.image = UIImage(systemName: "pencil")
-            }
-            else if tableView.isEditing && (tableView.indexPathsForSelectedRows?.count ?? 0) != 0 {
-                tableView.setEditing(false, animated: true)
-                deleteSelectedButton.isHidden = true
-                editButton?.image = UIImage(systemName: "pencil")
-            }
-            else {
-                deleteSelectedButton.isEnabled = false
-                deleteSelectedButton.alpha = 0.80
-                tableView.setEditing(true, animated: true)
-                deleteSelectedButton.isHidden = false
-                editButton?.image = UIImage(systemName: "xmark")
-            }
-        }
+        guard hourItems.count > 0 else { return }
+        setEditingMode(!tableView.isEditing, animated: true)
     }
     
-    @IBAction func deleteSelectedButtonTapped(_ sender: UIButton) {
-        if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
-            let alert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
-                UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
-            }))
-            self.present(alert, animated: true, completion: nil)
-        }
-        
+    @IBAction func deleteSelectedButtonTapped(_ sender: Any) {
         let alert = UIAlertController(title: "Warning", message: "You are fixing to delete selected hours. Would you like to continue?", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self] _ in
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [self] _ in
             if let indexPaths = tableView.indexPathsForSelectedRows {
                 let sortedPaths = indexPaths.sorted { $0.row > $1.row }
                 
@@ -537,6 +586,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                         context.delete(hourToDelete)
                     }
                 }
+                (UIApplication.shared.delegate as! AppDelegate).saveContext()
                 
                 self.tableView.deleteRows(at: sortedPaths, with: .fade)
                 noHoursStoredBackground()
@@ -544,9 +594,15 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 undo = 1
             }
             
-            tableView.setEditing(false, animated: true)
-            editButton?.image = UIImage(systemName: "pencil")
-            deleteSelectedButton.isHidden = true
+            setEditingMode(false, animated: true)
+            
+            if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
+                let undoAlert = UIAlertController(title: nil, message: "You can shake your phone in order to restore an hour", preferredStyle: .actionSheet)
+                undoAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+                    UserDefaults.standard.setValue(1, forKey: "undoAlertMessage")
+                }))
+                self.present(undoAlert, animated: true, completion: nil)
+            }
         }))
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
@@ -555,36 +611,44 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     private func handleInfo() {
+        let targetItems: [Hours]
+        let isSelectionFiltered: Bool
+        
         if tableView.isEditing {
-            tableView.setEditing(false, animated: true)
-            editButton?.image = UIImage(systemName: "pencil")
-            deleteSelectedButton.isHidden = true
+            guard let indexPaths = tableView.indexPathsForSelectedRows, !indexPaths.isEmpty else { return }
+            let sortedPaths = indexPaths.sorted(by: { $0.row < $1.row })
+            targetItems = sortedPaths.map { hourItems[$0.row] }
+            isSelectionFiltered = true
+        } else {
+            targetItems = hourItems
+            isSelectionFiltered = false
         }
-        showLiquidGlassInfoModal()
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.showLiquidGlassInfoModal(items: targetItems, isSelection: isSelectionFiltered)
+        }
     }
-    
-    private func showLiquidGlassInfoModal() {
+
+    private func showLiquidGlassInfoModal(items: [Hours], isSelection: Bool) {
         var calculatedTotal = 0.0
-        for item in hourItems {
+        for item in items {
             if let hoursStr = item.totalHours, let val = Double(hoursStr) {
                 calculatedTotal += val
             }
         }
         let totalHoursFormatted = round(calculatedTotal * 100.0) / 100.0
-        let entriesCount = hourItems.count
+        let entriesCount = items.count
         
         let modalVC = UIViewController()
         modalVC.modalPresentationStyle = .overFullScreen
         modalVC.modalTransitionStyle = .crossDissolve
         modalVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.35)
         
-        // 1. Dismiss background overlay
         let dismissButton = UIButton(frame: modalVC.view.bounds)
         dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         dismissButton.addTarget(self, action: #selector(dismissLiquidGlassModal), for: .touchUpInside)
         modalVC.view.addSubview(dismissButton)
         
-        // 2. Liquid Glass Backdrop
         let blurEffect = UIBlurEffect(style: .systemThinMaterial)
         let glassContainer = UIVisualEffectView(effect: blurEffect)
         glassContainer.layer.cornerRadius = 24
@@ -594,7 +658,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         glassContainer.translatesAutoresizingMaskIntoConstraints = false
         modalVC.view.addSubview(glassContainer)
         
-        // 3. Header Icon & Title
         let iconConfig = UIImage.SymbolConfiguration(pointSize: 32, weight: .semibold)
         let iconImageView = UIImageView(image: UIImage(systemName: "clock.badge.checkmark.fill", withConfiguration: iconConfig))
         iconImageView.tintColor = currentAccentColor
@@ -602,7 +665,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         
         let titleLabel = UILabel()
-        titleLabel.text = "History Summary"
+        titleLabel.text = isSelection ? "Selected Summary" : "History Summary"
         titleLabel.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         titleLabel.textAlignment = .center
         titleLabel.textColor = .label
@@ -612,7 +675,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         divider.backgroundColor = UIColor.separator.withAlphaComponent(0.35)
         divider.translatesAutoresizingMaskIntoConstraints = false
         
-        // 4. Info Rows Container
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 16
@@ -671,13 +733,13 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             return card
         }
         
-        let entriesRow = createInfoCard(icon: "list.bullet.rectangle", title: "Hours Stored", value: "\(entriesCount) \(entriesCount == 1 ? "entry" : "entries")")
+        let countTitle = isSelection ? "Selected Entries" : "Hours Stored"
+        let entriesRow = createInfoCard(icon: "list.bullet.rectangle", title: countTitle, value: "\(entriesCount) \(entriesCount == 1 ? "entry" : "entries")")
         let totalHoursRow = createInfoCard(icon: "hourglass.bottomhalf.filled", title: "Total Hours", value: "\(totalHoursFormatted) hrs")
         
         stackView.addArrangedSubview(entriesRow)
         stackView.addArrangedSubview(totalHoursRow)
         
-        // 5. Done Button
         let closeButton = UIButton(type: .system)
         var btnConfig = UIButton.Configuration.filled()
         btnConfig.title = "Done"
@@ -744,6 +806,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
         editButton.isEnabled = hourItems.count > 0
         noHoursStoredBackground()
+        setupMoreMenu()
     }
     
     func dateFromString(dateStr: String) -> NSDate {
@@ -754,233 +817,394 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     private func handleExport() {
-        var hoursForExport: [Hours] {
-            do {
-                let fetchrequest = NSFetchRequest<Hours>(entityName: "Hours")
-                let sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)
-                fetchrequest.sortDescriptors = [sort]
-                return try context.fetch(fetchrequest)
-            } catch {
-                print("Couldn't fetch data")
-            }
-            return [Hours]()
+        guard !hourItems.isEmpty else { return }
+        
+        let itemsToExport: [Hours]
+        let deletePaths: [IndexPath]
+        
+        if tableView.isEditing {
+            guard let indexPaths = tableView.indexPathsForSelectedRows, !indexPaths.isEmpty else { return }
+            let sortedIndexPaths = indexPaths.sorted(by: { $0.row < $1.row })
+            itemsToExport = sortedIndexPaths.map { self.hourItems[$0.row] }
+            deletePaths = indexPaths.sorted(by: { $0.row > $1.row })
+        } else {
+            deletePaths = (0..<hourItems.count).reversed().map { IndexPath(row: $0, section: 0) }
+            itemsToExport = hourItems
         }
         
+        DispatchQueue.main.async { [weak self] in
+            self?.promptExportNaming(itemsToExport: itemsToExport, indexPathsToDelete: deletePaths)
+        }
+    }
+    
+    private func promptExportNaming(itemsToExport: [Hours], indexPathsToDelete: [IndexPath]) {
+        self.pendingExportItems = itemsToExport
+        self.pendingDeletePaths = indexPathsToDelete
+        self.pendingExportImage = nil
+        
+        showExportModal()
+    }
+    
+    private func showExportModal() {
+        let modalVC = UIViewController()
+        modalVC.modalPresentationStyle = .overFullScreen
+        modalVC.modalTransitionStyle = .crossDissolve
+        modalVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.35)
+        self.exportModalVC = modalVC
+        
+        let dismissButton = UIButton(frame: modalVC.view.bounds)
+        dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        dismissButton.addTarget(self, action: #selector(dismissExportModal), for: .touchUpInside)
+        modalVC.view.addSubview(dismissButton)
+        
+        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
+        let glassContainer = UIVisualEffectView(effect: blurEffect)
+        glassContainer.layer.cornerRadius = 24
+        glassContainer.layer.masksToBounds = true
+        glassContainer.layer.borderWidth = 1.0
+        glassContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.25).cgColor
+        glassContainer.translatesAutoresizingMaskIntoConstraints = false
+        modalVC.view.addSubview(glassContainer)
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "Export Time Card"
+        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        titleLabel.textAlignment = .center
+        titleLabel.textColor = .label
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let subtitleLabel = UILabel()
+        let count = pendingExportItems.count
+        subtitleLabel.text = "Exporting \(count) \(count == 1 ? "entry" : "entries")"
+        subtitleLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        subtitleLabel.textColor = .secondaryLabel
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let textField = UITextField()
+        textField.placeholder = "e.g., Pay Period 1, Acme Corp"
+        textField.font = UIFont.systemFont(ofSize: 15)
+        textField.backgroundColor = UIColor.secondarySystemFill
+        textField.layer.cornerRadius = 10
+        textField.clearButtonMode = .whileEditing
+        textField.autocapitalizationType = .words
+        textField.autocorrectionType = .no
+        textField.returnKeyType = .done
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 42))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
+        self.exportModalTextField = textField
+        
+        let photoButton = UIButton(type: .system)
+        var photoConfig = UIButton.Configuration.tinted()
+        photoConfig.image = UIImage(systemName: "camera.badge.ellipsis")
+        photoConfig.title = " Attach Photo"
+        photoConfig.baseBackgroundColor = currentAccentColor
+        photoConfig.baseForegroundColor = currentAccentColor
+        photoConfig.cornerStyle = .medium
+        photoConfig.imagePadding = 6
+        photoButton.configuration = photoConfig
+        photoButton.menu = createInlinePhotoMenu()
+        photoButton.showsMenuAsPrimaryAction = true
+        photoButton.translatesAutoresizingMaskIntoConstraints = false
+        self.exportModalPhotoButton = photoButton
+        
+        let previewImageView = UIImageView()
+        previewImageView.contentMode = .scaleAspectFill
+        previewImageView.layer.cornerRadius = 8
+        previewImageView.layer.masksToBounds = true
+        previewImageView.layer.borderWidth = 1.5
+        previewImageView.layer.borderColor = currentAccentColor.cgColor
+        previewImageView.isHidden = true
+        previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        self.exportModalPreviewImageView = previewImageView
+        
+        let buttonStack = UIStackView()
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 12
+        buttonStack.distribution = .fillEqually
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        let cancelButton = UIButton(type: .system)
+        var cancelConfig = UIButton.Configuration.gray()
+        cancelConfig.title = "Cancel"
+        cancelConfig.cornerStyle = .capsule
+        cancelButton.configuration = cancelConfig
+        cancelButton.addTarget(self, action: #selector(dismissExportModal), for: .touchUpInside)
+        
+        let exportBtn = UIButton(type: .system)
+        var exportBtnConfig = UIButton.Configuration.filled()
+        exportBtnConfig.title = "Export"
+        exportBtnConfig.baseBackgroundColor = currentAccentColor
+        exportBtnConfig.baseForegroundColor = .white
+        exportBtnConfig.cornerStyle = .capsule
+        exportBtn.configuration = exportBtnConfig
+        exportBtn.addTarget(self, action: #selector(confirmExportTapped), for: .touchUpInside)
+        
+        buttonStack.addArrangedSubview(cancelButton)
+        buttonStack.addArrangedSubview(exportBtn)
+        
+        glassContainer.contentView.addSubview(titleLabel)
+        glassContainer.contentView.addSubview(subtitleLabel)
+        glassContainer.contentView.addSubview(textField)
+        glassContainer.contentView.addSubview(photoButton)
+        glassContainer.contentView.addSubview(previewImageView)
+        glassContainer.contentView.addSubview(buttonStack)
+        
+        NSLayoutConstraint.activate([
+            glassContainer.centerXAnchor.constraint(equalTo: modalVC.view.centerXAnchor),
+            glassContainer.centerYAnchor.constraint(equalTo: modalVC.view.centerYAnchor, constant: -30),
+            glassContainer.widthAnchor.constraint(equalTo: modalVC.view.widthAnchor, multiplier: 0.85),
+            glassContainer.widthAnchor.constraint(lessThanOrEqualToConstant: 340),
+            
+            titleLabel.topAnchor.constraint(equalTo: glassContainer.contentView.topAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -16),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            subtitleLabel.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 16),
+            subtitleLabel.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -16),
+            
+            textField.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 16),
+            textField.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 16),
+            textField.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -16),
+            textField.heightAnchor.constraint(equalToConstant: 42),
+            
+            photoButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 12),
+            photoButton.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 16),
+            photoButton.heightAnchor.constraint(equalToConstant: 38),
+            
+            previewImageView.centerYAnchor.constraint(equalTo: photoButton.centerYAnchor),
+            previewImageView.leadingAnchor.constraint(equalTo: photoButton.trailingAnchor, constant: 10),
+            previewImageView.trailingAnchor.constraint(lessThanOrEqualTo: glassContainer.contentView.trailingAnchor, constant: -16),
+            previewImageView.widthAnchor.constraint(equalToConstant: 36),
+            previewImageView.heightAnchor.constraint(equalToConstant: 36),
+            
+            buttonStack.topAnchor.constraint(equalTo: photoButton.bottomAnchor, constant: 20),
+            buttonStack.leadingAnchor.constraint(equalTo: glassContainer.contentView.leadingAnchor, constant: 16),
+            buttonStack.trailingAnchor.constraint(equalTo: glassContainer.contentView.trailingAnchor, constant: -16),
+            buttonStack.heightAnchor.constraint(equalToConstant: 42),
+            buttonStack.bottomAnchor.constraint(equalTo: glassContainer.contentView.bottomAnchor, constant: -20)
+        ])
+        
+        present(modalVC, animated: true)
+    }
+    
+    @objc private func dismissExportModal() {
+        exportModalVC?.dismiss(animated: true) { [weak self] in
+            self?.pendingExportImage = nil
+            self?.pendingExportItems = []
+            self?.pendingDeletePaths = []
+            self?.exportModalVC = nil
+        }
+    }
+    
+    @objc private func confirmExportTapped() {
+        let input = exportModalTextField?.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let customName: String? = input.isEmpty ? "Unknown" : input
+        let attachedImage = pendingExportImage
+        
+        let targetCardID = executeExport(
+            itemsToExport: pendingExportItems,
+            customName: customName,
+            indexPathsToDelete: pendingDeletePaths
+        )
+        
+        if let image = attachedImage {
+            attachImageToCard(cardID: targetCardID, cardName: customName, image: image)
+        }
+        
+        dismissExportModal()
+    }
+    
+    private func createInlinePhotoMenu() -> UIMenu {
+        var actions: [UIAction] = []
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            actions.append(UIAction(title: "Take Photo", image: UIImage(systemName: "camera")) { [weak self] _ in
+                self?.presentCameraPicker()
+            })
+        }
+        
+        actions.append(UIAction(title: "Choose Photo", image: UIImage(systemName: "photo.on.rectangle")) { [weak self] _ in
+            self?.presentModernPhotoPicker()
+        })
+        
+        return UIMenu(title: "Attach Time Card Picture", children: actions)
+    }
+    
+    private func presentModernPhotoPicker() {
+        var config = PHPickerConfiguration()
+        config.selectionLimit = 1
+        config.filter = .images
+        
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = self
+        (exportModalVC ?? self).present(picker, animated: true)
+    }
+    
+    private func presentCameraPicker() {
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else { return }
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .camera
+        (exportModalVC ?? self).present(picker, animated: true)
+    }
+    
+    // MARK: - PHPickerViewControllerDelegate
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        guard let provider = results.first?.itemProvider, provider.canLoadObject(ofClass: UIImage.self) else { return }
+        
+        provider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
+            guard let self = self, let pickedImage = image as? UIImage else { return }
+            DispatchQueue.main.async {
+                self.pendingExportImage = pickedImage
+                self.updateExportModalPhotoPreview(image: pickedImage)
+            }
+        }
+    }
+    
+    // MARK: - UIImagePickerControllerDelegate (Camera)
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true)
+        guard let pickedImage = info[.originalImage] as? UIImage else { return }
+        
+        self.pendingExportImage = pickedImage
+        updateExportModalPhotoPreview(image: pickedImage)
+        
+        if userDefaults.integer(forKey: "saveImages") == 0 {
+            UIImageWriteToSavedPhotosAlbum(pickedImage, nil, nil, nil)
+        }
+    }
+    
+    private func updateExportModalPhotoPreview(image: UIImage) {
+        exportModalPreviewImageView?.image = image
+        exportModalPreviewImageView?.isHidden = false
+        
+        if var config = exportModalPhotoButton?.configuration {
+            config.title = " Change Photo"
+            config.image = UIImage(systemName: "checkmark.circle.fill")
+            exportModalPhotoButton?.configuration = config
+        }
+    }
+    
+    private func attachImageToCard(cardID: Int32, cardName: String?, image: UIImage) {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self,
+                  let jpegData = image.jpegData(compressionQuality: 0.85) else { return }
+            
+            let thumbSize = CGSize(width: 156, height: 156)
+            let thumbData = UIImage.downsampledImage(from: jpegData, to: thumbSize, scale: self.currentDisplayScale)?.jpegData(compressionQuality: 0.8) ?? jpegData
+            let cardTitle = cardName ?? "Unknown"
+            
+            let today = Date()
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MM/dd/yyyy hh:mm a"
+            let dateFormatted = formatter.string(from: today)
+            
+            DispatchQueue.main.async {
+                let infoFetch = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
+                infoFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+                if let infoItems = try? self.context.fetch(infoFetch), let firstInfo = infoItems.first {
+                    firstInfo.image = jpegData
+                }
+                
+                let galFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
+                galFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+                galFetch.fetchLimit = 1
+                
+                if let galleryRecord = (try? self.context.fetch(galFetch))?.first {
+                    galleryRecord.thumbnail = thumbData
+                    galleryRecord.fullSize = jpegData
+                    galleryRecord.date = dateFormatted
+                    galleryRecord.name = cardTitle
+                } else {
+                    let galleryRecord = Gallery(context: self.context)
+                    galleryRecord.id_number = cardID
+                    galleryRecord.thumbnail = thumbData
+                    galleryRecord.fullSize = jpegData
+                    galleryRecord.date = dateFormatted
+                    galleryRecord.name = cardTitle
+                }
+                
+                (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
+            }
+        }
+    }
+    
+    @discardableResult
+    private func executeExport(itemsToExport: [Hours], customName: String?, indexPathsToDelete: [IndexPath]) -> Int32 {
         var random: Int32!
         repeat {
             random = Int32.random(in: 1...500)
         } while timeCards.contains(where: { $0.id_number == random })
         
-        if tableView.isEditing {
-            let alert = UIAlertController(title: "Warning", message: "You are fixing to export selected hours. Would you like to continue?", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
-                if let indexPaths = self.tableView.indexPathsForSelectedRows {
-                    let sortedPaths = indexPaths.sorted { $0.row > $1.row }
-                    let firstIndex = (sortedPaths.last?.row)!
-                    let lastIndex = (sortedPaths.first?.row)!
-                    
-                    let timeCards = TimeCards(context: self.context)
-                    let gallery = Gallery(context: self.context)
-                    var total = 0.0
-                    
-                    let date = "\(hoursForExport[firstIndex].date ?? "Unknown")-\(hoursForExport[lastIndex].date ?? "Unknown")"
-                    
-                    timeCards.week = date
-                    timeCards.numberBeingExported = Int64(self.hourItems.count)
-                    
-                    var items = [Hours]()
-                    for indexPath in sortedPaths {
-                        items.append(self.hourItems[indexPath.row])
-                    }
-                    
-                    for item in items.reversed() {
-                        if let index = self.hourItems.firstIndex(of: item) {
-                            let timeCardsInfo = TimeCardInfo(context: self.context)
-                            timeCardsInfo.id_number = random
-                            timeCardsInfo.intime = hoursForExport[index].inTime
-                            timeCardsInfo.outtime = hoursForExport[index].outTime
-                            timeCardsInfo.total_hours = hoursForExport[index].totalHours
-                            timeCardsInfo.date = hoursForExport[index].date
-                            
-                            let hourToDelete = self.hourItems[index]
-                            total += Double(hoursForExport[index].totalHours ?? "0") ?? 0.0
-                            self.context.delete(hourToDelete)
-                        }
-                    }
-                    self.tableView.deleteRows(at: sortedPaths, with: .fade)
-                    
-                    timeCards.total = total
-                    timeCards.id_number = random
-                    gallery.id_number = random
-                    self.noHoursStoredBackground()
-                    self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                    self.undo = 1
-                    self.tableView.setEditing(false, animated: true)
-                }
-            }))
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-                self.tableView.setEditing(false, animated: true)
-            }))
-            self.present(alert, animated: true, completion: nil)
+        let timeCards = TimeCards(context: self.context)
+        let gallery = Gallery(context: self.context)
+        timeCards.id_number = random
+        timeCards.name = customName
+        gallery.id_number = random
+        gallery.name = customName
+        
+        let firstDate = itemsToExport.first?.date ?? "Unknown"
+        let lastDate = itemsToExport.last?.date ?? "Unknown"
+        timeCards.week = (itemsToExport.count > 1) ? "\(firstDate)-\(lastDate)" : firstDate
+        timeCards.numberBeingExported = Int64(itemsToExport.count)
+        
+        var calculatedTotal = 0.0
+        for item in itemsToExport {
+            let timeCardsInfo = TimeCardInfo(context: self.context)
+            timeCardsInfo.id_number = random
+            timeCardsInfo.name = customName
+            timeCardsInfo.intime = item.inTime
+            timeCardsInfo.outtime = item.outTime
+            timeCardsInfo.total_hours = item.totalHours
+            timeCardsInfo.date = item.date
             
-            deleteSelectedButton.isHidden = true
-            editButton?.image = UIImage(systemName: "pencil")
+            calculatedTotal += Double(item.totalHours ?? "0") ?? 0.0
+            self.context.delete(item)
         }
-        else {
-            if hourItems.count > 7 {
-                let alert = UIAlertController(title: "Warning", message: "You have more than 7 hours stored, would you like to continue?", preferredStyle: .actionSheet)
-                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
-                    let timeCards = TimeCards(context: self.context)
-                    let gallery = Gallery(context: self.context)
-                    var total = 0.0
-                    
-                    let date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unknown")"
-                    timeCards.week = date
-                    timeCards.numberBeingExported = Int64(self.hourItems.count)
-                    
-                    for i in 0...(self.hourItems.count - 1) {
-                        let timeCardsInfo = TimeCardInfo(context: self.context)
-                        timeCardsInfo.id_number = random
-                        timeCardsInfo.intime = hoursForExport[i].inTime
-                        timeCardsInfo.outtime = hoursForExport[i].outTime
-                        timeCardsInfo.total_hours = hoursForExport[i].totalHours
-                        timeCardsInfo.date = hoursForExport[i].date
-                    }
-                    
-                    for i in (0...(self.hourItems.count - 1)).reversed() {
-                        let hourToDelete = hoursForExport[i]
-                        total += Double(hoursForExport[i].totalHours ?? "0") ?? 0.0
-                        self.context.delete(hourToDelete)
-                        let index = [0, i] as IndexPath
-                        self.tableView.deleteRows(at: [index], with: .fade)
-                    }
-                    
-                    timeCards.total = total
-                    timeCards.id_number = random
-                    gallery.id_number = random
-                    self.noHoursStoredBackground()
-                    self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                    self.undo = 1
-                }))
-                alert.addAction(UIAlertAction(title: "Just Export 7", style: .default, handler: { _ in
-                    let timeCards = TimeCards(context: self.context)
-                    let gallery = Gallery(context: self.context)
-                    var total = 0.0
-                    
-                    let date = "\(hoursForExport[0].date ?? "Unknown")-\(hoursForExport[6].date ?? "Unknown")"
-                    timeCards.week = date
-                    
-                    for i in 0...6 {
-                        let timeCardsInfo = TimeCardInfo(context: self.context)
-                        timeCardsInfo.id_number = random
-                        timeCardsInfo.intime = hoursForExport[i].inTime
-                        timeCardsInfo.outtime = hoursForExport[i].outTime
-                        timeCardsInfo.total_hours = hoursForExport[i].totalHours
-                        timeCardsInfo.date = hoursForExport[i].date
-                    }
-                    
-                    for i in (0...6).reversed() {
-                        let hourToDelete = hoursForExport[i]
-                        total += Double(hoursForExport[i].totalHours ?? "0") ?? 0.0
-                        self.context.delete(hourToDelete)
-                        let index = [0, i] as IndexPath
-                        self.tableView.deleteRows(at: [index], with: .fade)
-                    }
-                    
-                    timeCards.total = total
-                    timeCards.id_number = random
-                    gallery.id_number = random
-                    timeCards.numberBeingExported = Int64(7)
-                    UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
-                        self.tableView.reloadData()
-                    }, completion: nil)
-                    self.noHoursStoredBackground()
-                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                    self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                    self.undo = 1
-                }))
-                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+        
+        timeCards.total = calculatedTotal
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        
+        self.tableView.deleteRows(at: indexPathsToDelete, with: .fade)
+        self.noHoursStoredBackground()
+        self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+        self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+        self.undo = 1
+        
+        if tableView.isEditing {
+            self.setEditingMode(false, animated: true)
+        } else {
+            setupMoreMenu()
+        }
+        
+        return random
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "EditItem" {
+            let destinationVC: EditViewController?
+            if let navVC = segue.destination as? UINavigationController {
+                destinationVC = navVC.topViewController as? EditViewController
+            } else {
+                destinationVC = segue.destination as? EditViewController
             }
-            else if hourItems.count == 7 {
-                let alert = UIAlertController(title: "Warning", message: "You are fixing to export a weeks worth of hours, would you like to continue?", preferredStyle: .actionSheet)
-                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
-                    let timeCards = TimeCards(context: self.context)
-                    let gallery = Gallery(context: self.context)
-                    var total = 0.0
-                    let date = "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unknown")"
-                    timeCards.week = date
-                    timeCards.numberBeingExported = Int64(self.hourItems.count)
-                    
-                    for i in 0...(self.hourItems.count - 1) {
-                        let timeCardsInfo = TimeCardInfo(context: self.context)
-                        timeCardsInfo.id_number = random
-                        timeCardsInfo.intime = hoursForExport[i].inTime
-                        timeCardsInfo.outtime = hoursForExport[i].outTime
-                        timeCardsInfo.total_hours = hoursForExport[i].totalHours
-                        timeCardsInfo.date = hoursForExport[i].date
-                    }
-                    
-                    for i in (0...(self.hourItems.count - 1)).reversed() {
-                        let hourToDelete = hoursForExport[i]
-                        total += Double(hoursForExport[i].totalHours ?? "0") ?? 0.0
-                        self.context.delete(hourToDelete)
-                        let index = [0, i] as IndexPath
-                        self.tableView.deleteRows(at: [index], with: .fade)
-                    }
-                    
-                    timeCards.total = total
-                    timeCards.id_number = random
-                    gallery.id_number = random
-                    self.noHoursStoredBackground()
-                    self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                    self.undo = 1
-                }))
-                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
-            else {
-                let alert = UIAlertController(title: "Warning", message: "You have less than a weeks worth of hours, would you like to continue?", preferredStyle: .actionSheet)
-                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self] _ in
-                    let timeCards = TimeCards(context: self.context)
-                    let gallery = Gallery(context: self.context)
-                    var total = 0.0
-                    let date = self.hourItems.count > 1 ? "\(hoursForExport.first!.date ?? "Unknown")-\(hoursForExport.last!.date ?? "Unknown")" : "\(hoursForExport.first!.date ?? "Unknown")"
-                    
-                    timeCards.week = date
-                    timeCards.numberBeingExported = Int64(self.hourItems.count)
-                    
-                    for i in 0...(hourItems.count - 1) {
-                        let timeCardsInfo = TimeCardInfo(context: self.context)
-                        timeCardsInfo.id_number = random
-                        timeCardsInfo.intime = hoursForExport[i].inTime
-                        timeCardsInfo.outtime = hoursForExport[i].outTime
-                        timeCardsInfo.total_hours = hoursForExport[i].totalHours
-                        timeCardsInfo.date = hoursForExport[i].date
-                    }
-                    
-                    for i in (0...(self.hourItems.count - 1)).reversed() {
-                        let hourToDelete = hoursForExport[i]
-                        total += Double(hoursForExport[i].totalHours ?? "0") ?? 0.0
-                        self.context.delete(hourToDelete)
-                        let index = [0, i] as IndexPath
-                        self.tableView.deleteRows(at: [index], with: .fade)
-                    }
-                    
-                    timeCards.total = total
-                    timeCards.id_number = random
-                    gallery.id_number = random
-                    
-                    noHoursStoredBackground()
-                    tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-                    self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
-                    undo = 1
-                }))
-                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+            
+            if let hourItem = sender as? Hours {
+                destinationVC?.currentHourItem = hourItem
             }
         }
     }
