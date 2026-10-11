@@ -299,7 +299,13 @@ class SettingsTableViewController: UITableViewController {
                 self.executeBatchDelete(for: ["Hours", "TimeCards", "TimeCardInfo", "Gallery"])
                 
                 self.patchNotesCell?.accessoryView = nil
-                self.tabBarController?.tabBar.items?[1].badgeValue = "0"
+                
+                // Re-enable History tab and clear badges
+                if let historyTab = self.tabBarController?.tabBar.items?[1] {
+                    historyTab.isEnabled = true
+                    historyTab.badgeValue = "0"
+                }
+                
                 self.tabBarController?.tabBar.items?[2].badgeValue = "0"
                 
                 NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
@@ -316,5 +322,4 @@ class SettingsTableViewController: UITableViewController {
             }
         }
     }
-
 }
