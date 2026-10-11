@@ -15,6 +15,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
     @IBOutlet weak var sortBarButton: UIBarButtonItem!
+    @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet var tableView: UITableView!
     
     var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -114,6 +115,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                     self.tableView.reloadData()
                 }, completion: nil)
                 
+                self.editButton?.isEnabled = self.timeCards.count > 0
                 self.noHoursStoredBackground()
                 self.undo = 0
                 self.setupSortMenu()
@@ -133,6 +135,11 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        tableView.allowsMultipleSelection = true
+        tableView.allowsMultipleSelectionDuringEditing = true
+        
+        editButton?.isEnabled = timeCards.count > 0
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -144,6 +151,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         self.becomeFirstResponder()
         view.backgroundColor = tableView.backgroundColor
         
+        editButton?.isEnabled = timeCards.count > 0
         setupSortMenu()
     }
     
@@ -151,12 +159,26 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         super.viewWillDisappear(animated)
         undo = 0
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        setEditingMode(false, animated: false)
+    }
+    
+    // MARK: - Edit Mode Logic
+    
+    private func setEditingMode(_ editing: Bool, animated: Bool) {
+        tableView.setEditing(editing, animated: animated)
+        editButton?.image = UIImage(systemName: editing ? "xmark" : "pencil")
+        sortBarButton?.isEnabled = !editing && timeCards.count > 0
+    }
+    
+    @IBAction func editButtonTapped(_ sender: Any) {
+        guard timeCards.count > 0 else { return }
+        setEditingMode(!tableView.isEditing, animated: true)
     }
     
     func setupSortMenu() {
         guard let sortBarButton = sortBarButton else { return }
         
-        guard timeCards.count > 0 else {
+        guard timeCards.count > 0 && !tableView.isEditing else {
             sortBarButton.isEnabled = false
             sortBarButton.menu = nil
             return
@@ -271,6 +293,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 }
                 
                 self.tableView.deleteRows(at: [indexPath], with: .left)
+                self.editButton?.isEnabled = self.timeCards.count > 0
                 self.noHoursStoredBackground()
                 self.undo = 1
                 self.setupSortMenu()
@@ -392,6 +415,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard !tableView.isEditing else { return nil }
         let action = UIContextualAction(style: .normal, title: "Rename") { [weak self] (action, view, completionHandler) in
             self?.presentRenameAlert(forRowAt: indexPath)
             completionHandler(true)
@@ -401,6 +425,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView.isEditing { return }
         tableView.deselectRow(at: indexPath, animated: true)
         
         let selectedCard = timeCards[indexPath.row]
