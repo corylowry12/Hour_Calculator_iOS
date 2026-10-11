@@ -20,6 +20,7 @@ class ImageViewController: UIViewController {
     var index: Int = -1
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let userDefaults = UserDefaults.standard
     
     lazy var gallery: [Gallery] = {
         guard index != -1 else { return [] }
@@ -48,6 +49,8 @@ class ImageViewController: UIViewController {
             self.title = "Time Card Image"
         }
         
+        setupDeleteButton()
+        
         // 1. Immediately present thumbnail or existing image with zero delay
         if let immediateImage = newImage ?? placeholderThumbnail {
             imageView.image = immediateImage
@@ -61,6 +64,66 @@ class ImageViewController: UIViewController {
         }
     }
     
+    private func setupDeleteButton() {
+        let deleteButton = UIBarButtonItem(
+            image: UIImage(systemName: "trash"),
+            style: .plain,
+            target: self,
+            action: #selector(confirmDeleteImage)
+        )
+        deleteButton.tintColor = .systemRed
+        navigationItem.rightBarButtonItem = deleteButton
+    }
+    
+    @objc private func confirmDeleteImage() {
+        let alert = UIAlertController(
+            title: "Delete Image",
+            message: "Are you sure you want to permanently delete this image?",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [weak self] _ in
+            self?.performDeleteAndDismiss()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true)
+    }
+    
+    private func performDeleteAndDismiss() {
+        // Resolve target ID based on entry index or active session ID
+        let targetID: Int
+        if index != -1 && gallery.indices.contains(index) {
+            targetID = Int(gallery[index].id_number)
+        } else {
+            targetID = userDefaults.integer(forKey: "id")
+        }
+        
+        // 1. Remove Gallery entry
+        let galFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
+        galFetch.predicate = NSPredicate(format: "id_number == %d", targetID)
+        if let galleryItems = try? context.fetch(galFetch) {
+            for gal in galleryItems {
+                context.delete(gal)
+            }
+        }
+        
+        // 2. Clear image reference from TimeCardInfo entries
+        let infoFetch = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
+        infoFetch.predicate = NSPredicate(format: "id_number == %d", targetID)
+        if let infoItems = try? context.fetch(infoFetch) {
+            for info in infoItems {
+                info.image = nil
+            }
+        }
+        
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        
+        // 3. Post notification for parent views listening to sync
+        NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
+        
+        // 4. Return to previous view
+        navigationController?.popViewController(animated: true)
+    }
+    
     private func loadFullImageAsynchronously() {
         guard let data = fullImageData else { return }
         
@@ -69,7 +132,6 @@ class ImageViewController: UIViewController {
             
             DispatchQueue.main.async {
                 guard let self = self else { return }
-                // Smooth crossfade to full resolution once ready
                 UIView.transition(with: self.imageView, duration: 0.2, options: .transitionCrossDissolve) {
                     self.imageView.image = decoded
                 }
@@ -123,7 +185,6 @@ class ImageViewController: UIViewController {
         let item = gallery[targetIndex]
         self.title = (item.name?.isEmpty == false) ? item.name : "Time Card Image"
         
-        // Use thumbnail immediately for smooth animation
         if let thumbData = item.thumbnail, let thumb = UIImage(data: thumbData) {
             self.imageView.image = thumb
         }
@@ -133,7 +194,6 @@ class ImageViewController: UIViewController {
             self.imageView.transform = .identity
         }
         
-        // Decode full image in background
         if let fullData = item.fullSize {
             DispatchQueue.global(qos: .userInteractive).async { [weak self] in
                 guard let fullImage = UIImage(data: fullData) else { return }
