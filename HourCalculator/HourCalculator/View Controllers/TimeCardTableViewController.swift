@@ -10,8 +10,9 @@ import UIKit
 import CoreData
 import GoogleMobileAds
 import UniformTypeIdentifiers
+import PhotosUI
 
-class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIDocumentPickerDelegate {
+class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
@@ -28,6 +29,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     
     var undo: Int = 0
     var predicateText: String!
+    private var pendingTargetCardID: Int32?
     
     var currentAccentColor: UIColor {
         let accent = userDefaults.integer(forKey: "accent")
@@ -48,6 +50,16 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             }
         default: return UIColor(rgb: 0x26A69A)
         }
+    }
+    
+    private var currentDisplayScale: CGFloat {
+        if let windowScene = view.window?.windowScene {
+            return windowScene.screen.scale
+        }
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            return windowScene.screen.scale
+        }
+        return traitCollection.displayScale > 0 ? traitCollection.displayScale : 2.0
     }
     
     var gallery: [Gallery] {
@@ -101,6 +113,28 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         return [TimeCards]()
     }
     
+    @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
+        guard longPressGesture.state == .began else { return }
+        
+        let p = longPressGesture.location(in: tableView)
+        guard let indexPath = tableView.indexPathForRow(at: p) else { return }
+        
+        if tableView.isEditing {
+            let feedback = UIImpactFeedbackGenerator(style: .medium)
+            feedback.impactOccurred()
+            
+            for row in 0..<timeCards.count {
+                let targetPath = IndexPath(row: row, section: 0)
+                tableView.selectRow(at: targetPath, animated: true, scrollPosition: .none)
+            }
+            setupOptionsMenu()
+        } else {
+            setEditingMode(true, animated: true)
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            setupOptionsMenu()
+        }
+    }
+    
     override var canBecomeFirstResponder: Bool {
         return true
     }
@@ -135,6 +169,10 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
         bannerView.rootViewController = self
         bannerView.load(Request())
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.5
+        tableView.addGestureRecognizer(longPressGesture)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -836,14 +874,218 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         self.present(alert, animated: true)
     }
     
+    // MARK: - Photo Attachment Logic
+    
+    private func promptAttachPhoto(for cardID: Int32) {
+        pendingTargetCardID = cardID
+        let alert = UIAlertController(title: "Attach Photo", message: "Choose an image source to attach to this time card", preferredStyle: .alert)
+        alert.view.tintColor = currentAccentColor
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { [weak self] _ in
+                self?.presentCameraPicker()
+            }))
+        }
+        
+        alert.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { [weak self] _ in
+            self?.presentPhotoPicker()
+        }))
+        
+        let existingGalleryFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
+        existingGalleryFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+        existingGalleryFetch.fetchLimit = 1
+        if let existingRecord = (try? context.fetch(existingGalleryFetch))?.first, existingRecord.thumbnail != nil || existingRecord.fullSize != nil {
+            alert.addAction(UIAlertAction(title: "Remove Photo", style: .destructive, handler: { [weak self] _ in
+                self?.removeAttachedPhoto(for: cardID)
+            }))
+        }
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func presentPhotoPicker() {
+        var config = PHPickerConfiguration()
+        config.selectionLimit = 1
+        config.filter = .images
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = self
+        present(picker, animated: true, completion: nil)
+    }
+    
+    private func presentCameraPicker() {
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else { return }
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .camera
+        present(picker, animated: true, completion: nil)
+    }
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        guard let provider = results.first?.itemProvider, provider.canLoadObject(ofClass: UIImage.self) else { return }
+        provider.loadObject(ofClass: UIImage.self) { [weak self] (image, _) in
+            guard let self = self, let pickedImage = image as? UIImage, let cardID = self.pendingTargetCardID else { return }
+            DispatchQueue.main.async {
+                self.saveAttachedImage(pickedImage, for: cardID)
+            }
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        guard let pickedImage = info[.originalImage] as? UIImage, let cardID = pendingTargetCardID else { return }
+        saveAttachedImage(pickedImage, for: cardID)
+    }
+    
+    private func saveAttachedImage(_ image: UIImage, for cardID: Int32) {
+        guard let jpegData = image.jpegData(compressionQuality: 0.85) else { return }
+        let thumbSize = CGSize(width: 156, height: 156)
+        
+        UIGraphicsBeginImageContextWithOptions(thumbSize, false, currentDisplayScale)
+        image.draw(in: CGRect(origin: .zero, size: thumbSize))
+        let thumbImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        let thumbData = thumbImage?.jpegData(compressionQuality: 0.8) ?? jpegData
+        
+        thumbnailCache.setObject(thumbImage ?? image, forKey: NSNumber(value: cardID))
+        
+        let cardFetch = NSFetchRequest<TimeCards>(entityName: "TimeCards")
+        cardFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+        cardFetch.fetchLimit = 1
+        let cardName = (try? context.fetch(cardFetch))?.first?.name ?? "Unknown"
+        
+        let today = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy hh:mm a"
+        let dateFormatted = formatter.string(from: today)
+        
+        let infoFetch = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
+        infoFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+        if let infoItems = try? context.fetch(infoFetch), let firstInfo = infoItems.first {
+            firstInfo.image = jpegData
+        }
+        
+        let galFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
+        galFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+        galFetch.fetchLimit = 1
+        
+        if let galleryRecord = (try? context.fetch(galFetch))?.first {
+            galleryRecord.thumbnail = thumbData
+            galleryRecord.fullSize = jpegData
+            galleryRecord.date = dateFormatted
+            galleryRecord.name = cardName
+        } else {
+            let galleryRecord = Gallery(context: context)
+            galleryRecord.id_number = cardID
+            galleryRecord.thumbnail = thumbData
+            galleryRecord.fullSize = jpegData
+            galleryRecord.date = dateFormatted
+            galleryRecord.name = cardName
+        }
+        
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        
+        UIView.transition(with: tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
+            self.tableView.reloadData()
+        }, completion: nil)
+    }
+    
+    private func removeAttachedPhoto(for cardID: Int32) {
+        thumbnailCache.removeObject(forKey: NSNumber(value: cardID))
+        
+        let galFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
+        galFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+        if let galleryItems = try? context.fetch(galFetch) {
+            for gal in galleryItems {
+                context.delete(gal)
+            }
+        }
+        
+        let infoFetch = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
+        infoFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
+        if let infoItems = try? context.fetch(infoFetch) {
+            for info in infoItems {
+                info.image = nil
+            }
+        }
+        
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        
+        UIView.transition(with: tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
+            self.tableView.reloadData()
+        }, completion: nil)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard !tableView.isEditing else { return nil }
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
+            guard let self = self else { return }
+            let alert = UIAlertController(title: "Warning", message: "You are about to delete a time card entry. Would you like to continue?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+                let deletedID = self.timeCards[indexPath.row].id_number
+                self.predicateText = "\(deletedID)"
+                self.thumbnailCache.removeObject(forKey: NSNumber(value: deletedID))
+                
+                if self.timeCardInfo.count > 0 {
+                    for i in (0...self.timeCardInfo.count - 1).reversed() {
+                        let timeCardInfoToDelete = self.timeCardInfo[i]
+                        self.context.delete(timeCardInfoToDelete)
+                    }
+                }
+                
+                let hourToDelete = self.timeCards[indexPath.row]
+                self.context.delete(hourToDelete)
+                
+                if self.gallery.count > 0 {
+                    let galleryToDelete = self.gallery[0]
+                    self.context.delete(galleryToDelete)
+                }
+                
+                self.tableView.deleteRows(at: [indexPath], with: .left)
+                self.editButton?.isEnabled = self.timeCards.count > 0
+                self.noHoursStoredBackground()
+                self.undo = 1
+                self.setupSortMenu()
+                self.setupOptionsMenu()
+                
+                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+                completionHandler(true)
+            }))
+            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
+                completionHandler(false)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
+        deleteAction.backgroundColor = .systemRed
+        
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+    
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard !tableView.isEditing else { return nil }
-        let action = UIContextualAction(style: .normal, title: "Rename") { [weak self] (action, view, completionHandler) in
+        
+        let renameAction = UIContextualAction(style: .normal, title: "Rename") { [weak self] (_, _, completionHandler) in
             self?.presentRenameAlert(forRowAt: indexPath)
             completionHandler(true)
         }
-        action.backgroundColor = .systemOrange
-        return UISwipeActionsConfiguration(actions: [action])
+        renameAction.backgroundColor = .systemOrange
+        
+        let photoAction = UIContextualAction(style: .normal, title: "Photo") { [weak self] (_, _, completionHandler) in
+            guard let self = self else { return }
+            let card = self.timeCards[indexPath.row]
+            self.promptAttachPhoto(for: card.id_number)
+            completionHandler(true)
+        }
+        photoAction.backgroundColor = .systemBlue
+        
+        return UISwipeActionsConfiguration(actions: [renameAction, photoAction])
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
