@@ -44,6 +44,7 @@
 		32EB446F26ED190700380895 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32EB446E26ED190700380895 /* CloudKit.framework */; };
 		32F52A85268AD02E00BD9E2F /* Siren in Frameworks */ = {isa = PBXBuildFile; productRef = 32F52A84268AD02E00BD9E2F /* Siren */; };
 		3B796BA53079DCD20012E8D0 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 3B796BA43079DCD20012E8D0 /* GoogleMobileAds */; };
+		3BD1EA8B307B649200FF2287 /* LiquidGlassButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD1EA8A307B649200FF2287 /* LiquidGlassButton.swift */; };
 		4783DF6734144F1726A132EC /* Pods_HourCalculator_HourCalculatorUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C34CBA995020ACB3DB33A69 /* Pods_HourCalculator_HourCalculatorUITests.framework */; };
 		B387D5EF033D6F430219E519 /* Pods_HourCalculator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86962D89DC19621DAEAEA928 /* Pods_HourCalculator.framework */; };
 /* End PBXBuildFile section */
@@ -123,6 +124,7 @@
 		32EB446D26ED190300380895 /* HourCalculatorDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HourCalculatorDebug.entitlements; sourceTree = "<group>"; };
 		32EB446E26ED190700380895 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		3B7CF894345F641543487426 /* Pods-HourCalculatorTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculatorTests.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculatorTests/Pods-HourCalculatorTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3BD1EA8A307B649200FF2287 /* LiquidGlassButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassButton.swift; sourceTree = "<group>"; };
 		442AF45CB91E36B98D369433 /* Pods_HourCalculatorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculatorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4551DB0F6EEC6CDFFF05027B /* Pods-HourCalculator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HourCalculator.debug.xcconfig"; path = "Target Support Files/Pods-HourCalculator/Pods-HourCalculator.debug.xcconfig"; sourceTree = "<group>"; };
 		4C34CBA995020ACB3DB33A69 /* Pods_HourCalculator_HourCalculatorUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HourCalculator_HourCalculatorUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -189,6 +191,7 @@
 		32629DF526825FD7006632F2 /* HourCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				3BD1EA89307B648900FF2287 /* Classes */,
 				32EB446D26ED190300380895 /* HourCalculatorDebug.entitlements */,
 				32A2C0F62696C12600EABD3C /* blue_logo.png */,
 				32A2C0F52696C12600EABD3C /* orange_logo.png */,
@@ -259,6 +262,14 @@
 				32629E0126825FD9006632F2 /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		3BD1EA89307B648900FF2287 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				3BD1EA8A307B649200FF2287 /* LiquidGlassButton.swift */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		62D1BDB0B95E786AD2D0ADC3 /* Frameworks */ = {
@@ -553,6 +564,7 @@
 				32830187268B2D1F0042AAE7 /* SettingsTableViewController.swift in Sources */,
 				3272B71326D6D33200B2867C /* ImageViewController.swift in Sources */,
 				325568512689C13F00CC7ACD /* TabBarController.swift in Sources */,
+				3BD1EA8B307B649200FF2287 /* LiquidGlassButton.swift in Sources */,
 				32AB610C26ED2DCD00F41D6C /* StoredHours.xcdatamodeld in Sources */,
 				325F378826978B88000D6FFB /* TimeCardTableViewController.swift in Sources */,
 				32629DFB26825FD7006632F2 /* ViewController.swift in Sources */,
