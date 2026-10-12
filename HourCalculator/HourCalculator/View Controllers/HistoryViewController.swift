@@ -8,7 +8,6 @@
 import UIKit
 import CoreData
 import PhotosUI
-import SwipeableTabBarController
 
 class HistoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PHPickerViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -19,9 +18,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var moreMenuButton: UIBarButtonItem!
     
     var tappedItem: Hours!
-    
     let userDefaults = UserDefaults.standard
-    
     var totalHoursText: String!
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -36,6 +33,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     private weak var exportModalTextField: UITextField?
     private weak var exportModalPhotoButton: UIButton?
     private weak var exportModalPreviewImageView: UIImageView?
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     var currentAccentColor: UIColor {
         let accent = userDefaults.integer(forKey: "accent")
@@ -59,26 +60,32 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         return traitCollection.displayScale > 0 ? traitCollection.displayScale : 2.0
     }
     
+    var hourItemsCount: Int {
+        let fetch = NSFetchRequest<Hours>(entityName: "Hours")
+        return (try? context.count(for: fetch)) ?? 0
+    }
+    
+    var timeCardsCount: Int {
+        let fetch = NSFetchRequest<TimeCards>(entityName: "TimeCards")
+        return (try? context.count(for: fetch)) ?? 0
+    }
+    
     var timeCards: [TimeCards] {
         do {
             var sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: false)
             let fetchrequest = NSFetchRequest<TimeCards>(entityName: "TimeCards")
-            if userDefaults.integer(forKey: "timeCardsSort") == 0 {
+            let sortChoice = userDefaults.integer(forKey: "timeCardsSort")
+            if sortChoice == 0 {
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: false)
-            }
-            else if userDefaults.integer(forKey: "timeCardsSort") == 1 {
+            } else if sortChoice == 1 {
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: true)
-            }
-            else if userDefaults.integer(forKey: "timeCardsSort") == 2 {
+            } else if sortChoice == 2 {
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.total), ascending: true)
-            }
-            else if userDefaults.integer(forKey: "timeCardsSort") == 3 {
+            } else if sortChoice == 3 {
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.total), ascending: false)
-            }
-            else if userDefaults.integer(forKey: "timeCardsSort") == 4 {
+            } else if sortChoice == 4 {
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: true)
-            }
-            else if userDefaults.integer(forKey: "timeCardsSort") == 5 {
+            } else if sortChoice == 5 {
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: false)
             }
             fetchrequest.sortDescriptors = [sort]
@@ -93,16 +100,14 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         do {
             var sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
             let fetchrequest = NSFetchRequest<Hours>(entityName: "Hours")
-            if userDefaults.integer(forKey: "historySort") == 0 {
+            let sortChoice = userDefaults.integer(forKey: "historySort")
+            if sortChoice == 0 {
                 sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
-            }
-            else if userDefaults.integer(forKey: "historySort") == 1 {
+            } else if sortChoice == 1 {
                 sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: true)
-            }
-            else if userDefaults.integer(forKey: "historySort") == 2 {
+            } else if sortChoice == 2 {
                 sort = NSSortDescriptor(key: #keyPath(Hours.totalHours), ascending: false)
-            }
-            else if userDefaults.integer(forKey: "historySort") == 3 {
+            } else if sortChoice == 3 {
                 sort = NSSortDescriptor(key: #keyPath(Hours.totalHours), ascending: true)
             }
             fetchrequest.sortDescriptors = [sort]
@@ -141,22 +146,22 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake && undo == 1 {
-            print("Why are you shaking me?")
             let alert = UIAlertController(title: "Undo", message: "Would you like to undo recent hour deletion?", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [self] _ in
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
+                guard let self = self else { return }
                 (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext.rollback()
                 
                 UIView.transition(with: self.tableView, duration: 0.25, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
                     self.tableView.reloadData()
                 }, completion: nil)
                 
-                editButton.isEnabled = true
-                noHoursStoredBackground()
-                undo = 0
+                self.editButton.isEnabled = self.hourItemsCount > 0
+                self.noHoursStoredBackground()
+                self.undo = 0
                 
-                tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
-                tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
-                setupMoreMenu()
+                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItemsCount)
+                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCardsCount)
+                self.setupMoreMenu()
             }))
             alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -180,7 +185,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         let notificationName = NSNotification.Name("Update")
         NotificationCenter.default.addObserver(self, selector: #selector(HistoryViewController.reloadTableView), name: notificationName, object: nil)
         
-        editButton.isEnabled = hourItems.count > 0
+        editButton.isEnabled = hourItemsCount > 0
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -195,7 +200,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // Standard AdMob phone banner height
         let bannerHeight: CGFloat = 50.0
         let extraPadding: CGFloat = 8.0
         let bottomInset = bannerHeight + extraPadding
@@ -277,7 +281,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func noHoursStoredBackground() {
-        if hourItems.count == 0 {
+        if hourItemsCount == 0 {
             let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.accessibilityFrame.size.width, height: self.accessibilityFrame.size.height))
             messageLabel.text = "There are currently no hours stored"
             messageLabel.numberOfLines = 0
@@ -286,8 +290,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             messageLabel.sizeToFit()
             self.tableView.backgroundView = messageLabel
             tableView.separatorStyle = .none
-        }
-        else {
+        } else {
             tableView.backgroundView = nil
         }
     }
@@ -295,7 +298,8 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     private func setupMoreMenu() {
         guard let moreMenuButton = moreMenuButton else { return }
         
-        guard !hourItems.isEmpty else {
+        let totalCount = hourItemsCount
+        guard totalCount > 0 else {
             moreMenuButton.isEnabled = false
             moreMenuButton.menu = nil
             return
@@ -345,8 +349,8 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         noHoursStoredBackground()
-        self.editButton.isEnabled = hourItems.count > 0
-        self.moreMenuButton.isEnabled = hourItems.count > 0
+        self.editButton.isEnabled = hourItemsCount > 0
+        self.moreMenuButton.isEnabled = hourItemsCount > 0
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -359,7 +363,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }, completion: nil)
         
         noHoursStoredBackground()
-        editButton.isEnabled = hourItems.count > 0
+        editButton.isEnabled = hourItemsCount > 0
         setupMoreMenu()
     }
     
@@ -394,18 +398,20 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
+        let action = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
+            guard let self = self else { return }
             let alert = UIAlertController(title: "Warning", message: "You are fixing to delete a single entry, would you like to continue?", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
+            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] _ in
+                guard let self = self else { return }
                 let hourToDelete = self.hourItems[indexPath.row]
                 self.context.delete(hourToDelete)
                 (UIApplication.shared.delegate as! AppDelegate).saveContext()
                 
                 self.tableView.deleteRows(at: [indexPath], with: .fade)
                 self.undo = 1
-                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItemsCount)
                 self.noHoursStoredBackground()
-                self.editButton.isEnabled = self.hourItems.count > 0
+                self.editButton.isEnabled = self.hourItemsCount > 0
                 self.setupMoreMenu()
                 
                 if UserDefaults.standard.integer(forKey: "undoAlertMessage") == 0 {
@@ -415,6 +421,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     }))
                     self.present(undoAlert, animated: true, completion: nil)
                 }
+                completionHandler(true)
             }))
             alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
                 completionHandler(false)
@@ -422,7 +429,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             self.present(alert, animated: true, completion: nil)
         }
         
-        let exportAction = UIContextualAction(style: .normal, title: "Export") { [weak self] (action, view, completionHandler) in
+        let exportAction = UIContextualAction(style: .normal, title: "Export") { [weak self] (_, _, completionHandler) in
             guard let self = self else { return }
             let hourToExport = self.hourItems[indexPath.row]
             self.promptExportNaming(itemsToExport: [hourToExport], indexPathsToDelete: [indexPath])
@@ -446,7 +453,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .normal, title: "Edit") { [weak self] (action, view, completionHandler) in
+        let action = UIContextualAction(style: .normal, title: "Edit") { [weak self] (_, _, completionHandler) in
             guard let self = self else { return }
             let selectedHour = self.hourItems[indexPath.row]
             self.performSegue(withIdentifier: "EditItem", sender: selectedHour)
@@ -465,23 +472,24 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     private var finishedLoadingInitialTableCells = false
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if hourItems.count > 0 {
-            DispatchQueue.main.async { [self] in
+        if hourItemsCount > 0 {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
                 var lastInitialDisplayableCell = false
                 
-                if timeCards.count > 0 && !finishedLoadingInitialTableCells {
-                    if let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows,
+                if self.timeCardsCount > 0 && !self.finishedLoadingInitialTableCells {
+                    if let indexPathsForVisibleRows = self.tableView.indexPathsForVisibleRows,
                        let lastIndexPath = indexPathsForVisibleRows.last, lastIndexPath.row == indexPath.row {
                         lastInitialDisplayableCell = true
                     }
                 }
                 
-                if !finishedLoadingInitialTableCells {
+                if !self.finishedLoadingInitialTableCells {
                     if lastInitialDisplayableCell {
-                        finishedLoadingInitialTableCells = true
+                        self.finishedLoadingInitialTableCells = true
                     }
                     
-                    cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight/2)
+                    cell.transform = CGAffineTransform(translationX: 0, y: self.tableView.rowHeight/2)
                     cell.alpha = 0
                     
                     UIView.animate(withDuration: 0.25, delay: 0.0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
@@ -515,11 +523,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             
             self.tableView.deleteRows(at: sortedPaths, with: .fade)
             self.noHoursStoredBackground()
-            self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+            self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItemsCount)
             self.undo = 1
             
             self.setEditingMode(false, animated: true)
-            self.editButton.isEnabled = self.hourItems.count > 0
+            self.editButton.isEnabled = self.hourItemsCount > 0
             self.setupMoreMenu()
             
             if self.userDefaults.integer(forKey: "undoAlertMessage") == 0 {
@@ -540,18 +548,20 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         let alert = UIAlertController(title: "Delete All?", message: "Are you sure you would like to delete all stored hours?", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [self] _ in
-            undo = 1
-            DispatchQueue.main.async {
-                for i in (0...self.hourItems.count - 1).reversed() {
-                    let index = [0, i] as IndexPath
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.undo = 1
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                for i in (0..<self.hourItems.count).reversed() {
+                    let index = IndexPath(row: i, section: 0)
                     let hourToDelete = self.hourItems[i]
                     self.context.delete(hourToDelete)
                     self.tableView.deleteRows(at: [index], with: .fade)
                 }
                 (UIApplication.shared.delegate as! AppDelegate).saveContext()
                 self.noHoursStoredBackground()
-                tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItemsCount)
                 self.editButton.isEnabled = false
                 self.setupMoreMenu()
                 
@@ -568,10 +578,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             let sections = NSIndexSet(indexesIn: range)
             self.tableView.reloadSections(sections as IndexSet, with: .fade)
             
-            self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+            self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItemsCount)
             self.editButton.isEnabled = false
-            noHoursStoredBackground()
-            setupMoreMenu()
+            self.noHoursStoredBackground()
+            self.setupMoreMenu()
         }))
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -579,7 +589,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @IBAction func editButtonTapped(_ sender: Any) {
-        guard hourItems.count > 0 else { return }
+        guard hourItemsCount > 0 else { return }
         setEditingMode(!tableView.isEditing, animated: true)
     }
     
@@ -617,13 +627,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         modalVC.modalTransitionStyle = .crossDissolve
         modalVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        // Tap dimmed backdrop above the sheet to dismiss
         let dismissButton = UIButton(frame: modalVC.view.bounds)
         dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         dismissButton.addTarget(self, action: #selector(dismissLiquidGlassModal), for: .touchUpInside)
         modalVC.view.addSubview(dismissButton)
         
-        // Fixed bottom container pinned to the bottom of the screen
         let blurEffect = UIBlurEffect(style: .systemMaterialDark)
         let bottomSheetContainer = UIVisualEffectView(effect: blurEffect)
         bottomSheetContainer.layer.cornerRadius = 24
@@ -634,7 +642,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         bottomSheetContainer.translatesAutoresizingMaskIntoConstraints = false
         modalVC.view.addSubview(bottomSheetContainer)
         
-        // Top-left circular 'X' dismiss button
         let closeButton = UIButton(type: .system)
         var closeConfig = UIButton.Configuration.plain()
         let xSymbolConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
@@ -739,12 +746,10 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         bottomSheetContainer.contentView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            // Pinned flush to the very bottom edge of the display
             bottomSheetContainer.leadingAnchor.constraint(equalTo: modalVC.view.leadingAnchor),
             bottomSheetContainer.trailingAnchor.constraint(equalTo: modalVC.view.trailingAnchor),
             bottomSheetContainer.bottomAnchor.constraint(equalTo: modalVC.view.bottomAnchor),
             
-            // Top-left 'X' button
             closeButton.topAnchor.constraint(equalTo: bottomSheetContainer.contentView.topAnchor, constant: 16),
             closeButton.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 16),
             closeButton.widthAnchor.constraint(equalToConstant: 30),
@@ -768,7 +773,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             stackView.leadingAnchor.constraint(equalTo: bottomSheetContainer.contentView.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: bottomSheetContainer.contentView.trailingAnchor, constant: -20),
             
-            // Anchored directly to safe area bottom for proper home indicator padding
             stackView.bottomAnchor.constraint(equalTo: modalVC.view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
         
@@ -783,8 +787,8 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         UIView.animate(withDuration: 0.5, delay: 0, options: [.transitionCrossDissolve, .preferredFramesPerSecond60], animations: {
             self.tableView.reloadData()
         }, completion: nil)
-        tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
-        editButton.isEnabled = hourItems.count > 0
+        tabBarController?.tabBar.items?[1].badgeValue = String(hourItemsCount)
+        editButton.isEnabled = hourItemsCount > 0
         noHoursStoredBackground()
         setupMoreMenu()
     }
@@ -797,7 +801,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     private func handleExport() {
-        guard !hourItems.isEmpty else { return }
+        guard hourItemsCount > 0 else { return }
         
         let itemsToExport: [Hours]
         let deletePaths: [IndexPath]
@@ -1040,7 +1044,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         guard let provider = results.first?.itemProvider, provider.canLoadObject(ofClass: UIImage.self) else { return }
         
-        provider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
+        provider.loadObject(ofClass: UIImage.self) { [weak self] (image, _) in
             guard let self = self, let pickedImage = image as? UIImage else { return }
             DispatchQueue.main.async {
                 self.pendingExportImage = pickedImage
@@ -1092,7 +1096,8 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             formatter.dateFormat = "MM/dd/yyyy hh:mm a"
             let dateFormatted = formatter.string(from: today)
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
                 let infoFetch = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
                 infoFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
                 if let infoItems = try? self.context.fetch(infoFetch), let firstInfo = infoItems.first {
@@ -1161,8 +1166,8 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         self.tableView.deleteRows(at: indexPathsToDelete, with: .fade)
         self.noHoursStoredBackground()
-        self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
-        self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+        self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItemsCount)
+        self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCardsCount)
         self.undo = 1
         
         if tableView.isEditing {
