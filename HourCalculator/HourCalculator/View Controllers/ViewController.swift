@@ -6,39 +6,43 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController {
     
     @IBOutlet weak var dateDatePicker: LiquidGlassCalendarButton!
-    var window: UIWindow?
-    
-    var userDefaults = UserDefaults.standard
-    
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var datePickerOutTime: UIDatePicker!
     @IBOutlet weak var calculateButton: LiquidGlassButton!
     
+    var userDefaults = UserDefaults.standard
     var selectedDate: Date = Date()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    var hourItems: [Hours] {
-        do {
-            return try context.fetch(Hours.fetchRequest())
-        } catch {
-            print("Couldn't fetch data")
-        }
-        return [Hours]()
+    // Cached date formatters to eliminate expensive allocations on calculation touches
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "hh:mm a"
+        return formatter
+    }()
+    
+    private static let entryDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy"
+        return formatter
+    }()
+    
+    // Memory-efficient count queries that avoid loading entity objects into RAM
+    var hourItemsCount: Int {
+        let request: NSFetchRequest<Hours> = Hours.fetchRequest()
+        return (try? context.count(for: request)) ?? 0
     }
     
-    var timeCards: [TimeCards] {
-        do {
-            return try context.fetch(TimeCards.fetchRequest())
-        } catch {
-            print("Couldn't fetch data")
-        }
-        return [TimeCards]()
+    var timeCardsCount: Int {
+        let request: NSFetchRequest<TimeCards> = TimeCards.fetchRequest()
+        return (try? context.count(for: request)) ?? 0
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -103,7 +107,7 @@ class ViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             if self.userDefaults.integer(forKey: "historyEnabled") == 0 {
-                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItems.count)
+                self.tabBarController?.tabBar.items?[1].badgeValue = String(self.hourItemsCount)
             } else {
                 self.tabBarController?.tabBar.items?[1].badgeValue = nil
             }
@@ -160,12 +164,12 @@ class ViewController: UIViewController {
         }
         
         if userDefaults.integer(forKey: "historyEnabled") == 0 {
-            tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
+            tabBarController?.tabBar.items?[1].badgeValue = String(hourItemsCount)
         } else {
             tabBarController?.tabBar.items?[1].badgeValue = nil
         }
         
-        tabBarController?.tabBar.items?[2].badgeValue = String(timeCards.count)
+        tabBarController?.tabBar.items?[2].badgeValue = String(timeCardsCount)
         
         dateDatePicker.selectedDate = selectedDate
         dateDatePicker.onDateChanged = { [weak self] newDate in
@@ -218,12 +222,12 @@ class ViewController: UIViewController {
         let hoursDifference = outHour - inHour
         
         if hoursDifference < 0 && (12...24).contains(inHour) && (0...12).contains(outHour) {
-            DispatchQueue.main.async {
-                self.PMtoAM(date: date, inHour: self.inHour, inMinute: self.inMinute, outHour: self.outHour, outMinute: self.outMinute, minutesDifference: minutesDifference, hoursDifference: hoursDifference)
+            DispatchQueue.main.async { [weak self] in
+                self?.PMtoAM(date: date, inHour: self?.inHour ?? 0, inMinute: self?.inMinute ?? 0, outHour: self?.outHour ?? 0, outMinute: self?.outMinute ?? 0, minutesDifference: minutesDifference, hoursDifference: hoursDifference)
             }
         } else {
-            DispatchQueue.main.async {
-                self.AMtoPM(date: date, inHour: self.inHour, inMinute: self.inMinute, outHour: self.outHour, outMinute: self.outMinute, minutesDifference: minutesDifference, hoursDifference: hoursDifference)
+            DispatchQueue.main.async { [weak self] in
+                self?.AMtoPM(date: date, inHour: self?.inHour ?? 0, inMinute: self?.inMinute ?? 0, outHour: self?.outHour ?? 0, outMinute: self?.outMinute ?? 0, minutesDifference: minutesDifference, hoursDifference: hoursDifference)
             }
         }
     }
@@ -311,29 +315,26 @@ class ViewController: UIViewController {
     }
     
     private func saveEntry(totalHours: String, hours: Int, minutes: String) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm a"
-        let inTimeDate = dateFormatter.string(from: datePicker.date)
-        let outTimeDate = dateFormatter.string(from: datePickerOutTime.date)
-        
-        let formatter1 = DateFormatter()
-        formatter1.dateFormat = "MM/dd/yyyy"
-        let dateFormatted = formatter1.string(from: selectedDate)
+        let inTimeDate = Self.timeFormatter.string(from: datePicker.date)
+        let outTimeDate = Self.timeFormatter.string(from: datePickerOutTime.date)
+        let dateFormatted = Self.entryDateFormatter.string(from: selectedDate)
         
         storeHours(inTime: inTimeDate, outTime: outTimeDate, totalHours: totalHours, date: dateFormatted, hours: hours, minutes: minutes)
     }
     
     private func finalizeCalculation() {
         let autoDel = userDefaults.integer(forKey: "automaticDeletion")
-        if autoDel != 0 && hourItems.count > autoDel {
-            if let hourToDelete = hourItems.first {
+        if autoDel != 0 && hourItemsCount > autoDel {
+            let deleteFetch: NSFetchRequest<Hours> = Hours.fetchRequest()
+            deleteFetch.fetchLimit = 1
+            if let hourToDelete = (try? context.fetch(deleteFetch))?.first {
                 context.delete(hourToDelete)
             }
         }
         
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         if userDefaults.integer(forKey: "historyEnabled") == 0 {
-            tabBarController?.tabBar.items?[1].badgeValue = String(hourItems.count)
+            tabBarController?.tabBar.items?[1].badgeValue = String(hourItemsCount)
         } else {
             tabBarController?.tabBar.items?[1].badgeValue = nil
         }
