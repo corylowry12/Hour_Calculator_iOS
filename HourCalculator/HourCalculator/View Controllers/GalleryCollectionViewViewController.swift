@@ -88,8 +88,8 @@ class GalleryCollectionViewViewController: UIViewController, UICollectionViewDel
         let extraPadding: CGFloat = 8.0
         let bottomInset = bannerHeight + extraPadding
         
-        tableView.contentInset.bottom = bottomInset
-        tableView.verticalScrollIndicatorInsets.bottom = bottomInset
+        collectionView.contentInset.bottom = bottomInset
+        collectionView.verticalScrollIndicatorInsets.bottom = bottomInset
     }
     
     override func viewWillAppear(_ animated: Bool) {
