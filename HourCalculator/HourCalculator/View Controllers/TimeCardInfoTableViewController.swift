@@ -36,16 +36,24 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
-    var image: UIImage?
     let userDefaults = UserDefaults.standard
     var cameraIsBeingUsed = false
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     private static let isCameraAvailable: Bool = UIImagePickerController.isSourceTypeAvailable(.camera)
     
+    // Cached date formatter to eliminate heap churn on saves
+    private static let cardDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy hh:mm a"
+        return formatter
+    }()
+    
     private var currentCard: TimeCards?
     private var cachedTimeCardItems: [TimeCardInfo] = []
     private var currentDisplayImage: UIImage?
+    
+    private var headerConstraints: [NSLayoutConstraint] = []
     
     private let headerImageView: UIImageView = {
         let iv = UIImageView()
@@ -93,32 +101,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         return traitCollection.displayScale > 0 ? traitCollection.displayScale : 2.0
     }
     
-    var timeCards: [TimeCards] {
-        do {
-            var sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: false)
-            let fetchrequest = NSFetchRequest<TimeCards>(entityName: "TimeCards")
-            let sortChoice = userDefaults.integer(forKey: "timeCardsSort")
-            if sortChoice == 0 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: false)
-            } else if sortChoice == 1 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: true)
-            } else if sortChoice == 2 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.total), ascending: true)
-            } else if sortChoice == 3 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.total), ascending: false)
-            } else if sortChoice == 4 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: false)
-            } else if sortChoice == 5 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: true)
-            }
-            fetchrequest.sortDescriptors = [sort]
-            return try context.fetch(fetchrequest)
-        } catch {
-            print("Couldn't fetch data")
-        }
-        return [TimeCards]()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -147,7 +129,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // Standard AdMob phone banner height
         let bannerHeight: CGFloat = 50.0
         let extraPadding: CGFloat = 8.0
         let bottomInset = bannerHeight + extraPadding
@@ -168,6 +149,10 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     private func updateTableHeader(animated: Bool = false) {
+        // Deactivate existing constraints to prevent constraint leakage
+        NSLayoutConstraint.deactivate(headerConstraints)
+        headerConstraints.removeAll()
+        
         if hasStoredImage, let displayImage = currentDisplayImage {
             let tableWidth = tableView.bounds.width > 0 ? tableView.bounds.width : view.bounds.width
             let targetHeight: CGFloat = 220
@@ -191,34 +176,37 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             let aspectConstraint = headerImageView.widthAnchor.constraint(equalTo: headerImageView.heightAnchor, multiplier: imageRatio)
             aspectConstraint.priority = .defaultHigh
             
-            NSLayoutConstraint.activate([
+            let newConstraints = [
                 headerImageView.topAnchor.constraint(equalTo: headerContainer.topAnchor, constant: 10),
                 headerImageView.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -10),
                 headerImageView.centerXAnchor.constraint(equalTo: headerContainer.centerXAnchor),
                 aspectConstraint,
                 headerImageView.widthAnchor.constraint(lessThanOrEqualToConstant: maxCardWidth)
-            ])
+            ]
+            
+            headerConstraints = newConstraints
+            NSLayoutConstraint.activate(newConstraints)
             
             tableView.tableHeaderView = headerContainer
             
             if isInserting {
-                UIView.animate(withDuration: 0.35, delay: 0, options: [.curveEaseOut], animations: {
-                    self.headerImageView.alpha = 1.0
+                UIView.animate(withDuration: 0.35, delay: 0, options: [.curveEaseOut], animations: { [weak self] in
+                    self?.headerImageView.alpha = 1.0
                     headerContainer.frame.size.height = targetHeight
-                    self.tableView.beginUpdates()
-                    self.tableView.tableHeaderView = headerContainer
-                    self.tableView.endUpdates()
+                    self?.tableView.beginUpdates()
+                    self?.tableView.tableHeaderView = headerContainer
+                    self?.tableView.endUpdates()
                 }, completion: nil)
             }
         } else if let currentHeader = tableView.tableHeaderView, animated {
-            UIView.animate(withDuration: 0.32, delay: 0, options: [.curveEaseInOut], animations: {
+            UIView.animate(withDuration: 0.32, delay: 0, options: [.curveEaseInOut], animations: { [weak self] in
                 currentHeader.alpha = 0.0
                 currentHeader.frame.size.height = 0
-                self.tableView.beginUpdates()
-                self.tableView.tableHeaderView = currentHeader
-                self.tableView.endUpdates()
-            }, completion: { _ in
-                self.tableView.tableHeaderView = nil
+                self?.tableView.beginUpdates()
+                self?.tableView.tableHeaderView = currentHeader
+                self?.tableView.endUpdates()
+            }, completion: { [weak self] _ in
+                self?.tableView.tableHeaderView = nil
             })
         } else {
             tableView.tableHeaderView = nil
@@ -305,7 +293,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 guard let self = self else { return }
                 let crispCardImage = UIImage.downsampledImage(from: imgData, to: cardTargetSize, scale: scale) ?? UIImage(data: imgData)
                 
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
                     if self.userDefaults.integer(forKey: "id") == targetID {
                         self.currentDisplayImage = crispCardImage
                         self.headerImageView.image = crispCardImage
@@ -335,13 +324,14 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         dismissButton.addTarget(self, action: #selector(dismissLiquidGlassModal), for: .touchUpInside)
         modalVC.view.addSubview(dismissButton)
         
-        let blurEffect = UIBlurEffect(style: .systemMaterialDark)
+        // systemMaterial adapts cleanly across Light and Dark themes
+        let blurEffect = UIBlurEffect(style: .systemMaterial)
         let bottomSheetContainer = UIVisualEffectView(effect: blurEffect)
         bottomSheetContainer.layer.cornerRadius = 24
         bottomSheetContainer.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         bottomSheetContainer.layer.masksToBounds = true
         bottomSheetContainer.layer.borderWidth = 1.0
-        bottomSheetContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.15).cgColor
+        bottomSheetContainer.layer.borderColor = UIColor.separator.withAlphaComponent(0.2).cgColor
         bottomSheetContainer.translatesAutoresizingMaskIntoConstraints = false
         modalVC.view.addSubview(bottomSheetContainer)
         
@@ -576,8 +566,8 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                   let pickedImage = image as? UIImage,
                   let jpegData = pickedImage.jpegData(compressionQuality: 0.85) else { return }
             
-            DispatchQueue.main.async {
-                self.saveAndApplyImage(pickedImage: pickedImage, jpegData: jpegData)
+            DispatchQueue.main.async { [weak self] in
+                self?.saveAndApplyImage(pickedImage: pickedImage, jpegData: jpegData)
             }
         }
     }
@@ -614,10 +604,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             first.image = jpegData
         }
         
-        let today = Date()
-        let formatter1 = DateFormatter()
-        formatter1.dateFormat = "MM/dd/yyyy hh:mm a"
-        let dateFormatted = formatter1.string(from: today)
+        let dateFormatted = Self.cardDateFormatter.string(from: Date())
         
         let trimmedText = textField.text?.trimmingCharacters(in: .whitespaces)
         let cardTitle = (trimmedText?.isEmpty ?? true) ? (currentCard?.name ?? "Unknown") : trimmedText
@@ -746,7 +733,15 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     }
     
     @IBAction func textFieldClose(_ sender: UITextField) {
-        let trimmedText = sender.text?.trimmingCharacters(in: .whitespaces)
+        persistTitleUpdate(with: sender.text)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        persistTitleUpdate(with: textField.text)
+    }
+    
+    private func persistTitleUpdate(with text: String?) {
+        let trimmedText = text?.trimmingCharacters(in: .whitespaces)
         let finalName: String? = (trimmedText?.isEmpty ?? true) ? nil : trimmedText
         
         self.navigationItem.title = (finalName == nil || finalName == "Unknown") ? "Time Card Info" : finalName
@@ -771,25 +766,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         let currentText = textField.text ?? ""
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string).trimmingCharacters(in: .whitespaces)
-        let finalName: String? = updatedText.isEmpty ? nil : updatedText
-        
-        self.navigationItem.title = finalName ?? "Time Card Info"
-        
-        currentCard?.name = finalName
-        for info in cachedTimeCardItems {
-            info.name = finalName
-        }
-        
-        let targetID = userDefaults.integer(forKey: "id")
-        let galFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
-        galFetch.predicate = NSPredicate(format: "id_number == %d", targetID)
-        if let galItems = try? context.fetch(galFetch) {
-            for gal in galItems {
-                gal.name = finalName
-            }
-        }
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
-        
+        self.navigationItem.title = updatedText.isEmpty ? "Time Card Info" : updatedText
         return range.location < 16
     }
     
@@ -804,17 +781,7 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
             let targetID = userDefaults.integer(forKey: "id")
             
             dvc.placeholderThumbnail = self.currentDisplayImage
-            
-            let galFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
-            galFetch.predicate = NSPredicate(format: "id_number == %d AND fullSize != nil", targetID)
-            galFetch.fetchLimit = 1
-            
-            if let fullData = (try? context.fetch(galFetch))?.first?.fullSize {
-                dvc.fullImageData = fullData
-            } else if let cachedData = cachedTimeCardItems.first(where: { $0.image != nil })?.image {
-                dvc.fullImageData = cachedData
-            }
-            
+            dvc.targetCardID = targetID
             dvc.name = (textField.text?.isEmpty ?? true) ? "Time Card Image" : textField.text
             dvc.index = -1
         }
