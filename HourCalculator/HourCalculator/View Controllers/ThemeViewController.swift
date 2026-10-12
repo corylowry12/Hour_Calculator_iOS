@@ -145,23 +145,18 @@ class ThemeViewController: UITableViewController {
             }
             
             let accentColor: UIColor
-            var iconName: String? = nil
             
             switch indexPath.row {
             case 0:
                 accentColor = UIColor(rgb: 0x26A69A)
             case 1:
                 accentColor = UIColor(rgb: 0x7841c4)
-                iconName = "purple_logo"
             case 2:
                 accentColor = UIColor(rgb: 0x347deb)
-                iconName = "blue_logo"
             case 3:
                 accentColor = UIColor(rgb: 0xfc783a)
-                iconName = "orange_logo"
             case 4:
                 accentColor = UIColor(rgb: 0xc41d1d)
-                iconName = "red_logo"
             default:
                 var number = Int32.random(in: 0...4)
                 while number == Int32(userDefaults.integer(forKey: "accentRandom")) {
@@ -178,22 +173,9 @@ class ThemeViewController: UITableViewController {
                 }
             }
             
-            changeIcon(iconName)
-            
             UIView.animate(withDuration: 0.25) {
                 self.targetWindow?.tintColor = accentColor
             }
-        }
-    }
-    
-    func changeIcon(_ iconName: String?) {
-        if UIApplication.shared.responds(to: #selector(getter: UIApplication.supportsAlternateIcons)) && UIApplication.shared.supportsAlternateIcons {
-            typealias SetAlternateIconName = @convention(c) (NSObject, Selector, NSString?, @escaping (NSError) -> ()) -> ()
-            let selectorString = "_setAlternateIconName:completionHandler:"
-            let selector = NSSelectorFromString(selectorString)
-            let imp = UIApplication.shared.method(for: selector)
-            let method = unsafeBitCast(imp, to: SetAlternateIconName.self)
-            method(UIApplication.shared, selector, iconName as NSString?, { _ in })
         }
     }
 }
