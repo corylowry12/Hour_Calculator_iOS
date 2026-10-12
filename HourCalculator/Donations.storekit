@@ -1,0 +1,111 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "238D62B5",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "1",
+      "familyShareable" : false,
+      "internalID" : "5C1303CE",
+      "localizations" : [
+
+      ],
+      "productID" : "com.cory.HourCalculator.tip1",
+      "referenceName" : "Tip $1",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "5",
+      "familyShareable" : false,
+      "internalID" : "438A170D",
+      "localizations" : [
+
+      ],
+      "productID" : "com.cory.HourCalculator.tip5",
+      "referenceName" : "Tip $5",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "10",
+      "familyShareable" : false,
+      "internalID" : "662B3CEB",
+      "localizations" : [
+
+      ],
+      "productID" : "com.cory.HourCalculator.tip10",
+      "referenceName" : "Tip $10",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "20",
+      "familyShareable" : false,
+      "internalID" : "02F3B263",
+      "localizations" : [
+
+      ],
+      "productID" : "com.cory.HourCalculator.tip20",
+      "referenceName" : "Tip $20",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "100",
+      "familyShareable" : false,
+      "internalID" : "E9247FD6",
+      "localizations" : [
+
+      ],
+      "productID" : "com.cory.HourCalculator.tip100",
+      "referenceName" : "Tip $100",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "50",
+      "familyShareable" : false,
+      "internalID" : "DF10F2ED",
+      "localizations" : [
+
+      ],
+      "productID" : "com.cory.HourCalculator.tip50",
+      "referenceName" : "Tip $50",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionBundleGroups" : [
+
+  ],
+  "subscriptionGroups" : [
+
+  ],
+  "subscriptionSuiteGroups" : [
+
+  ],
+  "version" : {
+    "major" : 6,
+    "minor" : 3
+  }
+}
