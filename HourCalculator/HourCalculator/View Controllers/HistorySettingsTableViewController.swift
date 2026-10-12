@@ -35,6 +35,18 @@ class HistorySettingsTableViewController: UITableViewController {
         updateCheckmarks()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // Standard AdMob phone banner height
+        let bannerHeight: CGFloat = 50.0
+        let extraPadding: CGFloat = 8.0
+        let bottomInset = bannerHeight + extraPadding
+        
+        tableView.contentInset.bottom = bottomInset
+        tableView.verticalScrollIndicatorInsets.bottom = bottomInset
+    }
+    
     private func updateCheckmarks() {
         let historyEnabled = userDefaults.integer(forKey: "historyEnabled")
         let historySort = userDefaults.integer(forKey: "historySort")

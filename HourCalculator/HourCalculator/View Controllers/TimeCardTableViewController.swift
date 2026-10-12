@@ -8,13 +8,10 @@
 import Foundation
 import UIKit
 import CoreData
-import GoogleMobileAds
 import UniformTypeIdentifiers
 import PhotosUI
 
 class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
     @IBOutlet weak var sortBarButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
@@ -165,11 +162,6 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addBannerViewToView(bannerView)
-        bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
-        bannerView.rootViewController = self
-        bannerView.load(Request())
-        
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPressGesture.minimumPressDuration = 0.5
         tableView.addGestureRecognizer(longPressGesture)
@@ -183,6 +175,18 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         editButton?.isEnabled = timeCards.count > 0
         setupSortMenu()
         setupOptionsMenu()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // Standard AdMob phone banner height
+        let bannerHeight: CGFloat = 50.0
+        let extraPadding: CGFloat = 8.0
+        let bottomInset = bannerHeight + extraPadding
+        
+        tableView.contentInset.bottom = bottomInset
+        tableView.verticalScrollIndicatorInsets.bottom = bottomInset
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -1165,34 +1169,5 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         }
         
         return cell
-    }
-    
-    func addBannerViewToView(_ bannerView: BannerView) {
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(bannerView)
-        view.addConstraints([
-            NSLayoutConstraint(item: bannerView,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: view.safeAreaLayoutGuide,
-                               attribute: .bottom,
-                               multiplier: 1,
-                               constant: 0),
-            NSLayoutConstraint(item: bannerView,
-                               attribute: .centerX,
-                               relatedBy: .equal,
-                               toItem: view,
-                               attribute: .centerX,
-                               multiplier: 1,
-                               constant: 0)
-        ])
-    }
-    
-    func bannerViewDidReceiveAd(_ bannerView: BannerView) {
-        addBannerViewToView(bannerView)
-        bannerView.alpha = 0
-        UIView.animate(withDuration: 1, animations: {
-            bannerView.alpha = 1
-        })
     }
 }

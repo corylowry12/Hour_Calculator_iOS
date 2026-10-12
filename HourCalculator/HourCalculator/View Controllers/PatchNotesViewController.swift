@@ -22,4 +22,16 @@ class PatchNotesViewController: UITableViewController {
         userDefaults.set(appVersion, forKey: "appVersion")
         tabBarController?.tabBar.items?[3].badgeValue = nil
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // Standard AdMob phone banner height
+        let bannerHeight: CGFloat = 50.0
+        let extraPadding: CGFloat = 8.0
+        let bottomInset = bannerHeight + extraPadding
+        
+        tableView.contentInset.bottom = bottomInset
+        tableView.verticalScrollIndicatorInsets.bottom = bottomInset
+    }
 }

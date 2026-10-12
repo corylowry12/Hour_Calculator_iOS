@@ -6,11 +6,8 @@
 //
 
 import UIKit
-import GoogleMobileAds
 
 class ViewController: UIViewController {
-    
-    lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
     @IBOutlet weak var dateDatePicker: LiquidGlassCalendarButton!
     var window: UIWindow?
@@ -131,12 +128,6 @@ class ViewController: UIViewController {
         if userDefaults.value(forKey: "timeCardsSort") == nil {
             userDefaults.set(0, forKey: "timeCardsSort")
         }
-        
-        addBannerViewToView(bannerView)
-        
-        bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
-        bannerView.rootViewController = self
-        bannerView.load(Request())
         
         if userDefaults.value(forKey: "historyEnabled") == nil {
             userDefaults.set(0, forKey: "historyEnabled")
@@ -354,22 +345,5 @@ class ViewController: UIViewController {
         hoursToBeStored.outTime = outTime
         hoursToBeStored.totalHours = "\(hours).\(minutes)"
         hoursToBeStored.date = date
-    }
-    
-    func addBannerViewToView(_ bannerView: BannerView) {
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(bannerView)
-        view.addConstraints([
-            NSLayoutConstraint(item: bannerView, attribute: .bottom, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: bannerView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0)
-        ])
-    }
-    
-    func bannerViewDidReceiveAd(_ bannerView: BannerView) {
-        addBannerViewToView(bannerView)
-        bannerView.alpha = 0
-        UIView.animate(withDuration: 1) {
-            bannerView.alpha = 1
-        }
     }
 }

@@ -10,7 +10,6 @@ import UIKit
 import CoreData
 import ImageIO
 import PhotosUI
-import GoogleMobileAds
 
 extension UIImage {
     static func downsampledImage(from data: Data, to pointSize: CGSize, scale: CGFloat = 2.0) -> UIImage? {
@@ -31,8 +30,6 @@ extension UIImage {
 }
 
 class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PHPickerViewControllerDelegate {
-    
-    lazy var bannerView: BannerView! = BannerView(adSize: AdSizeBanner)
     
     @IBOutlet weak var addBarButton: UIBarButtonItem!
     @IBOutlet weak var infoBarButton: UIBarButtonItem!
@@ -130,10 +127,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
         
-        addBannerViewToView(bannerView)
-        bannerView.adUnitID = "ca-app-pub-4546055219731501/2396708566"
-        bannerView.rootViewController = self
-        
         textField.clearButtonMode = .always
         textField.autocapitalizationType = .words
         textField.autocorrectionType = .no
@@ -153,9 +146,14 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let adHeight: CGFloat = bannerView.frame.height > 0 ? bannerView.frame.height : 60
-        tableView.contentInset.bottom = adHeight + 16
-        tableView.verticalScrollIndicatorInsets.bottom = adHeight + 16
+        
+        // Standard AdMob phone banner height
+        let bannerHeight: CGFloat = 50.0
+        let extraPadding: CGFloat = 8.0
+        let bottomInset = bannerHeight + extraPadding
+        
+        tableView.contentInset.bottom = bottomInset
+        tableView.verticalScrollIndicatorInsets.bottom = bottomInset
     }
     
     private func setupNavigationButtons() {
@@ -317,11 +315,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
         }
         
         setupAddMenu()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        bannerView.load(Request())
     }
     
     @IBAction func infoButtonTapped(_ sender: Any) {
@@ -803,27 +796,6 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
-    }
-    
-    func addBannerViewToView(_ bannerView: BannerView) {
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(bannerView)
-        view.addConstraints([
-            NSLayoutConstraint(item: bannerView,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: view.safeAreaLayoutGuide,
-                               attribute: .bottom,
-                               multiplier: 1,
-                               constant: 0),
-            NSLayoutConstraint(item: bannerView,
-                               attribute: .centerX,
-                               relatedBy: .equal,
-                               toItem: view,
-                               attribute: .centerX,
-                               multiplier: 1,
-                               constant: 0)
-        ])
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
