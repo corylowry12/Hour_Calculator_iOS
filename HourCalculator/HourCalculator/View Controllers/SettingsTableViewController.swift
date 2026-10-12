@@ -51,52 +51,16 @@ class SettingsTableViewController: UITableViewController {
         }
     }
     
-    var hourItems: [Hours] {
-        do {
-            let fetchrequest = NSFetchRequest<Hours>(entityName: "Hours")
-            let sort = NSSortDescriptor(key: #keyPath(Hours.date), ascending: false)
-            fetchrequest.sortDescriptors = [sort]
-            return try context.fetch(fetchrequest)
-        } catch {
-            print("Couldn't fetch data")
-        }
-        return [Hours]()
-    }
-    
-    var timeCards: [TimeCards] {
-        do {
-            var sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: false)
-            let fetchrequest = NSFetchRequest<TimeCards>(entityName: "TimeCards")
-            let sortChoice = userDefaults.integer(forKey: "timeCardsSort")
-            if sortChoice == 0 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: false)
-            } else if sortChoice == 1 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: true)
-            } else if sortChoice == 2 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.total), ascending: true)
-            } else if sortChoice == 3 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.total), ascending: false)
-            } else if sortChoice == 4 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: true)
-            } else if sortChoice == 5 {
-                sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: false)
-            }
-            fetchrequest.sortDescriptors = [sort]
-            return try context.fetch(fetchrequest)
-        } catch {
-            print("Couldn't fetch data")
-        }
-        return [TimeCards]()
-    }
-    
     private var hasStoredImages: Bool {
         let galFetch = NSFetchRequest<Gallery>(entityName: "Gallery")
+        galFetch.includesPropertyValues = false
         galFetch.fetchLimit = 1
         let galleryCount = (try? context.count(for: galFetch)) ?? 0
         if galleryCount > 0 { return true }
         
         let infoFetch = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
         infoFetch.predicate = NSPredicate(format: "image != nil")
+        infoFetch.includesPropertyValues = false
         infoFetch.fetchLimit = 1
         let infoImageCount = (try? context.count(for: infoFetch)) ?? 0
         return infoImageCount > 0
@@ -104,6 +68,7 @@ class SettingsTableViewController: UITableViewController {
     
     private var hasStoredHistory: Bool {
         let fetch = NSFetchRequest<Hours>(entityName: "Hours")
+        fetch.includesPropertyValues = false
         fetch.fetchLimit = 1
         let count = (try? context.count(for: fetch)) ?? 0
         return count > 0
@@ -111,6 +76,7 @@ class SettingsTableViewController: UITableViewController {
     
     private var hasStoredTimeCards: Bool {
         let fetch = NSFetchRequest<TimeCards>(entityName: "TimeCards")
+        fetch.includesPropertyValues = false
         fetch.fetchLimit = 1
         let count = (try? context.count(for: fetch)) ?? 0
         return count > 0
@@ -197,7 +163,7 @@ class SettingsTableViewController: UITableViewController {
         }, for: .touchUpInside)
         modalVC.view.addSubview(dismissButton)
         
-        // Use systemMaterial so the sheet is bright/crisp in light mode and sleek in dark mode
+        // systemMaterial adapts cleanly across Light and Dark themes
         let blurEffect = UIBlurEffect(style: .systemMaterial)
         let bottomSheetContainer = UIVisualEffectView(effect: blurEffect)
         bottomSheetContainer.layer.cornerRadius = 24
@@ -208,7 +174,6 @@ class SettingsTableViewController: UITableViewController {
         bottomSheetContainer.translatesAutoresizingMaskIntoConstraints = false
         modalVC.view.addSubview(bottomSheetContainer)
         
-        // Top-left circular 'X' dismiss button
         let closeButton = UIButton(type: .system)
         var closeConfig = UIButton.Configuration.plain()
         let xSymbolConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
@@ -249,7 +214,6 @@ class SettingsTableViewController: UITableViewController {
         divider.backgroundColor = UIColor.separator.withAlphaComponent(0.35)
         divider.translatesAutoresizingMaskIntoConstraints = false
         
-        // Tiers Stack: Row 1 ($1, $5, $20), Row 2 ($50, $100)
         let amountsRow1 = [1, 5, 20]
         let amountsRow2 = [50, 100]
         var optionButtons: [Int: UIButton] = [:]
@@ -327,7 +291,6 @@ class SettingsTableViewController: UITableViewController {
         mainTierStack.addArrangedSubview(row1Stack)
         mainTierStack.addArrangedSubview(row2Stack)
         
-        // Donate confirmation action button
         var actionConfig = UIButton.Configuration.filled()
         actionConfig.title = "Leave a tip of $\(selectedDonationAmount)"
         actionConfig.baseBackgroundColor = currentAccentColor
@@ -403,7 +366,8 @@ class SettingsTableViewController: UITableViewController {
     private func executeDonationPurchase(amount: Int, presentingVC: UIViewController?) {
         guard let productID = donationProductIDs[amount] else { return }
         
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
             do {
                 let products = try await Product.products(for: [productID])
                 guard let product = products.first else {
@@ -453,7 +417,7 @@ class SettingsTableViewController: UITableViewController {
         }
         
         let clearImagesAction = UIAlertAction(title: "Clear Images", style: .destructive, handler: { [weak self] _ in
-            self?.confirmSpecificDeletion(title: "Clear Images?", message: "Are you sure you want to delete all saved photos and gallery thumbnails?") {
+            self?.confirmSpecificDeletion(title: "Clear Images?", message: "Are you sure you want to delete all saved photos and gallery thumbnails?") { [weak self] in
                 self?.deleteImagesOnly()
             }
         })
@@ -461,7 +425,7 @@ class SettingsTableViewController: UITableViewController {
         actionSheet.addAction(clearImagesAction)
         
         let clearHistoryAction = UIAlertAction(title: "Clear History", style: .destructive, handler: { [weak self] _ in
-            self?.confirmSpecificDeletion(title: "Clear History?", message: "Are you sure you want to delete all logged hours from your history?") {
+            self?.confirmSpecificDeletion(title: "Clear History?", message: "Are you sure you want to delete all logged hours from your history?") { [weak self] in
                 self?.deleteHistoryOnly()
             }
         })
@@ -469,7 +433,7 @@ class SettingsTableViewController: UITableViewController {
         actionSheet.addAction(clearHistoryAction)
         
         let clearTimeCardsAction = UIAlertAction(title: "Clear Time Cards", style: .destructive, handler: { [weak self] _ in
-            self?.confirmSpecificDeletion(title: "Clear Time Cards?", message: "Are you sure you want to delete all saved time cards and entries?") {
+            self?.confirmSpecificDeletion(title: "Clear Time Cards?", message: "Are you sure you want to delete all saved time cards and entries?") { [weak self] in
                 self?.deleteTimeCardsOnly()
             }
         })
@@ -477,7 +441,7 @@ class SettingsTableViewController: UITableViewController {
         actionSheet.addAction(clearTimeCardsAction)
         
         let clearEverythingAction = UIAlertAction(title: "Clear Everything", style: .destructive, handler: { [weak self] _ in
-            self?.confirmSpecificDeletion(title: "Clear Everything?", message: "Are you sure you want to clear all app data? This will reset all hours, time cards, photos, and preferences.") {
+            self?.confirmSpecificDeletion(title: "Clear Everything?", message: "Are you sure you want to clear all app data? This will reset all hours, time cards, photos, and preferences.") { [weak self] in
                 self?.deleteData()
             }
         })
@@ -576,7 +540,9 @@ class SettingsTableViewController: UITableViewController {
         present(alertLoading, animated: true) { [weak self] in
             guard let self = self else { return }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
+                guard let self = self else { return }
+                
                 if let domain = Bundle.main.bundleIdentifier {
                     UserDefaults.standard.removePersistentDomain(forName: domain)
                     UserDefaults.standard.synchronize()
@@ -601,8 +567,8 @@ class SettingsTableViewController: UITableViewController {
                 
                 self.tableView.reloadData()
                 
-                alertLoading.dismiss(animated: true) {
-                    self.showSuccessAlert(title: "Data Cleared", message: "All stored data and preferences have been successfully reset.")
+                alertLoading.dismiss(animated: true) { [weak self] in
+                    self?.showSuccessAlert(title: "Data Cleared", message: "All stored data and preferences have been successfully reset.")
                 }
             }
         }
