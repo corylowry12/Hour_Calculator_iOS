@@ -24,9 +24,34 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     // In-memory cache to keep 60/120 FPS table scrolling smooth
     private let thumbnailCache = NSCache<NSNumber, UIImage>()
     
+    // Cached date formatters to eliminate expensive allocations
+    private static let cardDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy hh:mm a"
+        return formatter
+    }()
+    
+    private static let exportTimestampFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd_h-mm-a"
+        return formatter
+    }()
+    
     var undo: Int = 0
     var predicateText: String!
     private var pendingTargetCardID: Int32?
+    
+    // In-memory array backing the table to prevent repeated Core Data heap allocations
+    private var cachedTimeCards: [TimeCards] = []
+    
+    var timeCards: [TimeCards] {
+        return cachedTimeCards
+    }
+    
+    var timeCardsCount: Int {
+        let fetch = NSFetchRequest<TimeCards>(entityName: "TimeCards")
+        return (try? context.count(for: fetch)) ?? 0
+    }
     
     var currentAccentColor: UIColor {
         let accent = userDefaults.integer(forKey: "accent")
@@ -83,7 +108,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         return [TimeCardInfo]()
     }
     
-    var timeCards: [TimeCards] {
+    private func reloadCardData() {
         do {
             var sort = NSSortDescriptor(key: #keyPath(TimeCards.week), ascending: false)
             let fetchrequest = NSFetchRequest<TimeCards>(entityName: "TimeCards")
@@ -103,11 +128,10 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 sort = NSSortDescriptor(key: #keyPath(TimeCards.name), ascending: true)
             }
             fetchrequest.sortDescriptors = [sort]
-            return try context.fetch(fetchrequest)
+            cachedTimeCards = try context.fetch(fetchrequest)
         } catch {
-            print("Couldn't fetch data")
+            cachedTimeCards = []
         }
-        return [TimeCards]()
     }
     
     @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
@@ -120,7 +144,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             let feedback = UIImpactFeedbackGenerator(style: .medium)
             feedback.impactOccurred()
             
-            for row in 0..<timeCards.count {
+            for row in 0..<cachedTimeCards.count {
                 let targetPath = IndexPath(row: row, section: 0)
                 tableView.selectRow(at: targetPath, animated: true, scrollPosition: .none)
             }
@@ -143,12 +167,13 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             alert.addAction(UIAlertAction(title: "Restore", style: .default, handler: { [weak self] _ in
                 guard let self = self else { return }
                 (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext.rollback()
+                self.reloadCardData()
                 
                 UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
                     self.tableView.reloadData()
                 }, completion: nil)
                 
-                self.editButton?.isEnabled = self.timeCards.count > 0
+                self.editButton?.isEnabled = self.cachedTimeCards.count > 0
                 self.noHoursStoredBackground()
                 self.undo = 0
                 self.setupSortMenu()
@@ -162,6 +187,11 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Extend content under navigation and tab bars for native blur dynamics
+        edgesForExtendedLayout = .all
+        extendedLayoutIncludesOpaqueBars = true
+        tableView.contentInsetAdjustmentBehavior = .automatic
+        
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPressGesture.minimumPressDuration = 0.5
         tableView.addGestureRecognizer(longPressGesture)
@@ -172,15 +202,36 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         tableView.allowsMultipleSelection = true
         tableView.allowsMultipleSelectionDuringEditing = true
         
-        editButton?.isEnabled = timeCards.count > 0
+        reloadCardData()
+        editButton?.isEnabled = cachedTimeCards.count > 0
         setupSortMenu()
         setupOptionsMenu()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDataUpdate),
+            name: NSNotification.Name("Update"),
+            object: nil
+        )
+    }
+    
+    @objc private func handleDataUpdate() {
+        thumbnailCache.removeAllObjects()
+        reloadCardData()
+        tableView.reloadData()
+        noHoursStoredBackground()
+        editButton?.isEnabled = cachedTimeCards.count > 0
+        setupSortMenu()
+        setupOptionsMenu()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // Standard AdMob phone banner height
         let bannerHeight: CGFloat = 50.0
         let extraPadding: CGFloat = 8.0
         let bottomInset = bannerHeight + extraPadding
@@ -193,12 +244,13 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         super.viewWillAppear(animated)
         
         thumbnailCache.removeAllObjects()
+        reloadCardData()
         tableView.reloadData()
         noHoursStoredBackground()
         self.becomeFirstResponder()
         view.backgroundColor = tableView.backgroundColor
         
-        editButton?.isEnabled = timeCards.count > 0
+        editButton?.isEnabled = cachedTimeCards.count > 0
         setupSortMenu()
         setupOptionsMenu()
     }
@@ -215,19 +267,19 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     private func setEditingMode(_ editing: Bool, animated: Bool) {
         tableView.setEditing(editing, animated: animated)
         editButton?.image = UIImage(systemName: editing ? "xmark" : "pencil")
-        sortBarButton?.isEnabled = !editing && timeCards.count > 0
+        sortBarButton?.isEnabled = !editing && cachedTimeCards.count > 0
         setupOptionsMenu()
     }
     
     @IBAction func editButtonTapped(_ sender: Any) {
-        guard timeCards.count > 0 else { return }
+        guard cachedTimeCards.count > 0 else { return }
         setEditingMode(!tableView.isEditing, animated: true)
     }
     
     func setupSortMenu() {
         guard let sortBarButton = sortBarButton else { return }
         
-        guard timeCards.count > 0 && !tableView.isEditing else {
+        guard cachedTimeCards.count > 0 && !tableView.isEditing else {
             sortBarButton.isEnabled = false
             sortBarButton.menu = nil
             return
@@ -254,6 +306,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                 guard let self = self else { return }
                 self.userDefaults.set(option.value, forKey: "timeCardsSort")
                 self.setupSortMenu()
+                self.reloadCardData()
                 
                 UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
                     self.tableView.reloadData()
@@ -274,7 +327,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         
         let isEditingMode = tableView.isEditing
         let selectedCount = tableView.indexPathsForSelectedRows?.count ?? 0
-        let hasAnyItems = !timeCards.isEmpty
+        let hasAnyItems = !cachedTimeCards.isEmpty
         
         let canExport = isEditingMode ? (selectedCount > 0) : hasAnyItems
         let exportTitle = (isEditingMode && selectedCount > 0) ? "Export Selected (\(selectedCount))" : "Export to CSV"
@@ -328,7 +381,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             let sortedPaths = selectedPaths.sorted(by: { $0.row > $1.row })
             
             for indexPath in sortedPaths {
-                let card = self.timeCards[indexPath.row]
+                let card = self.cachedTimeCards[indexPath.row]
                 let cardID = card.id_number
                 self.thumbnailCache.removeObject(forKey: NSNumber(value: cardID))
                 
@@ -350,16 +403,17 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
             self.undo = 1
             self.setEditingMode(false, animated: true)
+            self.reloadCardData()
             
             UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
                 self.tableView.reloadData()
             }, completion: nil)
             
-            self.editButton?.isEnabled = self.timeCards.count > 0
+            self.editButton?.isEnabled = self.cachedTimeCards.count > 0
             self.noHoursStoredBackground()
             self.setupSortMenu()
             self.setupOptionsMenu()
-            self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+            self.tabBarController?.tabBar.items?[2].badgeValue = String(self.cachedTimeCards.count)
         }))
         
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -381,7 +435,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] _ in
             guard let self = self else { return }
             
-            for card in self.timeCards {
+            for card in self.cachedTimeCards {
                 let cardID = card.id_number
                 self.thumbnailCache.removeObject(forKey: NSNumber(value: cardID))
                 
@@ -406,6 +460,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
             self.undo = 1
+            self.reloadCardData()
             
             UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
                 self.tableView.reloadData()
@@ -442,9 +497,9 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     private func generateAndShareCSV(onlySelected: Bool) {
         let cardsToExport: [TimeCards]
         if onlySelected, let selectedPaths = tableView.indexPathsForSelectedRows {
-            cardsToExport = selectedPaths.map { self.timeCards[$0.row] }
+            cardsToExport = selectedPaths.map { self.cachedTimeCards[$0.row] }
         } else {
-            cardsToExport = self.timeCards
+            cardsToExport = self.cachedTimeCards
         }
         
         var csvContent = "Time Card ID,Time Card Name,Period / Date,Card Total Hours,Entry Date,In Time,Out Time,Entry Hours\n"
@@ -475,9 +530,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             }
         }
         
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd_h-mm-a"
-        let timestamp = formatter.string(from: Date())
+        let timestamp = Self.exportTimestampFormatter.string(from: Date())
         let fileName = "HourCalculator_TimeCards_\(timestamp).csv"
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
         
@@ -486,6 +539,10 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             
             let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
             activityVC.view.tintColor = currentAccentColor
+            
+            activityVC.completionWithItemsHandler = { _, _, _, _ in
+                try? FileManager.default.removeItem(at: tempURL)
+            }
             
             if let popover = activityVC.popoverPresentationController {
                 popover.barButtonItem = optionsBarButton
@@ -572,8 +629,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         
         var cardMap: [Int32: TimeCards] = [:]
         
-        let allExisting = self.timeCards
-        var nextAutoID: Int32 = (allExisting.map { $0.id_number }.max() ?? 0) + 1
+        var nextAutoID: Int32 = (cachedTimeCards.map { $0.id_number }.max() ?? 0) + 1
         
         for index in 1..<lines.count {
             let cols = parseCSVRow(lines[index])
@@ -657,16 +713,17 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         }
         
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        reloadCardData()
         
         UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
             self.tableView.reloadData()
         }, completion: nil)
         
-        self.editButton?.isEnabled = self.timeCards.count > 0
+        self.editButton?.isEnabled = self.cachedTimeCards.count > 0
         self.noHoursStoredBackground()
         self.setupSortMenu()
         self.setupOptionsMenu()
-        self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+        self.tabBarController?.tabBar.items?[2].badgeValue = String(self.cachedTimeCards.count)
         
         showImportAlert(
             title: "Import Complete",
@@ -682,7 +739,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func noHoursStoredBackground() {
-        if timeCards.count == 0 {
+        if cachedTimeCards.count == 0 {
             let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: accessibilityFrame.size.width, height: accessibilityFrame.size.height))
             messageLabel.text = "There are currently no entries stored"
             messageLabel.numberOfLines = 0
@@ -704,22 +761,23 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     private var finishedLoadingInitialTableCells = false
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        DispatchQueue.main.async { [self] in
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
             var lastInitialDisplayableCell = false
             
-            if timeCards.count > 0 && !finishedLoadingInitialTableCells {
-                if let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows,
+            if self.cachedTimeCards.count > 0 && !self.finishedLoadingInitialTableCells {
+                if let indexPathsForVisibleRows = self.tableView.indexPathsForVisibleRows,
                    let lastIndexPath = indexPathsForVisibleRows.last, lastIndexPath.row == indexPath.row {
                     lastInitialDisplayableCell = true
                 }
             }
             
-            if !finishedLoadingInitialTableCells {
+            if !self.finishedLoadingInitialTableCells {
                 if lastInitialDisplayableCell {
-                    finishedLoadingInitialTableCells = true
+                    self.finishedLoadingInitialTableCells = true
                 }
                 
-                cell.transform = CGAffineTransform(translationX: 0, y: tableView.rowHeight / 2)
+                cell.transform = CGAffineTransform(translationX: 0, y: self.tableView.rowHeight / 2)
                 cell.alpha = 0
                 
                 UIView.animate(withDuration: 1.0, delay: 0.0, options: [.transitionCrossDissolve], animations: {
@@ -736,7 +794,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
                 guard let self = self else { return }
                 
-                let deletedID = self.timeCards[indexPath.row].id_number
+                let deletedID = self.cachedTimeCards[indexPath.row].id_number
                 self.predicateText = "\(deletedID)"
                 self.thumbnailCache.removeObject(forKey: NSNumber(value: deletedID))
                 
@@ -747,7 +805,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                     }
                 }
                 
-                let hourToDelete = self.timeCards[indexPath.row]
+                let hourToDelete = self.cachedTimeCards[indexPath.row]
                 self.context.delete(hourToDelete)
                 
                 if self.gallery.count > 0 {
@@ -755,14 +813,15 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                     self.context.delete(galleryToDelete)
                 }
                 
+                self.cachedTimeCards.remove(at: indexPath.row)
                 self.tableView.deleteRows(at: [indexPath], with: .left)
-                self.editButton?.isEnabled = self.timeCards.count > 0
+                self.editButton?.isEnabled = self.cachedTimeCards.count > 0
                 self.noHoursStoredBackground()
                 self.undo = 1
                 self.setupSortMenu()
                 self.setupOptionsMenu()
                 
-                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.cachedTimeCards.count)
             }))
             alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
                 tableView.setEditing(false, animated: true)
@@ -772,11 +831,11 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return timeCards.count
+        return cachedTimeCards.count
     }
     
     private func presentRenameAlert(forRowAt indexPath: IndexPath) {
-        let currentCard = self.timeCards[indexPath.row]
+        let currentCard = self.cachedTimeCards[indexPath.row]
         let currentName = currentCard.name?.trimmingCharacters(in: .whitespaces)
         let isCustomName = (currentName != nil && currentName != "" && currentName != "Unknown")
         
@@ -817,6 +876,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
             self.userDefaults.setValue(userText, forKey: "name")
+            self.reloadCardData()
             
             UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
                 self.tableView.reloadData()
@@ -847,6 +907,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             
             (UIApplication.shared.delegate as! AppDelegate).saveContext()
             self.userDefaults.removeObject(forKey: "name")
+            self.reloadCardData()
             
             UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
                 self.tableView.reloadData()
@@ -861,7 +922,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
             textField.autocapitalizationType = .words
             textField.autocorrectionType = .no
             
-            let name = self.timeCards[indexPath.row].name ?? "Unknown"
+            let name = self.cachedTimeCards[indexPath.row].name ?? "Unknown"
             textField.placeholder = name
             textField.text = isCustomName ? currentName : ""
         }
@@ -931,18 +992,18 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         guard let provider = results.first?.itemProvider, provider.canLoadObject(ofClass: UIImage.self) else { return }
         provider.loadObject(ofClass: UIImage.self) { [weak self] (image, _) in
             guard let self = self, let pickedImage = image as? UIImage, let cardID = self.pendingTargetCardID else { return }
-            DispatchQueue.main.async {
-                self.saveAttachedImage(pickedImage, for: cardID)
+            DispatchQueue.main.async { [weak self] in
+                self?.saveAttachedImage(pickedImage, for: cardID)
             }
         }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true)
         guard let pickedImage = info[.originalImage] as? UIImage, let cardID = pendingTargetCardID else { return }
         saveAttachedImage(pickedImage, for: cardID)
     }
@@ -964,10 +1025,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         cardFetch.fetchLimit = 1
         let cardName = (try? context.fetch(cardFetch))?.first?.name ?? "Unknown"
         
-        let today = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yyyy hh:mm a"
-        let dateFormatted = formatter.string(from: today)
+        let dateFormatted = Self.cardDateFormatter.string(from: Date())
         
         let infoFetch = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
         infoFetch.predicate = NSPredicate(format: "id_number == %d", cardID)
@@ -1032,8 +1090,9 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
             guard let self = self else { return }
             let alert = UIAlertController(title: "Warning", message: "You are about to delete a time card entry. Would you like to continue?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
-                let deletedID = self.timeCards[indexPath.row].id_number
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
+                guard let self = self else { return }
+                let deletedID = self.cachedTimeCards[indexPath.row].id_number
                 self.predicateText = "\(deletedID)"
                 self.thumbnailCache.removeObject(forKey: NSNumber(value: deletedID))
                 
@@ -1044,7 +1103,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                     }
                 }
                 
-                let hourToDelete = self.timeCards[indexPath.row]
+                let hourToDelete = self.cachedTimeCards[indexPath.row]
                 self.context.delete(hourToDelete)
                 
                 if self.gallery.count > 0 {
@@ -1052,14 +1111,15 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
                     self.context.delete(galleryToDelete)
                 }
                 
+                self.cachedTimeCards.remove(at: indexPath.row)
                 self.tableView.deleteRows(at: [indexPath], with: .left)
-                self.editButton?.isEnabled = self.timeCards.count > 0
+                self.editButton?.isEnabled = self.cachedTimeCards.count > 0
                 self.noHoursStoredBackground()
                 self.undo = 1
                 self.setupSortMenu()
                 self.setupOptionsMenu()
                 
-                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.timeCards.count)
+                self.tabBarController?.tabBar.items?[2].badgeValue = String(self.cachedTimeCards.count)
                 completionHandler(true)
             }))
             alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
@@ -1083,7 +1143,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         
         let photoAction = UIContextualAction(style: .normal, title: "Photo") { [weak self] (_, _, completionHandler) in
             guard let self = self else { return }
-            let card = self.timeCards[indexPath.row]
+            let card = self.cachedTimeCards[indexPath.row]
             self.promptAttachPhoto(for: card.id_number)
             completionHandler(true)
         }
@@ -1099,12 +1159,12 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
         }
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let selectedCard = timeCards[indexPath.row]
+        let selectedCard = cachedTimeCards[indexPath.row]
         
         if selectedCard.id_number == 0 {
             presentRenameAlert(forRowAt: indexPath)
         } else {
-            let matchedIndex = timeCards.firstIndex(where: { $0.id_number == selectedCard.id_number }) ?? indexPath.row
+            let matchedIndex = cachedTimeCards.firstIndex(where: { $0.id_number == selectedCard.id_number }) ?? indexPath.row
             
             userDefaults.setValue(selectedCard.id_number, forKey: "id")
             userDefaults.setValue(selectedCard.name ?? "Unknown", forKey: "name")
@@ -1123,7 +1183,7 @@ class TimeCardTableViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let card = timeCards[indexPath.row]
+        let card = cachedTimeCards[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "timeCard", for: indexPath) as! TimeCardTableViewCell
         
         let roundTotal = round(card.total * 100) / 100.00
