@@ -1452,7 +1452,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="F7p-6b-dc5">
-                                <rect key="frame" x="0.0" y="172" width="430" height="692"/>
+                                <rect key="frame" x="0.0" y="224" width="430" height="640"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ggQ-bp-EhE"/>
@@ -2612,7 +2612,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="d8f-j1-KTd"/>
-        <segue reference="BYH-Rv-U8T"/>
+        <segue reference="43q-JX-gmc"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Rainbow Image" width="378.66665649414062" height="312"/>
