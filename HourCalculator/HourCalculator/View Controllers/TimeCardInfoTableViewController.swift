@@ -759,20 +759,30 @@ class TimeCardInfoTableViewController: UIViewController, UITableViewDataSource, 
                 gal.name = finalName
             }
         }
+        
+        // Save to disk and broadcast update across the entire app
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
     }
+
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string).trimmingCharacters(in: .whitespaces)
         self.navigationItem.title = updatedText.isEmpty ? "Time Card Info" : updatedText
-        return range.location < 16
+        return range.location < 24
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
+    }
+    
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        self.navigationItem.title = "Time Card Info"
+        persistTitleUpdate(with: nil)
+        return true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
