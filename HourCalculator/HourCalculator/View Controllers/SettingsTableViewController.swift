@@ -92,10 +92,14 @@ class SettingsTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         hourSwitch?.onTintColor = currentAccentColor
-        
+        updatePatchNotesBadgeUI()
+    }
+    
+    private func updatePatchNotesBadgeUI() {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        let hasViewedCurrentVersion = userDefaults.string(forKey: "appVersion") == appVersion && appVersion != nil
         
-        if userDefaults.value(forKey: "appVersion") == nil || (userDefaults.value(forKey: "appVersion") as? String) != appVersion {
+        if !hasViewedCurrentVersion {
             let size: CGFloat = 22
             let width = max(size, 0.7 * size * 1)
             let badge = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: size))
@@ -104,10 +108,15 @@ class SettingsTableViewController: UITableViewController {
             badge.layer.masksToBounds = true
             badge.textAlignment = .center
             badge.textColor = UIColor.white
-            badge.backgroundColor = UIColor.red
+            badge.backgroundColor = UIColor.systemRed
             patchNotesCell?.accessoryView = badge
+            
+            navigationController?.tabBarItem.badgeValue = "1"
+            tabBarController?.tabBar.items?.last?.badgeValue = "1"
         } else {
             patchNotesCell?.accessoryView = nil
+            navigationController?.tabBarItem.badgeValue = nil
+            tabBarController?.tabBar.items?.last?.badgeValue = nil
         }
     }
     
@@ -143,7 +152,7 @@ class SettingsTableViewController: UITableViewController {
         }
         
         if indexPath.section == 7 && indexPath.row == 0 {
-            promptClearAppData(sourceView: cell)
+            showClearAppDataBottomSheet()
             return
         }
     }
@@ -163,7 +172,6 @@ class SettingsTableViewController: UITableViewController {
         }, for: .touchUpInside)
         modalVC.view.addSubview(dismissButton)
         
-        // systemMaterial adapts cleanly across Light and Dark themes
         let blurEffect = UIBlurEffect(style: .systemMaterial)
         let bottomSheetContainer = UIVisualEffectView(effect: blurEffect)
         bottomSheetContainer.layer.cornerRadius = 24
@@ -402,54 +410,408 @@ class SettingsTableViewController: UITableViewController {
         }
     }
     
-    // MARK: - Clear Data Helpers
+    // MARK: - Fully Expanded, Non-Draggable Clear App Data Bottom Sheet
     
-    private func promptClearAppData(sourceView: UIView) {
-        let actionSheet = UIAlertController(
-            title: "Clear App Data",
-            message: "Select which data you would like to clear. Deleted records cannot be recovered.",
-            preferredStyle: .actionSheet
-        )
+    private enum ClearOptionKey: CaseIterable {
+        case images
+        case history
+        case timeCards
+        case preferences
+        case everything
+    }
+    
+    private func showClearAppDataBottomSheet() {
+        let sheetVC = UIViewController()
+        sheetVC.view.backgroundColor = .systemBackground
+        sheetVC.modalPresentationStyle = .pageSheet
+        sheetVC.isModalInPresentation = true // Disables interactive downward dragging
         
-        if let popover = actionSheet.popoverPresentationController {
-            popover.sourceView = sourceView
-            popover.sourceRect = sourceView.bounds
+        if let sheet = sheetVC.sheetPresentationController {
+            sheet.detents = [.large()] // Expanded all the way
+            sheet.prefersGrabberVisible = false // Removes drag indicator handle
         }
         
-        let clearImagesAction = UIAlertAction(title: "Clear Images", style: .destructive, handler: { [weak self] _ in
-            self?.confirmSpecificDeletion(title: "Clear Images?", message: "Are you sure you want to delete all saved photos and gallery thumbnails?") { [weak self] in
-                self?.deleteImagesOnly()
-            }
-        })
-        clearImagesAction.isEnabled = hasStoredImages
-        actionSheet.addAction(clearImagesAction)
+        var selectedKeys = Set<ClearOptionKey>()
+        var optionButtons: [ClearOptionKey: UIButton] = [:]
+        var checkmarkViews: [ClearOptionKey: UIImageView] = [:]
         
-        let clearHistoryAction = UIAlertAction(title: "Clear History", style: .destructive, handler: { [weak self] _ in
-            self?.confirmSpecificDeletion(title: "Clear History?", message: "Are you sure you want to delete all logged hours from your history?") { [weak self] in
-                self?.deleteHistoryOnly()
-            }
-        })
-        clearHistoryAction.isEnabled = hasStoredHistory
-        actionSheet.addAction(clearHistoryAction)
+        let closeButton = UIButton(type: .system)
+        var closeConfig = UIButton.Configuration.plain()
+        let xSymbolConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
+        closeConfig.image = UIImage(systemName: "xmark", withConfiguration: xSymbolConfig)
+        closeConfig.baseForegroundColor = .secondaryLabel
+        closeConfig.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
+        closeButton.configuration = closeConfig
+        closeButton.backgroundColor = UIColor.secondarySystemFill
+        closeButton.layer.cornerRadius = 15
+        closeButton.layer.masksToBounds = true
+        closeButton.addAction(UIAction { [weak sheetVC] _ in
+            sheetVC?.dismiss(animated: true)
+        }, for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
         
-        let clearTimeCardsAction = UIAlertAction(title: "Clear Time Cards", style: .destructive, handler: { [weak self] _ in
-            self?.confirmSpecificDeletion(title: "Clear Time Cards?", message: "Are you sure you want to delete all saved time cards and entries?") { [weak self] in
-                self?.deleteTimeCardsOnly()
-            }
-        })
-        clearTimeCardsAction.isEnabled = hasStoredTimeCards
-        actionSheet.addAction(clearTimeCardsAction)
+        let iconConfig = UIImage.SymbolConfiguration(pointSize: 34, weight: .semibold)
+        let iconImageView = UIImageView(image: UIImage(systemName: "trash.circle.fill", withConfiguration: iconConfig))
+        iconImageView.tintColor = .systemRed
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        let clearEverythingAction = UIAlertAction(title: "Clear Everything", style: .destructive, handler: { [weak self] _ in
-            self?.confirmSpecificDeletion(title: "Clear Everything?", message: "Are you sure you want to clear all app data? This will reset all hours, time cards, photos, and preferences.") { [weak self] in
+        let titleLabel = UILabel()
+        titleLabel.text = "Clear App Data"
+        titleLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+        titleLabel.textAlignment = .center
+        titleLabel.textColor = .label
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = "Select which records or preferences to erase. Deleted items cannot be recovered."
+        subtitleLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.textColor = .secondaryLabel
+        subtitleLabel.numberOfLines = 2
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let divider = UIView()
+        divider.backgroundColor = UIColor.separator.withAlphaComponent(0.35)
+        divider.translatesAutoresizingMaskIntoConstraints = false
+        
+        let optionsStack = UIStackView()
+        optionsStack.axis = .vertical
+        optionsStack.spacing = 10
+        optionsStack.alignment = .fill
+        optionsStack.distribution = .fillEqually
+        optionsStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        let clearDataButton = UIButton(type: .system)
+        var clearDataConfig = UIButton.Configuration.filled()
+        clearDataConfig.title = "Clear Data"
+        clearDataConfig.baseBackgroundColor = .systemRed
+        clearDataConfig.baseForegroundColor = .white
+        clearDataConfig.cornerStyle = .capsule
+        clearDataConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+            return outgoing
+        }
+        clearDataButton.configuration = clearDataConfig
+        clearDataButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        func syncButtonAppearance(for key: ClearOptionKey) {
+            guard let button = optionButtons[key], let checkmark = checkmarkViews[key] else { return }
+            let isSelected = selectedKeys.contains(key)
+            
+            var config = button.configuration ?? UIButton.Configuration.filled()
+            config.baseBackgroundColor = isSelected
+                ? UIColor.systemRed.withAlphaComponent(0.24)
+                : UIColor.systemRed.withAlphaComponent(0.10)
+            button.configuration = config
+            
+            button.layer.borderWidth = isSelected ? 2.0 : 1.0
+            button.layer.borderColor = isSelected
+                ? UIColor.systemRed.cgColor
+                : UIColor.systemRed.withAlphaComponent(0.25).cgColor
+            
+            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold)
+            checkmark.image = UIImage(systemName: isSelected ? "checkmark.circle.fill" : "circle", withConfiguration: symbolConfig)
+            checkmark.tintColor = isSelected ? .systemRed : .tertiaryLabel
+        }
+        
+        func updateAllSelectionsUI() {
+            UIView.performWithoutAnimation {
+                CATransaction.begin()
+                CATransaction.setDisableActions(true)
+                
+                for key in ClearOptionKey.allCases {
+                    syncButtonAppearance(for: key)
+                }
+                
+                let count = selectedKeys.count
+                let hasSelection = count > 0
+                clearDataButton.isEnabled = hasSelection
+                clearDataButton.alpha = hasSelection ? 1.0 : 0.45
+                
+                if selectedKeys.contains(.everything) {
+                    clearDataButton.configuration?.title = "Clear Everything"
+                } else if count > 0 {
+                    clearDataButton.configuration?.title = "Clear Selected (\(count))"
+                } else {
+                    clearDataButton.configuration?.title = "Clear Data"
+                }
+                
+                CATransaction.commit()
+                sheetVC.view.layoutIfNeeded()
+            }
+        }
+        
+        func handleOptionTapped(key: ClearOptionKey) {
+            let feedback = UISelectionFeedbackGenerator()
+            feedback.selectionChanged()
+            
+            let subcategoryKeys: Set<ClearOptionKey> = [.images, .history, .timeCards, .preferences]
+            
+            if key == .everything {
+                if selectedKeys.contains(.everything) {
+                    selectedKeys.removeAll()
+                } else {
+                    selectedKeys = Set(ClearOptionKey.allCases)
+                }
+            } else {
+                if selectedKeys.contains(key) {
+                    selectedKeys.remove(key)
+                    selectedKeys.remove(.everything)
+                } else {
+                    selectedKeys.insert(key)
+                    if subcategoryKeys.isSubset(of: selectedKeys) {
+                        selectedKeys.insert(.everything)
+                    }
+                }
+            }
+            updateAllSelectionsUI()
+        }
+        
+        func createSelectableOptionButton(
+            key: ClearOptionKey,
+            title: String,
+            subtitle: String,
+            iconName: String,
+            isEnabled: Bool
+        ) -> UIButton {
+            let button = UIButton(type: .system)
+            var config = UIButton.Configuration.filled()
+            config.baseBackgroundColor = UIColor.systemRed.withAlphaComponent(0.10)
+            config.baseForegroundColor = .systemRed
+            config.cornerStyle = .medium
+            config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 54, bottom: 10, trailing: 46)
+            
+            var titleAttr = AttributedString(title)
+            titleAttr.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+            config.attributedTitle = titleAttr
+            
+            var subAttr = AttributedString(subtitle)
+            subAttr.font = UIFont.systemFont(ofSize: 11, weight: .regular)
+            subAttr.foregroundColor = UIColor.systemRed.withAlphaComponent(0.85)
+            config.attributedSubtitle = subAttr
+            
+            button.configuration = config
+            button.contentHorizontalAlignment = .leading
+            button.layer.cornerRadius = 14
+            button.layer.masksToBounds = true
+            button.isEnabled = isEnabled
+            button.alpha = isEnabled ? 1.0 : 0.45
+            
+            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
+            let iconImageView = UIImageView(image: UIImage(systemName: iconName, withConfiguration: symbolConfig))
+            iconImageView.tintColor = .systemRed
+            iconImageView.contentMode = .scaleAspectFit
+            iconImageView.isUserInteractionEnabled = false
+            iconImageView.translatesAutoresizingMaskIntoConstraints = false
+            button.addSubview(iconImageView)
+            
+            let checkSymbolConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold)
+            let checkmarkImageView = UIImageView(image: UIImage(systemName: "circle", withConfiguration: checkSymbolConfig))
+            checkmarkImageView.tintColor = .tertiaryLabel
+            checkmarkImageView.contentMode = .scaleAspectFit
+            checkmarkImageView.isUserInteractionEnabled = false
+            checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
+            button.addSubview(checkmarkImageView)
+            
+            NSLayoutConstraint.activate([
+                iconImageView.leadingAnchor.constraint(equalTo: button.leadingAnchor, constant: 16),
+                iconImageView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+                iconImageView.widthAnchor.constraint(equalToConstant: 26),
+                iconImageView.heightAnchor.constraint(equalToConstant: 26),
+                
+                checkmarkImageView.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -16),
+                checkmarkImageView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+                checkmarkImageView.widthAnchor.constraint(equalToConstant: 22),
+                checkmarkImageView.heightAnchor.constraint(equalToConstant: 22)
+            ])
+            
+            button.addAction(UIAction { _ in
+                handleOptionTapped(key: key)
+            }, for: .touchUpInside)
+            
+            optionButtons[key] = button
+            checkmarkViews[key] = checkmarkImageView
+            return button
+        }
+        
+        let clearImagesButton = createSelectableOptionButton(
+            key: .images,
+            title: "Clear Images",
+            subtitle: "Delete all saved time card photos and gallery thumbnails",
+            iconName: "photo.stack",
+            isEnabled: hasStoredImages
+        )
+        
+        let clearHistoryButton = createSelectableOptionButton(
+            key: .history,
+            title: "Clear History",
+            subtitle: "Delete all calculated decimal hours and shift logs",
+            iconName: "clock.arrow.circlepath",
+            isEnabled: hasStoredHistory
+        )
+        
+        let clearTimeCardsButton = createSelectableOptionButton(
+            key: .timeCards,
+            title: "Clear Time Cards",
+            subtitle: "Delete all saved time cards and weekly punch entries",
+            iconName: "calendar.badge.clock",
+            isEnabled: hasStoredTimeCards
+        )
+        
+        let clearPreferencesButton = createSelectableOptionButton(
+            key: .preferences,
+            title: "Clear User Preferences",
+            subtitle: "Reset themes, accent colors, and toggles without deleting logs",
+            iconName: "paintpalette",
+            isEnabled: true
+        )
+        
+        let clearEverythingButton = createSelectableOptionButton(
+            key: .everything,
+            title: "Clear Everything",
+            subtitle: "Factory reset all hours, cards, photos, and preferences",
+            iconName: "exclamationmark.triangle.fill",
+            isEnabled: true
+        )
+        
+        optionsStack.addArrangedSubview(clearImagesButton)
+        optionsStack.addArrangedSubview(clearHistoryButton)
+        optionsStack.addArrangedSubview(clearTimeCardsButton)
+        optionsStack.addArrangedSubview(clearPreferencesButton)
+        optionsStack.addArrangedSubview(clearEverythingButton)
+        
+        clearDataButton.addAction(UIAction { [weak self, weak sheetVC] _ in
+            guard let self = self, !selectedKeys.isEmpty else { return }
+            
+            let targets = selectedKeys
+            sheetVC?.dismiss(animated: true) { [weak self] in
+                self?.confirmBatchExecution(for: targets)
+            }
+        }, for: .touchUpInside)
+        
+        updateAllSelectionsUI()
+        
+        sheetVC.view.addSubview(closeButton)
+        sheetVC.view.addSubview(iconImageView)
+        sheetVC.view.addSubview(titleLabel)
+        sheetVC.view.addSubview(subtitleLabel)
+        sheetVC.view.addSubview(divider)
+        sheetVC.view.addSubview(optionsStack)
+        sheetVC.view.addSubview(clearDataButton)
+        
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: sheetVC.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            closeButton.leadingAnchor.constraint(equalTo: sheetVC.view.leadingAnchor, constant: 16),
+            closeButton.widthAnchor.constraint(equalToConstant: 30),
+            closeButton.heightAnchor.constraint(equalToConstant: 30),
+            
+            iconImageView.topAnchor.constraint(equalTo: sheetVC.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            iconImageView.centerXAnchor.constraint(equalTo: sheetVC.view.centerXAnchor),
+            iconImageView.widthAnchor.constraint(equalToConstant: 40),
+            iconImageView.heightAnchor.constraint(equalToConstant: 40),
+            
+            titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 8),
+            titleLabel.leadingAnchor.constraint(equalTo: sheetVC.view.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: sheetVC.view.trailingAnchor, constant: -20),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            subtitleLabel.leadingAnchor.constraint(equalTo: sheetVC.view.leadingAnchor, constant: 24),
+            subtitleLabel.trailingAnchor.constraint(equalTo: sheetVC.view.trailingAnchor, constant: -24),
+            
+            divider.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 14),
+            divider.leadingAnchor.constraint(equalTo: sheetVC.view.leadingAnchor, constant: 20),
+            divider.trailingAnchor.constraint(equalTo: sheetVC.view.trailingAnchor, constant: -20),
+            divider.heightAnchor.constraint(equalToConstant: 0.5),
+            
+            optionsStack.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 16),
+            optionsStack.leadingAnchor.constraint(equalTo: sheetVC.view.leadingAnchor, constant: 20),
+            optionsStack.trailingAnchor.constraint(equalTo: sheetVC.view.trailingAnchor, constant: -20),
+            
+            clearDataButton.topAnchor.constraint(equalTo: optionsStack.bottomAnchor, constant: 16),
+            clearDataButton.leadingAnchor.constraint(equalTo: sheetVC.view.leadingAnchor, constant: 20),
+            clearDataButton.trailingAnchor.constraint(equalTo: sheetVC.view.trailingAnchor, constant: -20),
+            clearDataButton.heightAnchor.constraint(equalToConstant: 48),
+            clearDataButton.bottomAnchor.constraint(lessThanOrEqualTo: sheetVC.view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+        ])
+        
+        present(sheetVC, animated: true)
+    }
+    
+    private func confirmBatchExecution(for selectedKeys: Set<ClearOptionKey>) {
+        if selectedKeys.contains(.everything) {
+            confirmSpecificDeletion(
+                title: "Clear Everything?",
+                message: "Are you sure you want to clear all app data? This will reset all hours, time cards, photos, and preferences."
+            ) { [weak self] in
                 self?.deleteData()
             }
-        })
-        clearEverythingAction.isEnabled = true
-        actionSheet.addAction(clearEverythingAction)
+            return
+        }
         
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(actionSheet, animated: true, completion: nil)
+        var selectedItemDescriptions: [String] = []
+        if selectedKeys.contains(.images) { selectedItemDescriptions.append("images") }
+        if selectedKeys.contains(.history) { selectedItemDescriptions.append("shift history") }
+        if selectedKeys.contains(.timeCards) { selectedItemDescriptions.append("time cards") }
+        if selectedKeys.contains(.preferences) { selectedItemDescriptions.append("user preferences") }
+        
+        let messageList = selectedItemDescriptions.joined(separator: ", ")
+        let alert = UIAlertController(
+            title: "Clear Selected Data?",
+            message: "Are you sure you want to delete the selected item(s): \(messageList)? This action cannot be undone.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            
+            if selectedKeys.contains(.images) {
+                self.executeBatchDelete(for: ["Gallery"])
+                let fetchRequest = NSFetchRequest<TimeCardInfo>(entityName: "TimeCardInfo")
+                if let records = try? self.context.fetch(fetchRequest) {
+                    for record in records { record.image = nil }
+                    (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                }
+            }
+            
+            if selectedKeys.contains(.history) {
+                self.executeBatchDelete(for: ["Hours"])
+                self.tabBarController?.tabBar.items?[1].badgeValue = "0"
+            }
+            
+            if selectedKeys.contains(.timeCards) {
+                self.executeBatchDelete(for: ["TimeCards", "TimeCardInfo"])
+                self.userDefaults.removeObject(forKey: "id")
+                self.userDefaults.removeObject(forKey: "index")
+                self.userDefaults.removeObject(forKey: "total")
+                self.userDefaults.removeObject(forKey: "week")
+                self.userDefaults.removeObject(forKey: "name")
+                self.userDefaults.synchronize()
+                self.tabBarController?.tabBar.items?[2].badgeValue = "0"
+            }
+            
+            if selectedKeys.contains(.preferences) {
+                if let domain = Bundle.main.bundleIdentifier {
+                    self.userDefaults.removePersistentDomain(forName: domain)
+                    self.userDefaults.synchronize()
+                }
+                self.hourSwitch?.isOn = false
+                self.hourSwitch?.onTintColor = UIColor(rgb: 0x26A69A)
+                self.view.window?.overrideUserInterfaceStyle = .unspecified
+                self.view.window?.tintColor = UIColor(rgb: 0x26A69A)
+                self.navigationController?.navigationBar.tintColor = UIColor(rgb: 0x26A69A)
+                self.tabBarController?.tabBar.tintColor = UIColor(rgb: 0x26A69A)
+                
+                self.updatePatchNotesBadgeUI()
+            }
+            
+            NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
+            self.tableView.reloadData()
+            self.showSuccessAlert(title: "Selected Data Cleared", message: "Your selected records and preferences have been cleared.")
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     private func confirmSpecificDeletion(title: String, message: String, confirmedAction: @escaping () -> Void) {
@@ -522,6 +884,31 @@ class SettingsTableViewController: UITableViewController {
         showSuccessAlert(title: "Time Cards Cleared", message: "All saved time cards and logged card entries have been deleted.")
     }
     
+    private func deletePreferencesOnly() {
+        if let domain = Bundle.main.bundleIdentifier {
+            userDefaults.removePersistentDomain(forName: domain)
+            userDefaults.synchronize()
+        }
+        
+        hourSwitch?.isOn = false
+        hourSwitch?.onTintColor = UIColor(rgb: 0x26A69A)
+        
+        view.window?.overrideUserInterfaceStyle = .unspecified
+        view.window?.tintColor = UIColor(rgb: 0x26A69A)
+        navigationController?.navigationBar.tintColor = UIColor(rgb: 0x26A69A)
+        tabBarController?.tabBar.tintColor = UIColor(rgb: 0x26A69A)
+        
+        updatePatchNotesBadgeUI()
+        
+        NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
+        tableView.reloadData()
+        
+        showSuccessAlert(
+            title: "Preferences Cleared",
+            message: "All theme settings, custom colors, and user preferences have been reset to default values. Your logged hours, time cards, and images were preserved."
+        )
+    }
+    
     func deleteData() {
         let alertLoading = UIAlertController(title: "Clearing Data...", message: "\n\n", preferredStyle: .alert)
         
@@ -550,14 +937,14 @@ class SettingsTableViewController: UITableViewController {
                 
                 self.executeBatchDelete(for: ["Hours", "TimeCards", "TimeCardInfo", "Gallery"])
                 
-                self.patchNotesCell?.accessoryView = nil
-                
                 if let historyTab = self.tabBarController?.tabBar.items?[1] {
                     historyTab.isEnabled = true
                     historyTab.badgeValue = "0"
                 }
                 
                 self.tabBarController?.tabBar.items?[2].badgeValue = "0"
+                
+                self.updatePatchNotesBadgeUI()
                 
                 NotificationCenter.default.post(name: NSNotification.Name("Update"), object: nil)
                 
