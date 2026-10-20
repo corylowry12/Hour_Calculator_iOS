@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 
-class ImageViewController: UIViewController {
+class ImageViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var imageView: UIImageView!
     
@@ -147,11 +147,12 @@ class ImageViewController: UIViewController {
     @objc private func promptRenameTitle() {
         let currentText = titleLabel.text == "Time Card Image" ? "" : (titleLabel.text ?? "")
         let alert = UIAlertController(title: "Rename Entry", message: "Enter a new name for this time card image.", preferredStyle: .alert)
-        alert.addTextField { textField in
+        alert.addTextField { [weak self] textField in
             textField.placeholder = "e.g. Week 42 Shift"
             textField.text = currentText
             textField.autocapitalizationType = .words
             textField.clearButtonMode = .whileEditing
+            textField.delegate = self
         }
         
         alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { [weak self, weak alert] _ in
@@ -162,6 +163,15 @@ class ImageViewController: UIViewController {
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alert, animated: true)
+    }
+    
+    // MARK: - UITextFieldDelegate (24 Character Limit)
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        return updatedText.count <= 24
     }
     
     private func persistRenamedTitle(_ newName: String) {
